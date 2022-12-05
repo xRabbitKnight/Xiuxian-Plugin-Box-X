@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <!-- <link rel="stylesheet" type="text/css" href="exchange.css" /> -->
+  <link rel="stylesheet" type="text/css" href="{{pluResPath}}/html/Exchange/exchange.css" />
+</head>
+
+<body>
+  <!--上-->
+  <div style="height: 1px;"></div>
+
+  <div class="user_top">
+    <h1> 弱水阁</h1>
+    <div> #上架+物品名*数量*价格 (不填数量,默认为1)</div>
+    <div> #选购+编号 </div>
+    <div> #下架+编号 </div>
+  </div>
+
+  <div class="user_bottom1">
+    <div class="use_data">
+      {{each wuqi item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font1" style="grid-template-columns:auto auto;">
+        <div> 攻击:{{item.thing.attack}}%</div>
+        <div> 敏捷:{{item.thing.speed}} </div>
+      </div>
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+
+      {{each huju item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font1" style="grid-template-columns:auto auto;">
+        <div> 防御:{{item.thing.defense}}% </div>
+        <div> 血量:{{item.thing.blood}}% </div>
+      </div>
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+
+      {{each fabao item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font1" style="grid-template-columns:auto auto;">
+        <div> 暴击:{{item.thing.burst}}% </div>
+        <div> 暴伤:{{item.thing.burstmax}}% </div>
+      </div>      
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+
+      {{each gongfa item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font1" style="grid-template-columns:auto;">
+        <div> 天赋:{{item.thing.size}}% </div>
+      </div>      
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+      
+      {{each danyao item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font1" style="grid-template-columns:auto auto auto;">
+        <div> 血量:{{item.thing.blood}}% </div>
+        <div> 气血:{{item.thing.experiencemax}}</div>
+        <div> 修为:{{item.thing.experience}}</div>
+      </div>
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+      
+      {{each daoju item}}
+      <div class="user_top_right_font0">{{item.thing.name}}</div>
+      <div class="user_top_right_font2">
+        <div> 编号:{{item.id}}</div>
+        <div> 数量:{{item.count}}</div>
+        <div> 总价格:{{item.price}}</div>
+      </div>
+      {{/each}}
+
+    </div>
+  </div>
+
+  </div>
+  <style>
+
+  </style>
+
+</body>
+
+<script>
+</script>
+
+</html>
