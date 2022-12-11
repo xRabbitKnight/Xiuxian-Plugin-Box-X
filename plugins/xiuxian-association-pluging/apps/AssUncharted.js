@@ -135,7 +135,7 @@ export class AssUncharted extends plugin {
             // 2 - 12
             incentivesLevel = unchartedLevel + Math.trunc(Math.random() * 4) -2;
         }
-        //扣钱
+        // 判断钱是否足够
         const player = await Read_wealth(usr_qq);
         e.reply(`本次生成秘境等级为${unchartedLevel},奖励等级为${incentivesLevel}`);
         if(player.lingshi < unchartedLevel * 5000){
@@ -146,6 +146,21 @@ export class AssUncharted extends plugin {
             e.reply(`这个宗门的灵石池，无法支撑秘境的运转了！`);
             return ;
         }
+
+        // 判断冷却时间
+        const CDTime = 60 * 30;
+        const ClassCD = ":LabyrinthGenerate";
+        const now_time = new Date().getTime();
+        const cdSecond = await redis.ttl("xiuxian:player:" + usr_qq + ClassCD);
+        if(cdSecond != -2){
+            e.reply(`秘境还在修整中，剩余${cdSecond}秒！`);
+            return ;
+        }
+
+        await redis.set("xiuxian:player:" + usr_qq + ClassCD, now_time);
+        await redis.expire("xiuxian:player:" + usr_qq + ClassCD, CDTime);
+
+        // 扣钱
         const assPlayer = assUtil.getAssOrPlayer(1,usr_qq);
 
         if(assPlayer.assName == ass.id){
@@ -160,7 +175,6 @@ export class AssUncharted extends plugin {
 
         //完事了，该进秘境了
         //初始化临时存档，选择随机地图，添加状态
-        const now_time = new Date().getTime();
         const actionObject = {
             'actionName': '宗门秘境',
             'startTime': now_time
@@ -230,18 +244,17 @@ export class AssUncharted extends plugin {
             return ;
         }
 
+        // const CDTime = 60;
+        // const ClassCD = ":LabyrinthMove";
+        // const now_time = new Date().getTime();
+        // const cdSecond = await redis.ttl("xiuxian:player:" + usr_qq + ClassCD);
+        // if(cdSecond != -2){
+        //     e.reply(`休整一下再出发吧，剩余${cdSecond}秒！`);
+        //     return ;
+        // }
 
-        const CDTime = 1;
-        const ClassCD = ":LabyrinthMove";
-        const now_time = new Date().getTime();
-        const cdSecond =await redis.ttl("xiuxian:player:" + usr_qq + ClassCD);
-        if(cdSecond!= -2){
-            e.reply(`休整一下再出发吧，剩余${cdSecond}秒！`);
-            return ;
-        }
-
-        await redis.set("xiuxian:player:" + usr_qq + ClassCD ,now_time);
-        await redis.expire("xiuxian:player:" + usr_qq + ClassCD , CDTime * 60);
+        // await redis.set("xiuxian:player:" + usr_qq + ClassCD, now_time);
+        // await redis.expire("xiuxian:player:" + usr_qq + ClassCD, CDTime);
 
 
         //随机事件
