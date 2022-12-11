@@ -204,10 +204,10 @@ export class AssUncharted extends plugin {
         let ordinate = interimArchive.ordinate;
         switch (true) {
             case (direction=="上"):
-                ordinate += 1;
+                ordinate -= 1;
                 break;
             case (direction=="下"):
-                ordinate -= 1;
+                ordinate += 1;
                 break;
             case (direction=="左"):
                 abscissa -= 1;
@@ -556,17 +556,17 @@ function getMapStr(labyrinthMap, interimArchive) {
     for(let p of labyrinthMap) {
         const everCame = interimArchive.alreadyExplore.find(item => item.x == p.x && item.y == p.y);
         if(isNotNull(everCame)) {
-            coordinate[5-p.y][p.x-1] = 2;
+            coordinate[p.y-1][p.x-1] = 2;
         } else if(p.transit) {
-            coordinate[5-p.y][p.x-1] = 1;
+            coordinate[p.y-1][p.x-1] = 1;
         }
     }
-    coordinate[5-interimArchive.ordinate][interimArchive.abscissa-1] = 3;
+    coordinate[interimArchive.ordinate-1][interimArchive.abscissa-1] = 3;
     let mapStr = '地图：\n(0)墙壁 (1)未探索道路 (2)已探索道路 (3)当前位置';
-    for(let y=1; y<=5; y++) {
+    for(let y=0; y<5; y++) {
         mapStr += '\n';
-        for(let x=1; x<=5; x++) {
-            switch(coordinate[5-y][x-1]) {
+        for(let x=0; x<5; x++) {
+            switch(coordinate[y][x]) {
                 case 0:
                     mapStr += '0';  // 墙
                     break;
