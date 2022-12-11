@@ -122,6 +122,16 @@ export class AssUncharted extends plugin {
             return ;
         }
 
+        // 判断冷却时间
+        const CDTime = 60 * 30;
+        const ClassCD = ":LabyrinthGenerate";
+        const now_time = new Date().getTime();
+        const cdSecond = await redis.ttl("xiuxian:player:" + usr_qq + ClassCD);
+        if(cdSecond > -2){
+            e.reply(`秘境还在修整中，剩余${cdSecond}秒！`);
+            return ;
+        }
+
         //初始化 秘境等级，奖励等级，迷宫地图，秘境游玩临时存档
 
         //秘境等级，驻地等级 -- 驻地+宗门
@@ -147,16 +157,7 @@ export class AssUncharted extends plugin {
             return ;
         }
 
-        // 判断冷却时间
-        const CDTime = 60 * 30;
-        const ClassCD = ":LabyrinthGenerate";
-        const now_time = new Date().getTime();
-        const cdSecond = await redis.ttl("xiuxian:player:" + usr_qq + ClassCD);
-        if(cdSecond != -2){
-            e.reply(`秘境还在修整中，剩余${cdSecond}秒！`);
-            return ;
-        }
-
+        // 写入冷却时间
         await redis.set("xiuxian:player:" + usr_qq + ClassCD, now_time);
         await redis.expire("xiuxian:player:" + usr_qq + ClassCD, CDTime);
 
