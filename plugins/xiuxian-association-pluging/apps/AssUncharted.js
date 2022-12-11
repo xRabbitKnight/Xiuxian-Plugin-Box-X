@@ -260,9 +260,15 @@ export class AssUncharted extends plugin {
         interimArchive.abscissa = abscissa;
         interimArchive.ordinate = ordinate;
 
+        let mapStr = getMapStr(labyrinthMap, interimArchive);
 
         if(random < 0.55){
-            e.reply(`无事发生`);
+            // e.reply(`无事发生`);
+            let msg = [
+                `无事发生`
+            ];
+            msg.push(mapStr)
+            await ForwardMsg(e, msg);
         }else if(random < 0.85){
             //遇怪
             const battle = await Read_battle(usr_qq);
@@ -303,6 +309,7 @@ export class AssUncharted extends plugin {
 
             await Add_experiencemax(usr_qq, 50*interimArchive.incentivesLevel);
             msg.push(`获得了${50*interimArchive.incentivesLevel}气血`);
+            msg.push(mapStr)
             await ForwardMsg(e, msg);
 
         }else {
@@ -319,7 +326,12 @@ export class AssUncharted extends plugin {
                 "type": chestsType,
                 "level": chestsLevel
             };
-            e.reply(`获得了一个宝箱，可使用#查看秘境收获，进行查看`);
+            // e.reply(`获得了一个宝箱，可使用#查看秘境收获，进行查看`);
+            let msg = [
+                `获得了一个宝箱，可使用#查看秘境收获，进行查看`
+            ];
+            msg.push(mapStr)
+            await ForwardMsg(e, msg);
             interimArchive.treasureChests.push(chests);
         }
 
@@ -539,3 +551,36 @@ async function getThingType(type) {
 }
 
 
+function getMapStr(labyrinthMap, interimArchive) {
+    let coordinate = Array(5).fill(0).map(() => Array(5).fill(0));
+    for(let p of labyrinthMap) {
+        const everCame = interimArchive.alreadyExplore.find(item => item.x == p.x && item.y == p.y);
+        if(isNotNull(everCame)) {
+            coordinate[5-p.y][p.x-1] = 2;
+        } else if(p.transit) {
+            coordinate[5-p.y][p.x-1] = 1;
+        }
+    }
+    coordinate[5-interimArchive.ordinate][interimArchive.abscissa-1] = 3;
+    let mapStr = '地图：\n(0)墙壁 (1)未探索道路 (2)已探索道路 (3)当前位置';
+    for(let y=1; y<=5; y++) {
+        mapStr += '\n';
+        for(let x=1; x<=5; x++) {
+            switch(coordinate[5-y][x-1]) {
+                case 0:
+                    mapStr += '0';  // 墙
+                    break;
+                case 1:
+                    mapStr += '1';  // 没走过的路
+                    break;
+                case 2:
+                    mapStr += '2';  // 走过的路
+                    break;
+                case 3:
+                    mapStr += '3';  // 当前位置
+                    break;
+            }
+        }
+    }
+    return mapStr;
+}
