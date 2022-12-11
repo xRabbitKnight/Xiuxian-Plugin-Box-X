@@ -1,0 +1,44 @@
+[
+  {
+    "id": 3000001,
+    "name": "不周山",
+    "efficiency": 0.3,
+    "level": 3,
+    "specialty": ["3-1-41"]
+  },
+  {
+    "id": 2000001,
+    "name": "瑶池",
+    "efficiency": 0.2,
+    "level": 2,
+    "specialty": ["4-2-40"]
+  },
+  {
+    "id": 2000003,
+    "name": "昆仑",
+    "efficiency": 0.2,
+    "level": 2,
+    "specialty": ["1-1-41"]
+  },
+  {
+    "id": 1000001,
+    "name": "蓬莱岛",
+    "efficiency": 0.1,
+    "level": 1,
+    "specialty": ["4-2-41"]
+  },
+  {
+    "id": 1000002,
+    "name": "方寸山",
+    "efficiency": 0.1,
+    "level": 1,
+    "specialty": ["5-1-53"]
+  },
+  {
+    "id": 1000003,
+    "name": "瀛洲市",
+    "efficiency": 0.1,
+    "level": 1,
+    "specialty": ["2-1-41"]
+  }
+]
