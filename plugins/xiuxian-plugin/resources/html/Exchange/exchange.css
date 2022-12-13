@@ -16,10 +16,27 @@ body {
 
 .user_top {
   grid-template-columns:auto auto auto;
-  padding: 20px;
+  padding: 15px;
   margin: 40px;
-  background-color: rgba(19, 21, 22, 0.486);
+  background-image: linear-gradient(to bottom, rgb(19, 21, 22, 0.9), rgba(19, 21, 22, 0.486));
   border-radius: 50px;
+  color: white;
+}
+.user_top h1 {
+  font-size: 40px;
+  line-height: 50px;
+  margin: 5px 0;
+}
+.user_help {
+  display: grid;
+  grid-template-columns: 100px 190px;
+  grid-row-gap: 8px;
+  margin-top: -30px;
+  justify-items: start;
+  justify-content: center;
+  background-image: none;
+  background-color: rgba(19, 21, 22, 0.6);
+  padding-left: 80px;
 }
 
 .user_top_img {
