@@ -1,6 +1,7 @@
 @font-face {
   font-family:"xiuxian";
-  src: url('../../../../../resources/font/_GBK.TTF');
+  /* src: url('../../../../../resources/font/_GBK.TTF'); */
+  src: url('../../font/_GBK.TTF');
   font-weight: normal;
   font-style: normal;
 }
@@ -37,6 +38,7 @@ body {
   background-image: none;
   background-color: rgba(19, 21, 22, 0.6);
   padding-left: 80px;
+  font-size: 20px
 }
 
 .user_top_img {
