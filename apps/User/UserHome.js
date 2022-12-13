@@ -51,7 +51,13 @@ export class UserHome extends plugin {
             e.reply('数量不足');
             return;
         };
+        
         const id = najie_thing.id.split('-');
+        if(id[0] != 4) {
+            e.reply(`不可服用${thing_name}`);
+            return;
+        };
+
         if (id[1] == 1) {
             let blood = parseInt(najie_thing.blood);
             await Add_blood(usr_qq, blood);
@@ -67,10 +73,6 @@ export class UserHome extends plugin {
             await Add_experiencemax(usr_qq, thing_acount * experiencemax);
             e.reply(`气血增加${thing_acount * najie_thing.experiencemax}`);
         }
-        else {
-            e.reply(`不可服用${thing_name}`);
-            return;
-        };
         let najie = await Read_najie(usr_qq);
         najie = await Add_najie_thing(najie, najie_thing, -thing_acount);
         await Write_najie(usr_qq, najie);
