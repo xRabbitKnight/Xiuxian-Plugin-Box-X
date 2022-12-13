@@ -52,7 +52,7 @@ export class BattleSite extends plugin {
             "msg":1
         };
         if (acount == 1) {
-            buff.msg = Math.floor((Math.random() * (20 - 5))) + Number(5);
+            buff.msg = Math.floor((Math.random() * (3 - 1))) + Number(1);
             msg.push('怪物突然变异了!');
         };
         const LevelMax = data.Level_list.find(item => item.id == mon.level+1);
