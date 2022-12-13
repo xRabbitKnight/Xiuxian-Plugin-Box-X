@@ -5,7 +5,7 @@ import config from "../../../model/Config.js"
 import {
     Add_najie_thing,
     shijianc,
-    Add_blood as AddBloodToPercent, Add_experience, Add_experiencemax,Read_action,
+    AddBloodToPercent, Add_experience, Add_experiencemax,Read_action,
     Read_najie, Write_najie, Read_level, search_thing_name, exist_najie_thing_id
 } from "../../../apps/Xiuxian/Xiuxian.js";
 import fs from "node:fs"
