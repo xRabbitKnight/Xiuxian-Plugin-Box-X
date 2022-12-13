@@ -52,7 +52,8 @@ export class Battle extends plugin {
         const CDid = '0';
         const CD = await GenerateCD(user.A, CDid);
         if (CD != 0) {
-            e.reply(CD);
+            await e.reply(CD);
+            return;
         };
         user.QQ  = await battle(e, user.A, user.B);
         const Level = await Read_level(user.A);
