@@ -69,7 +69,7 @@ export class Battle extends plugin {
             let equipment = await Read_equipment(user.B);
             if (equipment.length > 0) {
                 const thing = await Anyarray(equipment);
-                equipment = equipment.splice(equipment.indexOf(thing), 1);
+                equipment = equipment.splice(equipment.indexOf(thing.name), 1); 
                 await Write_equipment(user.B, equipment);
                 let najie = await Read_najie(user.A);
                 najie = await Add_najie_thing(najie, thing, 1);

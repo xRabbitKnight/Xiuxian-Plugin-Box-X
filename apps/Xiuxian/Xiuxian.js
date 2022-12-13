@@ -45,7 +45,8 @@ const Read = async (usr_qq, PATH) => {
         };
         return data;
     });
-    return JSON.parse(the.player);
+    the.player = JSON.parse(the.player)
+    return the.player;
 };
 //写入数据
 const Write = async (usr_qq, player, PATH) => {
