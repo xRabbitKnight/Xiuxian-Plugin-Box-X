@@ -218,17 +218,33 @@ export const Add_experiencemax = async (usr_qq, qixue) => {
     await Write_level(usr_qq, player);
     return;
 };
-//血量按百分比恢复
-export const Add_blood = async (usr_qq, blood) => {
+
+/**
+ * @description: 血量回复到指定百分比
+ * @param {string} usr_qq 目标qq 
+ * @param {Number} blood 回复到百分比
+ * @return {*} 无返回
+ */
+export const AddBloodToPercent = async (usr_qq, blood) => {
     const player = await Read_battle(usr_qq);
-    const battle = await Read_battle(usr_qq);
-    //判断百分比
-    if (player.nowblood < Math.floor(battle.blood * blood * 0.01)) {
-        player.nowblood = Math.floor(battle.blood * blood * 0.01);
-    };
+    player.nowblood = Math.max(player.nowblood, Math.floor(player.blood * blood * 0.01));
     await Write_battle(usr_qq, player);
     return;
 };
+
+/**
+ * @description: 回复额外百分比血量
+ * @param {string} usr_qq 目标qq 
+ * @param {Number} blood 回复百分比
+ * @return {*} 无返回
+ */
+export const AddPercentBlood = async (usr_qq, blood) => {
+    const player = await Read_battle(usr_qq);
+    player.nowblood = Math.min(player.blood, player.nowblood + Math.floor(player.blood * blood * 0.01));
+    await Write_battle(usr_qq, player);
+    return;
+};
+
 //储物袋灵石操作
 export const Add_najie_lingshi = async (usr_qq, acount) => {
     const najie = await Read_najie(usr_qq);

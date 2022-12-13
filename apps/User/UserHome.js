@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { existplayer, exist_najie_thing_name, Read_najie, Add_experiencemax, Write_najie, Numbers, Add_najie_thing, Add_blood, Add_experience, get_talent, Write_talent, player_efficiency, Read_talent, Read_level } from '../Xiuxian/Xiuxian.js';
+import { existplayer, exist_najie_thing_name, Read_najie, Add_experiencemax, Write_najie, Numbers, Add_najie_thing, AddPercentBlood, Add_experience, get_talent, Write_talent, player_efficiency, Read_talent, Read_level, AddPercentBlood } from '../Xiuxian/Xiuxian.js';
 export class UserHome extends plugin {
     constructor() {
         super({
@@ -51,11 +51,17 @@ export class UserHome extends plugin {
             e.reply('数量不足');
             return;
         };
+        
         const id = najie_thing.id.split('-');
+        if(id[0] != 4) {
+            e.reply(`不可服用${thing_name}`);
+            return;
+        };
+
         if (id[1] == 1) {
             let blood = parseInt(najie_thing.blood);
-            await Add_blood(usr_qq, blood);
-            e.reply(`血量恢复至${blood}%`);
+            await AddPercentBlood(usr_qq, blood);
+            e.reply(`血量恢复${blood}%`);
         }
         else if (id[1] == 2) {
             let experience = parseInt(najie_thing.experience);
@@ -67,10 +73,6 @@ export class UserHome extends plugin {
             await Add_experiencemax(usr_qq, thing_acount * experiencemax);
             e.reply(`气血增加${thing_acount * najie_thing.experiencemax}`);
         }
-        else {
-            e.reply(`不可服用${thing_name}`);
-            return;
-        };
         let najie = await Read_najie(usr_qq);
         najie = await Add_najie_thing(najie, najie_thing, -thing_acount);
         await Write_najie(usr_qq, najie);

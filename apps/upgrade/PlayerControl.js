@@ -2,7 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import common from '../../../../lib/common/common.js';
 import config from '../../model/Config.js';
 import { segment } from 'oicq';
-import { Gomini, Go, offaction, Add_experience, Add_blood,  existplayer, Read_level, Read_talent, Add_experiencemax } from '../Xiuxian/Xiuxian.js';
+import { Gomini, Go, offaction, Add_experience, AddBloodToPercent,  existplayer, Read_level, Read_talent, Add_experiencemax } from '../Xiuxian/Xiuxian.js';
 export class PlayerControl extends plugin {
     constructor() {
         super({
@@ -146,8 +146,8 @@ export class PlayerControl extends plugin {
                 msg.push(`\n闭关结束,得到了${other}修为`);
             }
             await Add_experience(usr_qq, other);
-            await Add_blood(usr_qq, 90);
-            msg.push('\n血量恢复至90%');
+            await AddBloodToPercent(usr_qq, 100);
+            msg.push('\n血量恢复至100%');
         }
         else {
             if (rand < 20) {
@@ -159,7 +159,7 @@ export class PlayerControl extends plugin {
                 msg.push(`\n降妖回来,得到了${other}气血`);
             };
             await Add_experiencemax(usr_qq, other);
-            await Add_blood(usr_qq, 90);
+            await AddBloodToPercent(usr_qq, 90);
             msg.push('\n血量恢复至90%');
         };
         msg.push('\n' + name + '结束');
