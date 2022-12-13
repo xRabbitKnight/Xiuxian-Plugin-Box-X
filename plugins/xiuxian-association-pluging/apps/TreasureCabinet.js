@@ -5,7 +5,7 @@ import config from "../../../model/Config.js"
 import {
     Add_najie_thing,
     shijianc,
-    Add_blood, Add_experience, Add_experiencemax,Read_action,
+    Add_blood as AddBloodToPercent, Add_experience, Add_experiencemax,Read_action,
     Read_najie, Write_najie, Read_level, search_thing_name, exist_najie_thing_id
 } from "../../../apps/Xiuxian/Xiuxian.js";
 import fs from "node:fs"
@@ -227,7 +227,7 @@ export class TreasureCabinet extends plugin {
                 await Add_experiencemax(usr_qq , 30*body_level_id );
                 await Add_najie_things(item,usr_qq,1);
             }
-            await Add_blood(usr_qq , 100)
+            await AddBloodToPercent(usr_qq , 100)
             if(flag == 0.1 && res == 1 && randomB > 0.8){
                 e.reply(`看见你来了,${BeastList[ass.divineBeast - 1]}很高兴，仔细挑选了${item.name}给你`);
 
