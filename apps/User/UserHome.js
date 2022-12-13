@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { existplayer, exist_najie_thing_name, Read_najie, Add_experiencemax, Write_najie, Numbers, Add_najie_thing, AddPercentBlood, Add_experience, get_talent, Write_talent, player_efficiency, Read_talent, Read_level, AddPercentBlood } from '../Xiuxian/Xiuxian.js';
+import { existplayer, exist_najie_thing_name, Read_najie, Add_experiencemax, Write_najie, Numbers, Add_najie_thing, AddPercentBlood, Add_experience, get_talent, Write_talent, player_efficiency, Read_talent, Read_level} from '../Xiuxian/Xiuxian.js';
 export class UserHome extends plugin {
     constructor() {
         super({
