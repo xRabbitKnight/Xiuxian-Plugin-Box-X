@@ -42,20 +42,14 @@ export class Battle extends plugin {
         const actionA = await Read_action(user.A);
         const actionB = await Read_action(user.B);
         if(actionA.region!=actionB.region){
-            e.reply('没找到此人');
+            await e.reply('没找到此人');
             return;
         };
-        if(actionA.address==1){
-            e.reply('[修仙联盟]普通卫兵:城内不可出手!');
-            return;
-        };
-        if(actionB.address==1){
-            e.reply('[修仙联盟]普通卫兵:城内不可出手!');
+        if(actionA.address==1 || actionB.address==1){
+            await e.reply('[修仙联盟]普通卫兵:城内不可出手!');
             return;
         };
         const CDid = '0';
-        const now_time = new Date().getTime();
-        const CDTime = this.xiuxianConfigData.CD.Attack;
         const CD = await GenerateCD(user.A, CDid);
         if (CD != 0) {
             e.reply(CD);
@@ -75,7 +69,7 @@ export class Battle extends plugin {
             let equipment = await Read_equipment(user.B);
             if (equipment.length > 0) {
                 const thing = await Anyarray(equipment);
-                equipment = equipment.filter(item => item.name != thing.name);
+                equipment = equipment.splice(equipment.indexOf(thing), 1);
                 await Write_equipment(user.B, equipment);
                 let najie = await Read_najie(user.A);
                 najie = await Add_najie_thing(najie, thing, 1);
@@ -83,6 +77,9 @@ export class Battle extends plugin {
                 e.reply(`${user.A}夺走了${thing.name}`);
             };
         };
+
+        const now_time = new Date().getTime();
+        const CDTime = this.xiuxianConfigData.CD.Attack;
         await redis.set(`xiuxian:player:${user.A}:${CDid}`,now_time);
         await redis.expire(`xiuxian:player:${user.A}:${CDid}`, CDTime * 60);
         return;
