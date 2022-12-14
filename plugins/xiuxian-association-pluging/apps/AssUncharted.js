@@ -3,6 +3,8 @@ import fs from "node:fs"
 import data from '../../../model/XiuxianData.js'
 import assUtil from '../model/AssUtil.js'
 import config from "../../../model/Config.js"
+import Show from '../model/show.js';
+import puppeteer from '../../../../../lib/puppeteer/puppeteer.js';
 import {
     Add_najie_thing,
     ForwardMsg,search_thing_id,Add_experiencemax,
@@ -147,7 +149,6 @@ export class AssUncharted extends plugin {
         }
         // 判断钱是否足够
         const player = await Read_wealth(usr_qq);
-        e.reply(`本次生成秘境等级为${unchartedLevel},奖励等级为${incentivesLevel}`);
         if(player.lingshi < unchartedLevel * 5000){
             e.reply(`没钱，买不起秘境门票`);
             return ;
@@ -176,6 +177,7 @@ export class AssUncharted extends plugin {
 
         //完事了，该进秘境了
         //初始化临时存档，选择随机地图，添加状态
+        e.reply(`本次生成秘境等级为${unchartedLevel},奖励等级为${incentivesLevel}`);
         const actionObject = {
             'actionName': '宗门秘境',
             'startTime': now_time
@@ -196,7 +198,8 @@ export class AssUncharted extends plugin {
         await assUtil.setAssOrPlayer("interimArchive",usr_qq,interimArchive);
         ass.facility[2].buildNum -=1;
         await assUtil.checkFacility(ass);
-        e.reply(`你已成功进入${didian}秘境,开始探索吧！`);
+        await e.reply(`你已成功进入${didian}秘境！`);
+        await this.explore_point(e, interimArchive.abscissa, interimArchive.ordinate, interimArchive)
         return;
     }
 
@@ -217,27 +220,29 @@ export class AssUncharted extends plugin {
         const interimArchive = assUtil.getAssOrPlayer(3,usr_qq);
         let abscissa = interimArchive.abscissa;
         let ordinate = interimArchive.ordinate;
-        switch (true) {
-            case (direction=="上"):
+        switch (direction) {
+            case "上":
                 ordinate -= 1;
                 break;
-            case (direction=="下"):
+            case "下":
                 ordinate += 1;
                 break;
-            case (direction=="左"):
+            case "左":
                 abscissa -= 1;
                 break;
-            case (direction=="右"):
+            case "右":
                 abscissa += 1;
                 break;
             default:
-                direction = 0;
-                break;
-        }
-        if(direction == 0){
-            return ;
+                return
         }
 
+        await this.explore_point(e, abscissa, ordinate, interimArchive)
+    }
+
+    async explore_point(e, abscissa, ordinate, interimArchive) {
+        const usr_qq = e.user_id;
+        
         const labyrinthMap = await assUtil.assLabyrinthList[interimArchive.labyrinthMap];
         const newPoint = labyrinthMap.find(item => item.x == abscissa && item.y == ordinate);
         if(!isNotNull(newPoint) || !newPoint.transit){
@@ -257,7 +262,6 @@ export class AssUncharted extends plugin {
         // await redis.set("xiuxian:player:" + usr_qq + ClassCD, now_time);
         // await redis.expire("xiuxian:player:" + usr_qq + ClassCD, CDTime);
 
-
         //随机事件
         let random = Math.random();
         const everCame = interimArchive.alreadyExplore.find(item => item.x == abscissa && item.y == ordinate);
@@ -274,15 +278,8 @@ export class AssUncharted extends plugin {
         interimArchive.abscissa = abscissa;
         interimArchive.ordinate = ordinate;
 
-        const mapImg = await getMapImg(labyrinthMap, interimArchive);
-
         if(random < 0.55){
-            // e.reply(`无事发生`);
-            let msg = [
-                `无事发生`
-            ];
-            msg.push(mapImg)
-            await ForwardMsg(e, msg);
+            e.reply(`无事发生`);
         }else if(random < 0.85){
             //遇怪
             const battle = await Read_battle(usr_qq);
@@ -323,7 +320,6 @@ export class AssUncharted extends plugin {
 
             await Add_experiencemax(usr_qq, 50*interimArchive.incentivesLevel);
             msg.push(`获得了${50*interimArchive.incentivesLevel}气血`);
-            msg.push(mapImg)
             await ForwardMsg(e, msg);
 
         }else {
@@ -344,10 +340,12 @@ export class AssUncharted extends plugin {
             let msg = [
                 `获得了一个宝箱，可使用#查看秘境收获，进行查看`
             ];
-            msg.push(mapImg)
             await ForwardMsg(e, msg);
             interimArchive.treasureChests.push(chests);
         }
+        
+        const mapImg = await getMapImg(e, labyrinthMap, interimArchive);
+        e.reply(mapImg)
 
         await assUtil.setAssOrPlayer("interimArchive",usr_qq,interimArchive);
         return ;
@@ -566,9 +564,9 @@ async function getThingType(type) {
 
 
 function getMapCoor(labyrinthMap, interimArchive) {
-    let yLen = labyrinthMap.length()
-    let xLen = labyrinthMap[0].length(0)
-    let coordinate = Array(yLen).fill(0).map(() => Array(xLen).fill(0));
+    const XLEN = 5
+    const YLEN = 5
+    let coordinate = Array(YLEN).fill(0).map(() => Array(XLEN).fill(0));
     for(let p of labyrinthMap) {
         const everCame = interimArchive.alreadyExplore.find(item => item.x == p.x && item.y == p.y);
         if(isNotNull(everCame)) {
@@ -582,7 +580,7 @@ function getMapCoor(labyrinthMap, interimArchive) {
 }
 
 function getMapStr(labyrinthMap, interimArchive) {
-    let coordinate = getMapCoor(labyrinthMap, interimArchive)
+    let coordinate = getMapCoor(e, labyrinthMap, interimArchive)
     let mapStr = '地图：\n(0)墙壁 (1)未探索道路 (2)已探索道路 (3)当前位置';
     for(let y=0; y<5; y++) {
         mapStr += '\n';
@@ -606,11 +604,11 @@ function getMapStr(labyrinthMap, interimArchive) {
     return mapStr;
 }
 
-async function getMapImg(labyrinthMap, interimArchive) {
+async function getMapImg(e, labyrinthMap, interimArchive) {
     let coordinate = getMapCoor(labyrinthMap, interimArchive)
     let points = []
     for(let row of coordinate) {
-        points = points.concact(row)
+        points = points.concat(row)
     }
     const mapData = {points: points}
     const renderData = await new Show(e).get_Data('LabyrinthMap', 'LabyrinthMap', mapData);
