@@ -3,7 +3,7 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import { segment } from 'oicq';
 import fs from 'node:fs';
-import {Read_action,point_map, Read_level,Read_najie,Go,Add_najie_thing,Write_najie,Numbers,Add_lingshi,At,GenerateCD, Read_wealth, Write_wealth, Write_action} from '../Xiuxian/Xiuxian.js';
+import {Read_action,point_map, Read_level,Read_najie,Go,Add_najie_thing,Write_najie,exist_najie_thing_name,Numbers,Add_lingshi,At,Read_wealth, Write_wealth, Write_action} from '../Xiuxian/Xiuxian.js';
 export class MoneyOperation extends plugin {
     constructor() {
         super({
@@ -15,6 +15,10 @@ export class MoneyOperation extends plugin {
                 {
                     reg: '^#赠送灵石.*$',
                     fnc: 'Give_lingshi'
+                },
+                {
+                    reg: '^#赠送.*$',
+                    fnc: 'Give_prop' 
                 },
                 {
                     reg: '^#联盟报到$',
@@ -57,40 +61,78 @@ export class MoneyOperation extends plugin {
         e.reply(`你对此高兴万分\n把[${equipment_name}]放进了#储物袋`)
         return;
     };
-     Give_lingshi=async(e)=> {
-        const good=await Go(e);
-        if (!good) {
+    
+    Give_lingshi = async(e) => {
+        if (await !Go(e)) {
             return;
         };
-        const A = e.user_id;
-        const B = await At(e);
-        if(B==0||B==A){
+        
+        const giverId = e.user_id;
+        const doneeId = await At(e);
+
+        if(doneeId == 0){
+            await e.reply("获赠者不存在！");
             return;
         };
-        let lingshi = e.msg.replace('#赠送灵石', '');
-        lingshi = await Numbers(lingshi);
-        if(lingshi<50){
-            lingshi=50;
-        };
-        const A_player = await  Read_wealth(A);
-        if (A_player.lingshi < lingshi) {
-            e.reply([segment.at(A), `似乎没有${lingshi}灵石`]);
+
+        if(doneeId == giverId){
+            await e.reply("请不要赠送给自己！");
+            return;
+        }
+
+        let lingshi = await Numbers(e.msg.replace('#赠送灵石', ''));
+        lingshi = Math.max(lingshi, 50);
+
+        const giverWealth = await Read_wealth(giverId);
+        if (giverWealth.lingshi < lingshi) {
+            await e.reply([segment.at(giverId), `似乎没有${lingshi}灵石`]);
             return;
         };
-        const CDTime = this.xiuxianConfigData.CD.Transfer;
-        const CDid = '5';
-        const now_time = new Date().getTime();
-        const CD = await GenerateCD(A, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
-        await redis.set(`xiuxian:player:${A}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${A}:${CDid}`, CDTime * 60);
-        A_player.lingshi-=lingshi;
-        await Write_wealth(A,A_player);
-        await Add_lingshi(B, lingshi);
-        e.reply([segment.at(B), `你获得了由 ${A}赠送的${lingshi}灵石`]);
+
+        giverWealth.lingshi-=lingshi;
+        await Write_wealth(giverId,giverWealth);
+        await Add_lingshi(doneeId, lingshi);
+        await e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${lingshi}灵石`]);
+
         return;
     };
+
+    Give_prop = async(e) => {
+        if (await !Go(e)) {
+            return;
+        };
+
+        const giverId = e.user_id;
+        const doneeId = await At(e);
+
+        if(doneeId == 0){
+            await e.reply("获赠者不存在！");
+            return;
+        };
+
+        if(doneeId == giverId){
+            await e.reply("请不要赠送给自己！");
+            return;
+        }
+
+        let [propName, count] = await e.msg.replace('#赠送', '').replace('{at:*}','').split('*');
+        count = count == undefined ? 1 : count;
+
+        let prop = await exist_najie_thing_name(giverId, propName);
+        if(prop == 1 || prop.acount < count){
+            await e.reply([segment.at(giverId), `似乎没有${propName} * ${count}`]);
+            return;
+        }
+
+        let giverPack = await Read_najie(giverId);
+        let doneePack = await Read_najie(doneeId);
+
+        giverPack = await Add_najie_thing(giverPack, prop, -count);
+        doneePack = await Add_najie_thing(doneePack, prop, count);
+        await Write_najie(giverId, giverPack);
+        await Write_najie(doneeId, doneePack);
+
+        await e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${propName} * ${count}`]);
+        return;
+    }
 };
