@@ -1,0 +1,62 @@
+@font-face {
+  font-family:"xiuxian";
+  /* src: url('../../../../../resources/font/_GBK.TTF'); */
+  src: url('../../font/_GBK.TTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  display: flex;
+  width: 400px;
+  margin: auto;
+  text-align: center;
+  background-image: url('exchange.jpg');
+  background-size: 100% auto;
+  font-family: xiuxian;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.help {
+  display: grid;
+  grid-template-columns: auto 150px;
+  justify-items: start;
+  align-items: center;
+  grid-column-gap: 10px;
+}
+
+.type {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+}
+.type_0 {
+  background-color: black;
+}
+.type_1 {
+  background-color: white;
+}
+.type_2 {
+  background-color: lightblue;
+}
+.type_3 {
+  background-color: dodgerblue;
+}
+
+.map {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 2px;
+  align-content: center;
+  justify-content: center;
+  width: 170px;
+  padding: 5px;
+  border: 1px solid black;
+}
+
+.map div {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+}

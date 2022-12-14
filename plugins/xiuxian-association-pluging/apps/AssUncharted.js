@@ -274,14 +274,14 @@ export class AssUncharted extends plugin {
         interimArchive.abscissa = abscissa;
         interimArchive.ordinate = ordinate;
 
-        let mapStr = getMapStr(labyrinthMap, interimArchive);
+        const mapImg = await getMapImg(labyrinthMap, interimArchive);
 
         if(random < 0.55){
             // e.reply(`无事发生`);
             let msg = [
                 `无事发生`
             ];
-            msg.push(mapStr)
+            msg.push(mapImg)
             await ForwardMsg(e, msg);
         }else if(random < 0.85){
             //遇怪
@@ -323,7 +323,7 @@ export class AssUncharted extends plugin {
 
             await Add_experiencemax(usr_qq, 50*interimArchive.incentivesLevel);
             msg.push(`获得了${50*interimArchive.incentivesLevel}气血`);
-            msg.push(mapStr)
+            msg.push(mapImg)
             await ForwardMsg(e, msg);
 
         }else {
@@ -344,7 +344,7 @@ export class AssUncharted extends plugin {
             let msg = [
                 `获得了一个宝箱，可使用#查看秘境收获，进行查看`
             ];
-            msg.push(mapStr)
+            msg.push(mapImg)
             await ForwardMsg(e, msg);
             interimArchive.treasureChests.push(chests);
         }
@@ -565,8 +565,10 @@ async function getThingType(type) {
 }
 
 
-function getMapStr(labyrinthMap, interimArchive) {
-    let coordinate = Array(5).fill(0).map(() => Array(5).fill(0));
+function getMapCoor(labyrinthMap, interimArchive) {
+    let yLen = labyrinthMap.length()
+    let xLen = labyrinthMap[0].length(0)
+    let coordinate = Array(yLen).fill(0).map(() => Array(xLen).fill(0));
     for(let p of labyrinthMap) {
         const everCame = interimArchive.alreadyExplore.find(item => item.x == p.x && item.y == p.y);
         if(isNotNull(everCame)) {
@@ -576,6 +578,11 @@ function getMapStr(labyrinthMap, interimArchive) {
         }
     }
     coordinate[interimArchive.ordinate-1][interimArchive.abscissa-1] = 3;
+    return coordinate;
+}
+
+function getMapStr(labyrinthMap, interimArchive) {
+    let coordinate = getMapCoor(labyrinthMap, interimArchive)
     let mapStr = '地图：\n(0)墙壁 (1)未探索道路 (2)已探索道路 (3)当前位置';
     for(let y=0; y<5; y++) {
         mapStr += '\n';
@@ -597,4 +604,18 @@ function getMapStr(labyrinthMap, interimArchive) {
         }
     }
     return mapStr;
+}
+
+async function getMapImg(labyrinthMap, interimArchive) {
+    let coordinate = getMapCoor(labyrinthMap, interimArchive)
+    let points = []
+    for(let row of coordinate) {
+        points = points.concact(row)
+    }
+    const mapData = {points: points}
+    const renderData = await new Show(e).get_Data('LabyrinthMap', 'LabyrinthMap', mapData);
+    const mapImg = await puppeteer.screenshot('LabyrinthMap', {
+        ...renderData,
+    });
+    return mapImg;
 }
