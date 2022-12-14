@@ -63,7 +63,7 @@ export class MoneyOperation extends plugin {
     };
     
     Give_lingshi = async(e) => {
-        if (await !Go(e)) {
+        if (!await Go(e)) {
             return;
         };
         
@@ -98,7 +98,7 @@ export class MoneyOperation extends plugin {
     };
 
     Give_prop = async(e) => {
-        if (await !Go(e)) {
+        if (!await Go(e)) {
             return;
         };
 
