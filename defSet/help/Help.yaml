@@ -97,6 +97,9 @@
     - icon: help-icon_10
       title: "#赠送灵石1000 @群友"
       desc: "赠送灵石"
+    - icon: help-icon_9
+      title: "#赠送物品名*2 @群友"
+      desc: "赠送物品，数量默认为1"
       
 - group: 
   list:

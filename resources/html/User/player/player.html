@@ -14,10 +14,10 @@
   <div style="display:grid;grid-template-columns:auto auto;">
     <div class="user_top">
       <div class="user_top_left">
-        <div class="user_top_right_font0" style="padding: 5px;">账号:{{user_id}}</div>
-        <div class="user_top_right_font1" style="padding: 5px;"> 道号:{{life.name}}</div>
-        <div class="user_top_right_font" style="padding: 5px;">血量:{{battle.nowblood}}/{{battle.blood}}</div>
-        <div class="user_top_right_font2" style="padding: 5px;">寿龄:{{life.Age}}/{{life.life}}</div>
+        <div class="user_top_right_font0" style="padding: 5px;">账号：{{user_id}}</div>
+        <div class="user_top_right_font1" style="padding: 5px;"> 道号：{{life.name}}</div>
+        <div class="user_top_right_font" style="padding: 5px;">血量：{{battle.nowblood}}/{{battle.blood}}</div>
+        <div class="user_top_right_font2" style="padding: 5px;">寿龄：{{life.Age}}/{{life.life}}</div>
       </div>
       <div class="user_top_right">
         <div class="user_top_img_bottom">
@@ -40,50 +40,22 @@
   <div class="user_bottom1">
     <div class="use_data">
       <div class="user_top_right_font0">[基础信息]</div>
-      <div class="user_top_right_font" style="display:grid;grid-template-columns:auto auto;">
-        <div>
-          法境:{{level.levelname}}
+      <div class="user_top_right_font2 user_base_info">
+        <div>法境：{{level.levelname}}</div>
+        <div>修为：{{level.experience}}</div>
+        <div>体境：{{level.levelnamemax}}</div>
+        <div>气血：{{level.experiencemax}}</div>
+        <div>仙石：{{xianshi}}</div>
+        <div>灵石：{{lingshi}}</div>
+        <div>灵根：{{linggenname}}</div>
+        <div>天赋：{{talentsize}}</div>
+        <div class="user_top_right_font equipment">
+          {{each equipment item}}
+          <div>{{item.name}}</div>
+          {{/each}}
         </div>
-        <div>
-          修为:{{level.experience}}
-        </div>
-      </div>
-      <div class="user_top_right_font1" style="display:grid;grid-template-columns:auto auto;">
-        <div>
-          体境:{{level.levelnamemax}}
-        </div>
-        <div>
-          气血:{{level.experiencemax}}
-        </div>
-      </div>
-      <div class="user_top_right_font" style="display:grid;grid-template-columns:auto auto;">
-        <div>
-          仙石:{{xianshi}}
-        </div>
-        <div>
-          灵石:{{lingshi}}
-        </div>
-      </div>
-      <div class="user_top_right_font1" style="display:grid;grid-template-columns:auto auto;">
-        <div>
-          灵根:{{linggenname}}
-        </div>
-        <div>
-          天赋:{{talentsize}}
-        </div>
-      </div>
-      <div class="user_top_right_font" style="display:grid;grid-template-columns:auto auto auto auto;">
-        {{each equipment item}}
-        <div>
-          {{item.name}}
-        </div>
-        {{/each}}
-      </div>
-      <div class="user_top_right_font2" style="margin: auto;display:grid;grid-template-columns:auto auto;">
-        <div>魔力:{{level.prestige}}
-        </div>
-        <div>战力:{{battle.power}}
-        </div>
+        <div>魔力：{{level.prestige}}</div>
+        <div>战力：{{battle.power}}</div>
       </div>
     </div>
   </div>

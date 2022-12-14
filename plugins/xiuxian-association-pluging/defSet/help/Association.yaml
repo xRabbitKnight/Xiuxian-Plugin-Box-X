@@ -21,12 +21,24 @@
     - icon: help-icon_81
       title: "#鉴定宗门令牌"
       desc: "获取建立宗门或宗门升级的令牌"
+    - icon: help-icon_13
+      title: "#宗门玩法存档"
+      desc: "查看宗门玩法存档"
+    - icon: help-icon_13
+      title: "#宗门存档刷新"
+      desc: "刷新宗门存档"
 
 - group: 宗门基础玩法
   list:
     - icon: help-icon_52
+      title: "#宗门列表"
+      desc: "查看所有宗门"
+    - icon: help-icon_52
       title: "#申请加入xxx"
       desc: "向某宗门发出申请"
+    - icon: help-icon_52
+      title: "#我的宗门"
+      desc: "查看宗门成员"
     - icon: help-icon_52
       title: "#退出宗门"
       desc: "退宗"
@@ -78,6 +90,12 @@
     - icon: help-icon_59
       title: "#集合攻打+宗门名"
       desc: "集合对方势力范围内的己方成员，掀起宗门大战"
+    - icon: help-icon_10
+      title: "#宗门捐赠灵石1000"
+      desc: "灵石换取贡献1000:1"
+    - icon: help-icon_4
+      title: "#宗门俸禄"
+      desc: "领取今日宗门俸禄"
 
 - group: 宗门神兽玩法
   list:

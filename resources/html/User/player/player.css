@@ -141,3 +141,27 @@ body {
   margin: auto;
   height: 20px;
 }
+
+.user_base_info {
+  display: grid;
+  grid-template-columns: auto auto;
+  line-height: 60px;
+  justify-items: start;
+  justify-content: space-around;
+  grid-template-areas: '. .'
+                       '. .'
+                       '. .'
+                       '. .'
+                       'e e'
+                       '. .'
+}
+
+.equipment {
+  padding: 0;
+  width: 100%;
+  grid-area: e;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background-color: transparent;
+  justify-content: space-between;
+}
