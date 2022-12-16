@@ -4,6 +4,7 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import fs from 'node:fs';
 import { Gomini,Go, Read_action, ForwardMsg, Read_battle, monsterbattle, Add_experiencemax, Add_experience, Add_lingshi, GenerateCD, Add_najie_thing, Read_najie, Write_najie, Read_talent } from '../Xiuxian/Xiuxian.js';
+import { PVE } from '../../model/Battle/Battle.js';
 export class BattleSite extends plugin {
     constructor() {
         super({
@@ -46,33 +47,11 @@ export class BattleSite extends plugin {
             e.reply(`这里没有${name},去别处看看吧`);
             return;
         };
-        const acount = await Cachemonster.add(action.region, Number(1));
         const msg = [`${usr_qq}的[击杀结果]\n注:怪物每1小时刷新\n物品掉落率=怪物等级*5%`];
-        const buff={
-            "msg":1
-        };
-        if (acount == 1) {
-            buff.msg = Math.floor((Math.random() * (3 - 1))) + Number(1);
-            msg.push('怪物突然变异了!');
-        };
-        const LevelMax = data.Level_list.find(item => item.id == mon.level+1);
-        const monsters = {
-            'nowblood': LevelMax.blood * buff.msg,
-            'attack': LevelMax.attack * buff.msg,
-            'defense': LevelMax.defense * buff.msg,
-            'blood': LevelMax.blood * buff.msg,
-            'burst': LevelMax.burst + LevelMax.id * 5 * buff.msg,
-            'burstmax': LevelMax.burstmax + LevelMax.id * 10 * buff.msg,
-            'speed': LevelMax.speed + 5 + buff.msg
-        };
-        const battle = await Read_battle(usr_qq);
-        const talent = await Read_talent(usr_qq);
-        const mybuff = Math.floor(talent.talentsize / 100) + Number(1);
-        const battle_msg = await monsterbattle(e, battle, monsters);
-        battle_msg.msg.forEach((item)=>{
-            msg.push(item);
-        });
-        if (battle_msg.QQ != 0) {
+        const battleResult = await PVE(e, mon, msg);
+        if(battleResult){
+            const talent = await Read_talent(usr_qq);
+            const mybuff = Math.floor(talent.talentsize / 100) + Number(1);
             const m = Math.floor((Math.random() * (100 - 1))) + Number(1);
             if (m < mon.level * 5) {
                 const dropsItemList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsItem.json`));
