@@ -1,6 +1,6 @@
 import Data from "../XiuxianData.js";
 import { Read_battle, Write_battle } from "../../apps/Xiuxian/Xiuxian.js";
-import { Model_1v1 } from "./BattleModel.js";
+import { Model_1v1 } from "./BattleModel_1v1.js";
 
 /**
  * @description: PVE 1v1战斗
