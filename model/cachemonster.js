@@ -3,7 +3,8 @@ const addall = [];
 const name1 = ['蜥', '狮', '鹏', '雕', '雀', '豹', '虎', '龟', '猫', '龙','鲲','鸡','蛇','狼','鼠','鹿','貂','猴','狗','熊','羊','牛','象','兔','猪'];
 const name2 = ['兵', '将', '兽', '魔', '妖', '大妖', '王', '皇', '帝', '神'];
 class Cachemonster {
-    constructor() { }; monsterscache = async (i) => {
+    constructor() { }; 
+    monsterscache = async (i) => {
         while (true) {
             if (alldata.length <= i) {
                 alldata.push({
@@ -53,7 +54,7 @@ class Cachemonster {
                     //累计  
                     killNum: 1,
                     //境界
-                    level: y
+                    level: y + 1
                 });
             };
             return alldata[i].data;
