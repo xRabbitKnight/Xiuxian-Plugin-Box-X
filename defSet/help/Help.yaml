@@ -15,6 +15,12 @@
     - icon: help-icon_56
       title: "#取灵石全部"
       desc: "从储物袋中取出灵石"
+    - icon: help-icon_5
+      title: "#仓库"
+      desc: "查看仓库"
+    - icon: help-icon_16
+      title: "#存/取物品名*2"
+      desc: "仓库存取物品，数量默认为1"
     
 - group: 
   list:

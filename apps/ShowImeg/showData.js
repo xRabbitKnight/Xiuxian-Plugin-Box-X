@@ -229,8 +229,7 @@ export const get_toplist_img = async (e, list) => {
 
 export const getWarehouseImg = async (e) => {
     const usr_qq = e.user_id;
-    let life = await Read_Life();
-    life = life.find(item => item.qq == usr_qq);
+    const life = (await Read_Life()).find(item => item.qq == usr_qq);
     const warehouse = await readWarehouse(usr_qq);
 
     const itemNum = warehouse.items.length
