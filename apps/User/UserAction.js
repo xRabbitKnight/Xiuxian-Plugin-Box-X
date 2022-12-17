@@ -168,27 +168,19 @@ export class UserAction extends plugin {
         let [itmeName, itemNum] = e.msg.substr(2).split('*');
         itemNum = await Numbers(itemNum);
         if(op == '存') {
-            const item = await exist_najie_thing_name(usr_qq, itmeName);
-            if (item == 1) {
-                e.reply(`没有[${itmeName}]`);
-                return;
-            };
-            if (item.acount < itemNum) {
-                e.reply(`[${itmeName}]不够`);
-                return;
-            };
+            var item = await exist_najie_thing_name(usr_qq, itmeName);
         } else if(op == '取') {
-            const item = await findWarehouseItemByName(usr_qq, itmeName);
-            if (item == undefined) {
-                e.reply(`没有[${itmeName}]`);
-                return;
-            };
-            if (item.acount < itemNum) {
-                e.reply(`[${itmeName}]不够`);
-                return;
-            };
+            var item = await findWarehouseItemByName(usr_qq, itmeName);
             itemNum *= -1;
         }
+        if (item == 1 || item == undefined) {
+            e.reply(`没有[${itmeName}]`);
+            return;
+        };
+        if (item.acount < Math.abs(itemNum)) {
+            e.reply(`[${itmeName}]不够`);
+            return;
+        };
         let backpack = await Read_najie(usr_qq);
         backpack = await Add_najie_thing(backpack, item, -itemNum);
         await Write_najie(usr_qq, backpack);
