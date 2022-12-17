@@ -16,7 +16,9 @@ export const __PATH = {
     najie: path.join(__dirname, '/resources/data/birth/xiuxian/najie'),
     Exchange: path.join(__dirname, '/resources/data/birth/Exchange'),
     Forum: path.join(__dirname, '/resources/data/birth/Forum'),
-    life: path.join(__dirname, '/resources/data/birth/xiuxian/life')
+    life: path.join(__dirname, '/resources/data/birth/xiuxian/life'),
+
+    warehouse: path.join(__dirname, '/resources/data/birth/xiuxian/warehouse')
 };
 //配置地址
 export class Xiuxian extends plugin {
@@ -132,13 +134,22 @@ export const Write_action = async (usr_qq, data) => {
     return;
 };
 //读取储物袋
+export const Read_najie = async (usr_qq) => {
+    return await Read(usr_qq, __PATH.najie);
+};
+//写入新储物袋
 export const Write_najie = async (usr_qq, najie) => {
     await Write(usr_qq, najie, __PATH.najie);
     return;
 };
-//写入新储物袋
-export const Read_najie = async (usr_qq) => {
-    return await Read(usr_qq, __PATH.najie);
+//读取仓库
+export const readWarehouse = async (usr_qq) => {
+    return await Read(usr_qq, __PATH.warehouse);
+};
+//写入仓库
+export const writeWarehouse = async (usr_qq, warehouse) => {
+    await Write(usr_qq, warehouse, __PATH.warehouse);
+    return;
 };
 //读取装备
 export const Read_equipment = async (usr_qq) => {
@@ -596,6 +607,28 @@ export const Add_najie_thing = async (najie, najie_thing, thing_acount) => {
         najie_thing.acount = thing_acount;
         najie.thing.push(najie_thing);
         return najie;
+    };
+};
+//根据名字搜仓库物品
+export const findWarehouseItemByName = async (usr_qq, name) => {
+    const warehouse = await readWarehouse(usr_qq);
+    return warehouse.items.find(item => item.name == name);;
+};
+//修改仓库物品
+export const modifyWarehouseItem = async (warehouse, item, num) => {
+    const wItem = warehouse.items.find(i => i.id == item.id);
+    if (wItem) {
+        let acount = wItem.acount + num;
+        if (acount < 1) {
+            warehouse.items = warehouse.items.filter(i => i.id != item.id);
+        } else {
+            warehouse.items.find(i => i.id == item.id).acount = acount;
+        };
+        return warehouse;
+    } else {
+        item.acount = num;
+        warehouse.items.push(item);
+        return warehouse;
     };
 };
 //发送转发消息

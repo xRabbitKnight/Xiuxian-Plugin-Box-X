@@ -3,7 +3,7 @@ import Show from '../../model/show.js';
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import config from '../../model/Config.js';
 import data from '../../model/XiuxianData.js';
-import { talentname, Read_battle, Read_player, Read_wealth, Read_talent, Read_equipment, Read_level, Read_najie, Read_Life, existplayer } from '../Xiuxian/Xiuxian.js';
+import { talentname, Read_battle, Read_player, Read_wealth, Read_talent, Read_equipment, Read_level, Read_najie, Read_Life, existplayer, writeWarehouse } from '../Xiuxian/Xiuxian.js';
 export class showData extends plugin {
     constructor() {
         super({
@@ -225,3 +225,42 @@ export const get_toplist_img = async (e, list) => {
     });
     return img;
 };
+
+
+export const getWarehouseImg = async (e) => {
+    const usr_qq = e.user_id;
+    const life = await Read_Life().find(item => item.qq == usr_qq);
+    const warehouse = await writeWarehouse(usr_qq);
+
+    const itemNum = warehouse.items.length
+    let thing_list = [];
+    let danyao_list = [];
+    let daoju_list = [];
+    warehouse.items.forEach((item, index) => {
+        const id = item.id.split('-');
+        switch(id[0]) {
+            case 4:
+                danyao_list.push(item);
+                break;
+            case 6:
+                daoju_list.push(item);
+                break;
+            default:
+                thing_list.push(item);
+                break;
+        }
+    });
+    const warehouseData = {
+        user_id: usr_qq,
+        life: life,
+        itemNum: itemNum,
+        thing: thing_list,
+        daoju_list: daoju_list,
+        danyao_list: danyao_list
+    };
+    const renderData = await new Show(e).get_Data('User/warehouse', 'warehouse', warehouseData);
+    const img = await puppeteer.screenshot('warehouse', {
+        ...renderData,
+    });
+    return img;
+}

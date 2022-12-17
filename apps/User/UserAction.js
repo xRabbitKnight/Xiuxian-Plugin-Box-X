@@ -1,8 +1,8 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { get_najie_img } from '../ShowImeg/showData.js';
+import { getWarehouseImg, get_najie_img } from '../ShowImeg/showData.js';
 import { segment } from 'oicq';
-import { existplayer, Go, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth } from '../Xiuxian/Xiuxian.js';
+import { existplayer, Go, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
 export class UserAction extends plugin {
     constructor() {
         super({
@@ -22,7 +22,15 @@ export class UserAction extends plugin {
                 {
                     reg: '^#(存|取)灵石(.*)$',
                     fnc: 'Take_lingshi'
-                }
+                },
+                {
+                    reg: '^#仓库$',
+                    fnc: 'showWarehouse'
+                },
+                {
+                    reg: '^#(存|取)(.*)$',
+                    fnc: 'accessWarehouse'
+                },
             ]
         });
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
@@ -120,4 +128,73 @@ export class UserAction extends plugin {
         };
         return;
     };
+
+    /**
+     * 仓库查看及存取相关功能
+     */
+    warehousePre = async (e) => {
+        const usr_qq = e.user_id;
+        const ifexistplay = await existplayer(usr_qq);      // 玩家存在
+        if (!ifexistplay) {
+            return false;
+        };
+        const good = await Go(e);       // 玩家可行动
+        if (!good) {
+            return false;
+        };
+        const action = await Read_action(usr_qq);
+        const address_name = '万宝楼';
+        const map = await point_map(action, address_name);
+        if(!map){
+            e.reply(`需回${address_name}`);     // 玩家位于「万宝楼」
+            return false;
+        };
+        return true;
+    };
+
+    showWarehouse = async (e) => {
+        let pre = await this.warehousePre(e);
+        if(!pre) return;
+        const img = await getWarehouseImg(e);
+        e.reply(img)
+    }
+
+    accessWarehouse = async (e) => {
+        let pre = await this.warehousePre(e);
+        if(!pre) return;
+        
+        const usr_qq = e.user_id;
+        const op = e.msg.substr(1, 1);
+        let [itmeName, itemNum] = e.msg.substr(2).split('*');
+        itemNum = await Numbers(itemNum);
+        if(op == '存') {
+            const item = await exist_najie_thing_name(usr_qq, itmeName);
+            if (item == 1) {
+                e.reply(`没有[${itmeName}]`);
+                return;
+            };
+            if (item.acount < itemNum) {
+                e.reply(`[${itmeName}]不够`);
+                return;
+            };
+        } else if(op == '取') {
+            const item = await findWarehouseItemByName(usr_qq, itmeName);
+            if (item == undefined) {
+                e.reply(`没有[${itmeName}]`);
+                return;
+            };
+            if (item.acount < itemNum) {
+                e.reply(`[${itmeName}]不够`);
+                return;
+            };
+            itemNum *= -1;
+        }
+        let backpack = await Read_najie(usr_qq);
+        backpack = await Add_najie_thing(backpack, item, -itemNum);
+        await Write_najie(usr_qq, backpack);
+        let warehouse = await readWarehouse(usr_qq);
+        warehouse = await modifyWarehouseItem(warehouse, item, itemNum);
+        await writeWarehouse(usr_qq, warehouse);
+        e.reply('操作成功！')
+    }
 };

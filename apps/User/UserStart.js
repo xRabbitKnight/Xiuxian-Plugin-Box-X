@@ -3,7 +3,7 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import fs from 'fs';
 import { segment } from 'oicq';
-import { existplayer, __PATH, Write_player, Go, GenerateCD, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray } from '../Xiuxian/Xiuxian.js';
+import { existplayer, __PATH, Write_player, Go, GenerateCD, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray, writeWarehouse } from '../Xiuxian/Xiuxian.js';
 import { get_player_img } from '../ShowImeg/showData.js';
 export class UserStart extends plugin {
     constructor() {
@@ -89,6 +89,9 @@ export class UserStart extends plugin {
             'lingshi': 0,
             'thing': []
         };
+        const newWarehouse = {
+            'items': []
+        };
         const newtalent = await get_talent();
         const new_talent = {
             'talent': newtalent,//灵根
@@ -120,6 +123,7 @@ export class UserStart extends plugin {
         await Write_action(usr_qq, new_action);
         await Write_equipment(usr_qq, []);
         await Write_najie(usr_qq, new_najie);
+        await writeWarehouse(usr_qq, newWarehouse);
         await Write_Life(life);
         e.reply(`你来到一个修仙世界\n你对修仙充满了好奇\n你可以#前往极西联盟\n进行#联盟报到\n会得到[修仙联盟]的帮助\n更快的成为练气修士\n也可以#基础信息\n查看自己的身世\n若想快速去往天山\n建议#前往极西传送阵\n进行#传送天山`);
         return;
