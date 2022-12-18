@@ -239,10 +239,10 @@ export const getWarehouseImg = async (e) => {
     warehouse.items.forEach((item, index) => {
         const id = item.id.split('-');
         switch(id[0]) {
-            case 4:
+            case '4':
                 danyao_list.push(item);
                 break;
-            case 6:
+            case '6':
                 daoju_list.push(item);
                 break;
             default:
