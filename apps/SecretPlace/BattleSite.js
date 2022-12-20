@@ -1,10 +1,11 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import Cachemonster from '../../model/cachemonster.js';
 import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import fs from 'node:fs';
 import { Gomini,Go, Read_action, ForwardMsg, Add_experiencemax, Add_experience, Add_lingshi, GenerateCD, Add_najie_thing, Read_najie, Write_najie, Read_talent } from '../Xiuxian/Xiuxian.js';
 import { PVE } from '../../model/Battle/Battle.js';
+import MonsterMgr from '../../model/Region/MonsterMgr.js';
+
 export class BattleSite extends plugin {
     constructor() {
         super({
@@ -95,8 +96,8 @@ export class BattleSite extends plugin {
         const usr_qq = e.user_id;
         const action = await Read_action(usr_qq);
         const msg = [];
-        const monster = await Cachemonster.monsterscache(action.region);
-        monster.forEach((item) => {
+        const monsters = MonsterMgr.GetMonsters(action.region);
+        monsters.forEach((item) => {
             msg.push(
                 '怪名:' + item.name + '\n' +
                 '等级:' + item.level + '\n'

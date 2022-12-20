@@ -1,20 +1,22 @@
 //管理所有的怪物
 class MonsterMgr{
-    static mgr = new MonsterMgr();
-    constructor(){return mgr;};
+    constructor(){
+        if(!MonsterMgr.instance) MonsterMgr.instance = this;
+        return MonsterMgr.instance;
+    };
 
     /*按区域储存所有怪物
         key : region
         value : Monster[]
     */
-    static monsters = {}
+    monsters = {}
     
     /******* 
      * @description: 将怪物添加至对应地区
      * @param {number} _region 待添加的地区号
      * @param {Monster} _monster 怪物实例
      */    
-    static AddMonster(_region, _monster){
+    AddMonster(_region, _monster){
         if(!(_region in this.monsters)) 
             this.monsters[_region] = [];
         _monster.region = _region;
@@ -25,10 +27,13 @@ class MonsterMgr{
      * @description: 删除某个怪物
      * @param {Monster} _monster 怪物实例
      */    
-    static DeleteMonster(_monster){
+    DeleteMonster(_monster){
         if(!(_monster.region in this.monsters)) 
             return;
-        this.monsters[_monster.region].filter(monster => monster != _monster);    
+        
+        const pos = this.monsters[_monster.region].indexOf(_monster);
+        if(pos != -1)
+            this.monsters[_monster.region].splice(pos, 1);    
     }
 
     /******* 
@@ -36,7 +41,7 @@ class MonsterMgr{
      * @param {number} _region 目标地区号
      * @return {Monster[]} 目标地区所有怪物
      */    
-    static GetMonsters(_region){
+    GetMonsters(_region){
         if(!(_region in this.monsters)) 
             this.monsters[_region] = [];
         return this.monsters[_region];
@@ -47,9 +52,10 @@ class MonsterMgr{
      * @param {number} _region 目标地区号 
      * @return {number} 对应怪物数量
      */    
-    static GetMonsterCount(_region){
+    GetMonsterCount(_region){
         if(!(_region in this.monsters)) 
             this.monsters[_region] = [];
         return this.monsters[_region].length;
     }
 }
+export default new MonsterMgr();

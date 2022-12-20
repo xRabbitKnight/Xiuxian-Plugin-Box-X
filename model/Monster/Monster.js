@@ -5,7 +5,7 @@ const MonsterLevelName = ['小兵','兵', '将', '兽', '魔', '妖', '大妖', 
 
 
 //怪物的基类，储存怪物name, level, battleInfo信息
-export default class Monster{
+export class Monster{
     /**
      * @description: 根据等级生成一个怪物
      * @param {Number} _level 怪物等级
@@ -18,10 +18,10 @@ export default class Monster{
         this.level = _level;
 
         //TODO:我认为这个怪物应该有一套单独的面板机制= =， 还没想好, 暂定练气炼体各半取随机相加
-        const tmpInfo0 = Data.Level_list.find(item => item.id == _monsterInfo.level);
-        const tmpInfo1 = Data.LevelMax_list.find(item => item.id == _monsterInfo.level);
-        const percent0 = Math.random() * 0.5;
-        const percent1 = Math.random() * 0.5;
+        const tmpInfo0 = Data.Level_list.find(item => item.id == _level);
+        const tmpInfo1 = Data.LevelMax_list.find(item => item.id == _level);
+        const percent0 = Math.random() * 0.3 + 0.5;
+        const percent1 = Math.random() * 0.5 + 0.5;
         this.battleInfo = {
             "nowblood": tmpInfo0.blood * percent0 + tmpInfo1.blood * percent1,
             "attack": tmpInfo0.attack * percent0 + tmpInfo1.attack * percent1,
