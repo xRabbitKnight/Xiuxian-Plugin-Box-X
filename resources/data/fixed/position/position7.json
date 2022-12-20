@@ -7,7 +7,7 @@
         "y1": "500",
         "y2": "599",
         "levelMin": 1,
-        "levelMax": 11,
-        "monsterNum": 100
+        "levelMax": 3,
+        "monsterNum": 10
     }
 ]

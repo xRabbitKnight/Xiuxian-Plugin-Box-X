@@ -6,8 +6,8 @@
         "x2": "799",
         "y1": "400",
         "y2": "599",
-        "levelMin": 1,
-        "levelMax": 11,
-        "monsterNum": 100
+        "levelMin": 3,
+        "levelMax": 6,
+        "monsterNum": 10
     }
 ]
