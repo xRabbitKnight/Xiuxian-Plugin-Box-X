@@ -5,7 +5,7 @@
  * @param {[]} _msg 战斗信息
  * @return {boolean} 战斗结果， win->true 
  */
-export function Model_1v1(_attacker, _target, _msg){
+export async function Model_1v1(_attacker, _target, _msg){
     const C_MAXROUND = 50; //限制最大回合
     const C_PROCESS = {    //战斗流程
         raid_1v1 : counterAttack_1v1,
@@ -17,7 +17,7 @@ export function Model_1v1(_attacker, _target, _msg){
     let count = 1;          //记录战斗轮数
 
     //1. 按轮次发动战斗
-    while(count < C_MAXROUND && !round(_attacker, _target, _msg)){
+    while(count < C_MAXROUND && !await round(_attacker, _target, _msg)){
         count++;
         round = C_PROCESS[round.name];
     }
@@ -38,7 +38,7 @@ export function Model_1v1(_attacker, _target, _msg){
  * @param {[]} _msg 战斗信息
  * @return {bool} 返回战斗是否结束 
  */
-function raid_1v1(_attacker, _target, _msg){
+async function raid_1v1(_attacker, _target, _msg){
     //偷袭失败
     if(!ifRaidSuc(_attacker, _target)){
         _msg.push(`你个老六想偷袭,${_target.name}一个转身就躲过去了`);
@@ -52,7 +52,7 @@ function raid_1v1(_attacker, _target, _msg){
                 * C_RAID_EXTRA_RATE);
     
     //mio杀
-    if(damage >= _target.nowblood){ 
+    if(damage >= _target.battleInfo.nowblood){ 
         _msg.push(`你个老六偷袭,仅出一招,就击败了${_target.name}!`);
         _target.battleInfo.nowblood = 0;
         return true;
@@ -77,7 +77,7 @@ function raid_1v1(_attacker, _target, _msg){
  * @param {[]} _msg 战斗信息
  * @return {bool} 返回战斗是否结束 
  */
-function attack_1v1(_attacker, _target, _msg){
+async function attack_1v1(_attacker, _target, _msg){
     let damage = Math.floor(Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)              //计算伤害
                 * (ifBurst(_attacker.battleInfo.burst)? _attacker.battleInfo.burstmax / 100 : 1));
 
@@ -89,7 +89,7 @@ function attack_1v1(_attacker, _target, _msg){
 /**
  * @description: 1v1战斗，target 攻击 attacker
  */
-function counterAttack_1v1(_attacker, _target, _msg){
+async function counterAttack_1v1(_attacker, _target, _msg){
     return attack_1v1(_target, _attacker, _msg);
 };
 
