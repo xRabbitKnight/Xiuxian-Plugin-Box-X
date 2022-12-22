@@ -54,6 +54,31 @@ class XiuxianData {
             ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju1.json`)),
             ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju2.json`))
         ], 'dropsItem');
+
+        this.deletelist('dropsEquipment');
+        this.addlist([
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/wuqi1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/wuqi2.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/huju1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/huju2.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/fabao1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedequipment}/fabao2.json`)),
+        ], 'dropsEquipment');
+        this.deletelist('dropsDanyao');
+        this.addlist([
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/danyao1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/danyao2.json`)),
+        ], 'dropsDanyao');
+        this.deletelist('dropsDaoju');
+        this.addlist([
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju2.json`))
+        ], 'dropsDaoju');
+        this.deletelist('dropsGongfa');
+        this.addlist([
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/gongfa1.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/gongfa2.json`))
+        ], 'dropsGongfa');
         /**
          * id数据头规定
          * 1武器2护具3法宝4道具5功法6丹药
