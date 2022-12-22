@@ -1,8 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
-import fs from 'node:fs';
-import { Gomini,Go, Read_action, ForwardMsg, Add_experiencemax, Add_experience, Add_lingshi, GenerateCD, Add_najie_thing, Read_najie, Write_najie, Read_talent } from '../Xiuxian/Xiuxian.js';
+import { Gomini,Go, Read_action, ForwardMsg, GenerateCD} from '../Xiuxian/Xiuxian.js';
 import { PVE } from '../../model/Battle/Battle.js';
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
