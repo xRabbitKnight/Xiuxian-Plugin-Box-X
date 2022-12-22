@@ -12,7 +12,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 1524
+        "price": 1524,
+        "level": 1
     },
     {
         "id": "2-1-2",
@@ -27,7 +28,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 1922
+        "price": 1922,
+        "level": 1
     },
     {
         "id": "2-1-3",
@@ -42,7 +44,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 2318
+        "price": 2318,
+        "level": 2
     },
     {
         "id": "2-1-4",
@@ -57,7 +60,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 3074
+        "price": 3074,
+        "level": 2
     },
     {
         "id": "2-1-5",
@@ -72,7 +76,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 3830
+        "price": 3830,
+        "level": 3
     },
     {
         "id": "2-1-6",
@@ -87,7 +92,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 4600
+        "price": 4600,
+        "level": 3
     },
     {
         "id": "2-1-7",
@@ -102,7 +108,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 5372
+        "price": 5372,
+        "level": 4
     },
     {
         "id": "2-1-8",
@@ -117,7 +124,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 6138
+        "price": 6138,
+        "level": 4
     },
     {
         "id": "2-1-9",
@@ -132,6 +140,7 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 6906
+        "price": 6906,
+        "level": 5
     }
 ]
