@@ -1,3 +1,5 @@
+import { rand } from "../mathCommon.js";
+
 /**
  * @description: 1v1战斗模型
  * @param {Object} _attacker 攻击者 需求 .name .battleInfo
@@ -99,7 +101,7 @@ async function counterAttack_1v1(_attacker, _target, _msg){
  * @return {bool} 是否暴击
  */
 function ifBurst(_burstRate){
-    return Math.random() * 100 <= _burstRate;
+    return rand(0, 100) <= _burstRate;
 }
 
 /**

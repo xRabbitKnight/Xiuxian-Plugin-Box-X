@@ -16,7 +16,6 @@ export class MonsterRefresh extends plugin {
             name: "定时刷新怪物",
             cron: CRON_REFREASH,
             fnc : () => this.refreshTask(),
-            log : true
         }
     };
 
