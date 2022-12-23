@@ -85,10 +85,7 @@ export const StatuLevel = {
 export async function CheckStatu(_user, _statuLevel) {
     let res = true;
     for (let i = 0; i <= _statuLevel && res; ++i) {
-        logger.info(res);
-        logger.info(checkList[i]);
         res &= (await checkList[i](_user));
-
     }
     return res;
 }
