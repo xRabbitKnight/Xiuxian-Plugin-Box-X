@@ -3,6 +3,7 @@ import config from '../../model/Config.js';
 import { getWarehouseImg, get_najie_img } from '../ShowImeg/showData.js';
 import { segment } from 'oicq';
 import { existplayer, Go, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class UserAction extends plugin {
     constructor() {
         super({
@@ -52,8 +53,7 @@ export class UserAction extends plugin {
         return;
     };
     Lv_up_najie = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -84,8 +84,7 @@ export class UserAction extends plugin {
         return;
     };
     Take_lingshi = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -134,12 +133,7 @@ export class UserAction extends plugin {
      */
     warehousePre = async (e) => {
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);      // 玩家存在
-        if (!ifexistplay) {
-            return false;
-        };
-        const good = await Go(e);       // 玩家可行动
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
             return false;
         };
         const action = await Read_action(usr_qq);

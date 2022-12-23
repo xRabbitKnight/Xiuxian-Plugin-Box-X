@@ -8,9 +8,10 @@ import puppeteer from '../../../../../lib/puppeteer/puppeteer.js';
 import {
     Add_najie_thing,
     ForwardMsg,search_thing_id,Add_experiencemax,
-    Go, monsterbattle,Read_battle,Read_action,
+    monsterbattle,Read_battle,Read_action,
     Read_najie, Write_najie, isNotNull, Read_wealth,Write_wealth
 } from "../../../apps/Xiuxian/Xiuxian.js";
+import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js'
 
 
 //要DIY的话，确保这两个数组长度相等
@@ -92,10 +93,9 @@ export class AssUncharted extends plugin {
     }
 
     async Go_Guild_Secrets(e) {
-        const go =await Go(e);
-        if (!go) {
+        if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
-        }
+        };
         const usr_qq = e.user_id;
         const ifexistplay = await assUtil.existArchive(usr_qq);
         if (!ifexistplay) {

@@ -2,6 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
 import { __PATH, Write_player, point_map,Read_action,Go, GenerateCD, Read_player, Read_wealth, Write_Life, Read_Life, Add_lingshi } from '../Xiuxian/Xiuxian.js';
 import { get_player_img } from '../ShowImeg/showData.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class UserModify extends plugin {
     constructor() {
         super({
@@ -23,8 +24,7 @@ export class UserModify extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Change_name = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -75,8 +75,7 @@ export class UserModify extends plugin {
         return;
     };
     Change_autograph = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
         const usr_qq = e.user_id;

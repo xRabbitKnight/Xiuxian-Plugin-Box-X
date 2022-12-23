@@ -1,6 +1,7 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { Go, Read_action, point_map,existplayer, GenerateCD, __PATH, At, battle,  Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { Read_action, point_map, existplayer, GenerateCD, __PATH, At, battle, Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
 export class Battle extends plugin {
     constructor() {
         super({
@@ -24,11 +25,11 @@ export class Battle extends plugin {
 
 
     Attack = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
-        };
-        const user={
+        }
+
+        const user = {
             A: e.user_id,
             B: 0,
             C: 0,
@@ -41,11 +42,11 @@ export class Battle extends plugin {
         };
         const actionA = await Read_action(user.A);
         const actionB = await Read_action(user.B);
-        if(actionA.region!=actionB.region){
+        if (actionA.region != actionB.region) {
             await e.reply('没找到此人');
             return;
         };
-        if(actionA.address==1 || actionB.address==1){
+        if (actionA.address == 1 || actionB.address == 1) {
             await e.reply('[修仙联盟]普通卫兵:城内不可出手!');
             return;
         };
@@ -55,7 +56,7 @@ export class Battle extends plugin {
             await e.reply(CD);
             return;
         };
-        user.QQ  = await battle(e, user.A, user.B);
+        user.QQ = await battle(e, user.A, user.B);
         const Level = await Read_level(user.A);
         Level.prestige += 1;
         await Write_level(user.A, Level);
@@ -70,7 +71,7 @@ export class Battle extends plugin {
             let equipment = await Read_equipment(user.B);
             if (equipment.length > 0) {
                 const thing = await Anyarray(equipment);
-                equipment = equipment.splice(equipment.indexOf(thing.name), 1); 
+                equipment = equipment.splice(equipment.indexOf(thing.name), 1);
                 await Write_equipment(user.B, equipment);
                 let najie = await Read_najie(user.A);
                 najie = await Add_najie_thing(najie, thing, 1);
@@ -81,12 +82,12 @@ export class Battle extends plugin {
 
         const now_time = new Date().getTime();
         const CDTime = this.xiuxianConfigData.CD.Attack;
-        await redis.set(`xiuxian:player:${user.A}:${CDid}`,now_time);
+        await redis.set(`xiuxian:player:${user.A}:${CDid}`, now_time);
         await redis.expire(`xiuxian:player:${user.A}:${CDid}`, CDTime * 60);
         return;
     };
 
-    
+
     /**
      * 此功能需要回  天机门
      */
@@ -100,10 +101,10 @@ export class Battle extends plugin {
         if (!ifexistplay) {
             return;
         };
-        const action=await Read_action(usr_qq);
-        const address_name='天机门';
-        const map=await point_map(action,address_name);
-        if(!map){
+        const action = await Read_action(usr_qq);
+        const address_name = '天机门';
+        const map = await point_map(action, address_name);
+        if (!map) {
             e.reply(`需回${address_name}`);
             return;
         };
@@ -121,7 +122,7 @@ export class Battle extends plugin {
             }
             e.reply(`[天机门]韩立\n清魔力需要${money}`);
             return;
-        } 
+        }
         else {
             e.reply('[天机门]李逍遥\n你一身清廉');
         };

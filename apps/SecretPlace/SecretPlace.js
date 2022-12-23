@@ -2,7 +2,8 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
 import { segment } from 'oicq';
-import { Go, Read_action, Read_level, ForwardMsg,existplayer, Read_wealth, Write_action, Write_wealth, Read_battle, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { Read_action, Read_level, ForwardMsg,existplayer, Read_wealth, Write_action, Write_wealth, Read_battle, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 const forwardsetTime = []
 const deliverysetTime = [];
 const useraction = [];
@@ -67,8 +68,7 @@ export class SecretPlace extends plugin {
         return;
     };
     returnpoint = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -102,8 +102,7 @@ export class SecretPlace extends plugin {
         return;
     };
     forward = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -145,8 +144,7 @@ export class SecretPlace extends plugin {
         return;
     };
     delivery = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
         };
         const usr_qq = e.user_id;

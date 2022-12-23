@@ -2,7 +2,8 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import common from '../../../../lib/common/common.js';
 import config from '../../model/Config.js';
 import { segment } from 'oicq';
-import { Gomini, Go, offaction, Add_experience, AddBloodToPercent,  existplayer, Read_level, Read_talent, Add_experiencemax } from '../Xiuxian/Xiuxian.js';
+import { offaction, Add_experience, AddBloodToPercent,  existplayer, Read_level, Read_talent, Add_experiencemax } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class PlayerControl extends plugin {
     constructor() {
         super({
@@ -32,8 +33,7 @@ export class PlayerControl extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Biguan = async (e) => {
-        const good = await Gomini(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
         const usr_qq = e.user_id;
@@ -47,8 +47,7 @@ export class PlayerControl extends plugin {
         return true;
     };
     Dagong = async (e) => {
-        const good = await Go(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
         };
         const usr_qq = e.user_id;

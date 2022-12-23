@@ -1,9 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { Gomini,Go, Read_action, ForwardMsg, GenerateCD} from '../Xiuxian/Xiuxian.js';
+import { Read_action, ForwardMsg, GenerateCD} from '../Xiuxian/Xiuxian.js';
 import { PVE } from '../../model/Battle/Battle.js';
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 
 export class BattleSite extends plugin {
     constructor() {
@@ -26,7 +27,7 @@ export class BattleSite extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Kill = async (e) => {
-        if (!await Go(e)) {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
         };
 
@@ -63,10 +64,10 @@ export class BattleSite extends plugin {
     };
 
     Exploremonsters = async (e) => {
-        const good = await Gomini(e);
-        if (!good) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
+
         const usr_qq = e.user_id;
         const action = await Read_action(usr_qq);
         const msg = [];

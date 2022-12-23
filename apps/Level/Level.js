@@ -1,7 +1,8 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
-import { Go, GenerateCD, __PATH, Read_level, Write_level, updata_equipment, Read_Life, Write_Life } from '../Xiuxian/Xiuxian.js';
+import { GenerateCD, __PATH, Read_level, Write_level, updata_equipment, Read_Life, Write_Life } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class Level extends plugin {
     constructor() {
         super({
@@ -31,10 +32,10 @@ export class Level extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     LevelMax_up = async (e) => {
-        const good = await Go(e);
-        if (!good) {
-            return;
-        };
+        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
+            return ;
+        }
+
         const usr_qq = e.user_id;
         const CDTime = this.xiuxianConfigData.CD.LevelMax_up;
         const CDid = '7';
@@ -99,10 +100,9 @@ export class Level extends plugin {
         return;
     };
     Level_up = async (e) => {
-        const good = await Go(e);
-        if (!good) {
-            return;
-        };
+        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
+            return ;
+        }
         const usr_qq = e.user_id;
         const CDTime = this.xiuxianConfigData.CD.Level_up;
         const CDid = '6';
@@ -178,10 +178,9 @@ export class Level extends plugin {
         return;
     };
     fate_up = async (e) => {
-        const good = await Go(e);
-        if (!good) {
-            return;
-        };
+        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
+            return ;
+        }
         const usr_qq = e.user_id;
         const player = await Read_level(usr_qq);
         if (player.level_id != 10) {
