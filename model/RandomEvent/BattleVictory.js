@@ -121,7 +121,7 @@ const addMaxAttack = new RandomEvent({
     odds: 0.15,
     fnc: async (_user, _monster, _msg) => {
         const battleInfo = await Read_battle(_user.user_id);
-        const amount = rand(0, 100) * _monster.level;
+        const amount = rand(10, 100) * _monster.level;
         battleInfo.attack += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你攻击力提升了${amount}！！`);
         await Write_battle(_user.user_id, battleInfo);
@@ -145,7 +145,7 @@ const addMaxDefense = new RandomEvent({
     odds: 0.15,
     fnc: async (_user, _monster, _msg) => {
         const battleInfo = await Read_battle(_user.user_id);
-        const amount = rand(0, 100) * _monster.level;
+        const amount = rand(10, 100) * _monster.level;
         battleInfo.defense += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你防御力提升了${amount}！！`);
         await Write_battle(_user.user_id, battleInfo);
