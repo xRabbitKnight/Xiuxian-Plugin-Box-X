@@ -1,5 +1,8 @@
 import Config from "../Config.js";
 
+/******* 
+ * @description: 读取config中cd配置
+ */
 class CD {
     constructor() {
         if (!CD.instance) {
@@ -11,6 +14,11 @@ class CD {
 }
 export default new CD();
 
+/******* 
+ * @description: 根据actionName获取对应cd时间
+ * @param {string} _ActionName
+ * @return {number} 返回对应的cd时间，若actionName不存在返回-1
+ */
 export function GetActionCDTime(_ActionName){
     const cd = (new CD()).ActionCDTime[_ActionName];
     if(cd == undefined){
