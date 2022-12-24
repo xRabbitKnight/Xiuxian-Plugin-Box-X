@@ -3,15 +3,15 @@ import { Read_battle, Read_Life } from "../../apps/Xiuxian/Xiuxian.js";
 /******* 
  * @description: 检查有无此人存档
  */
-const existPlayer = async (_user) => {
-    const life = (await Read_Life()).find(player => player.qq == _user.user_id);
+const existPlayer = async (_e) => {
+    const life = (await Read_Life()).find(player => player.qq == _e.user_id);
     if (life == undefined) {
-        _user.reply("生死簿上查无此人，请先#降临世界！");
+        _e.reply("生死簿上查无此人，请先#降临世界！");
         return false;
     };
 
     if (life.status == 0) {
-        _user.reply("你此生寿元已尽，请#再入仙途！");
+        _e.reply("你此生寿元已尽，请#再入仙途！");
         return false;
     };
 
@@ -21,9 +21,9 @@ const existPlayer = async (_user) => {
 /******* 
  * @description: 检查是否群中消息
  */
-const isGroup = async (_user) => {
-    if (!_user.isGroup) {
-        _user.reply("该指令必须在多人群中进行！");
+const isGroup = async (_e) => {
+    if (!_e.isGroup) {
+        _e.reply("该指令必须在多人群中进行！");
         return false;
     }
     return true;
@@ -32,10 +32,10 @@ const isGroup = async (_user) => {
 /******* 
  * @description: 检查是否在某行动中
  */
-const action = async (_user) => {
-    const action = await redis.get(`xiuxian:player:${_user.user_id}:action`);
+const action = async (_e) => {
+    const action = await redis.get(`xiuxian:player:${_e.user_id}:action`);
     if (action != undefined) {
-        _user.reply((await JSON.parse(action)).actionName + '中...');
+        _e.reply((await JSON.parse(action)).actionName + '中...');
         return false;
     };
     return true;
@@ -44,9 +44,9 @@ const action = async (_user) => {
 /******* 
  * @description: 检查血量是否充足
  */
-const blood = async (_user) => {
-    if ((await Read_battle(_user.user_id)).nowblood <= 1) {
-        _user.reply("血量不足......");
+const blood = async (_e) => {
+    if ((await Read_battle(_e.user_id)).nowblood <= 1) {
+        _e.reply("血量不足......");
         return false;
     }
     return true;
@@ -78,14 +78,14 @@ export const StatuLevel = {
 
 /******* 
  * @description: 根据状态等级逐级检查是否被封锁
- * @param {*} _user plugin参数e
+ * @param {*} _e plugin参数e
  * @param {number} _statuLevel 状态等级，见上方StatuLevel
  * @return {boolean} 返回状态 false->不可进行 
  */
-export async function CheckStatu(_user, _statuLevel) {
+export async function CheckStatu(_e, _statuLevel) {
     let res = true;
     for (let i = 0; i <= _statuLevel && res; ++i) {
-        res &= (await checkList[i](_user));
+        res &= (await checkList[i](_e));
     }
     return res;
 }
