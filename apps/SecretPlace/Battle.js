@@ -1,7 +1,9 @@
 import plugin from '../../../../lib/plugins/plugin.js';
+import { AddActionCD } from '../../model/CD/AddCD.js';
+import { CheckCD } from '../../model/CD/CheckCD.js';
 import config from '../../model/Config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { Read_action, point_map, existplayer, GenerateCD, __PATH, At, battle, Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
+import { Read_action, point_map, existplayer, __PATH, At, battle, Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
 export class Battle extends plugin {
     constructor() {
         super({
@@ -25,8 +27,12 @@ export class Battle extends plugin {
 
 
     Attack = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.canBattle)) {
+        if (!CheckStatu(e, StatuLevel.canBattle)) {
             return;
+        }
+
+        if(CheckCD(e, 'Attack')){
+            return ;
         }
 
         const user = {
@@ -50,12 +56,7 @@ export class Battle extends plugin {
             await e.reply('[修仙联盟]普通卫兵:城内不可出手!');
             return;
         };
-        const CDid = '0';
-        const CD = await GenerateCD(user.A, CDid);
-        if (CD != 0) {
-            await e.reply(CD);
-            return;
-        };
+
         user.QQ = await battle(e, user.A, user.B);
         const Level = await Read_level(user.A);
         Level.prestige += 1;
@@ -80,10 +81,7 @@ export class Battle extends plugin {
             };
         };
 
-        const now_time = new Date().getTime();
-        const CDTime = this.xiuxianConfigData.CD.Attack;
-        await redis.set(`xiuxian:player:${user.A}:${CDid}`, now_time);
-        await redis.expire(`xiuxian:player:${user.A}:${CDid}`, CDTime * 60);
+        await AddActionCD(e, 'Attack');
         return;
     };
 

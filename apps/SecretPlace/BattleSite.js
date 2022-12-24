@@ -1,10 +1,12 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { Read_action, ForwardMsg, GenerateCD} from '../Xiuxian/Xiuxian.js';
+import { Read_action, ForwardMsg} from '../Xiuxian/Xiuxian.js';
 import { PVE } from '../../model/Battle/Battle.js';
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { CheckCD } from '../../model/CD/CheckCD.js';
+import { AddActionCD } from '../../model/CD/AddCD.js';
 
 export class BattleSite extends plugin {
     constructor() {
@@ -27,18 +29,15 @@ export class BattleSite extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Kill = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.canBattle)) {
+        if (!CheckStatu(e, StatuLevel.canBattle)) {
             return;
         };
 
+        if(CheckCD(e, 'Kill')){
+            return;
+        }
+        
         const usr_qq = e.user_id;
-        const CDid = '10';
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
-
         const monsterName = e.msg.replace('#击杀', '');
         const action = await Read_action(usr_qq);
         const monsters = MonsterMgr.GetMonsters(action.region);
@@ -54,17 +53,13 @@ export class BattleSite extends plugin {
             await BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
             
-        const now_time = new Date().getTime();
-        const CDTime = this.xiuxianConfigData.CD.Kill;
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`, now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
-        
+        await AddActionCD(e, 'Kill');
         await ForwardMsg(e, msg);
         return;
     };
 
     Exploremonsters = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inAction)) {
+        if (!CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
 

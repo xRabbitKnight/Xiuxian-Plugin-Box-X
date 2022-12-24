@@ -1,8 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
-import { GenerateCD, __PATH, Read_level, Write_level, updata_equipment, Read_Life, Write_Life } from '../Xiuxian/Xiuxian.js';
+import { __PATH, Read_level, Write_level, updata_equipment, Read_Life, Write_Life } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { CheckCD } from '../../model/CD/CheckCD.js';
+import { AddActionCD } from '../../model/CD/AddCD.js';
 export class Level extends plugin {
     constructor() {
         super({
@@ -32,19 +34,17 @@ export class Level extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     LevelMax_up = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
+        if(!CheckStatu(e, StatuLevel.canLevelUp)){
             return ;
         }
 
+        if(CheckCD(e, 'LevelMaxUp')){
+            return ;
+        }
+
+        await AddActionCD(e, 'LevelMaxUp');
+
         const usr_qq = e.user_id;
-        const CDTime = this.xiuxianConfigData.CD.LevelMax_up;
-        const CDid = '7';
-        const now_time = new Date().getTime();
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
         const player = await Read_level(usr_qq);
         const LevelMax = data.LevelMax_list.find(item => item.id == player.levelmax_id);
         if (player.experiencemax < LevelMax.exp) {
@@ -54,8 +54,7 @@ export class Level extends plugin {
         if (player.levelmax_id >= 11) {
             return;
         };
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
+        
         if (player.levelmax_id > 1 && player.rankmax_id < 4) {
             player.rankmax_id = player.rankmax_id + 1;
             player.experiencemax -= LevelMax.exp;
@@ -84,8 +83,6 @@ export class Level extends plugin {
             };
             player.experiencemax -= LevelMax.exp * x;
             await Write_level(usr_qq, player);
-            await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-            await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
             return;
         };
         player.levelmax_id = player.levelmax_id + 1;
@@ -95,23 +92,20 @@ export class Level extends plugin {
         await Write_level(usr_qq, player);
         await updata_equipment(usr_qq);
         e.reply(`突破成功至${player.levelnamemax}${player.rank_name[player.rankmax_id]}`);
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
         return;
     };
     Level_up = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
+        if(!CheckStatu(e, StatuLevel.canLevelUp)){
             return ;
         }
+        
+        if(CheckCD(e, 'LevelUp')){
+            return ;
+        }
+
+        await AddActionCD(e, 'LevelUp');
+
         const usr_qq = e.user_id;
-        const CDTime = this.xiuxianConfigData.CD.Level_up;
-        const CDid = '6';
-        const now_time = new Date().getTime();
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
         const player = await Read_level(usr_qq);
         if (player.level_id >= 11) {
             return;
@@ -125,8 +119,7 @@ export class Level extends plugin {
             e.reply(`请先渡劫!`);
             return;
         };
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
+        
         if (player.level_id > 1 && player.rank_id < 4) {
             player.rank_id = player.rank_id + 1;
             player.experience -= Level.exp;
@@ -155,8 +148,6 @@ export class Level extends plugin {
             };
             player.experience -= Level.exp * x;
             await Write_level(usr_qq, player);
-            await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-            await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
             return;
         };
         player.level_id = player.level_id + 1;
@@ -173,8 +164,6 @@ export class Level extends plugin {
             };
         });
         await Write_Life(life);
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
         return;
     };
     fate_up = async (e) => {

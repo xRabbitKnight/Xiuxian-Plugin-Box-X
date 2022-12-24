@@ -788,55 +788,6 @@ export const offaction = async (qq) => {
     };
     return;
 };
-
-//0     1     2      3      4     5       6     7      8      9     10    11   12   13   14
-const CDname = ['攻击', '降妖', '闭关', '改名', '道宣', '赠送', '突破', '破体', '转世', '行为', '击杀', '  ', '  ', '  ', '  '];
-/**
- * 冷却检测
- */
-export const GenerateCD = async (usr_qq, CDid) => {
-    const remainTime = await redis.ttl('xiuxian:player:' + usr_qq + ':' + CDid);
-    const time = {
-        h: 0,
-        m: 0,
-        s: 0
-    };
-    if (remainTime != -1) {
-        time.h = Math.floor(remainTime / 60 / 60);
-        time.h = time.h < 0 ? 0 : time.h;
-        time.m = Math.floor((remainTime - time.h * 60 * 60) / 60);
-        time.m = time.m < 0 ? 0 : time.m;
-        time.s = Math.floor((remainTime - time.h * 60 * 60 - time.m * 60));
-        time.s = time.s < 0 ? 0 : time.s;
-        if (time.h == 0 && time.m == 0 && time.s == 0) {
-            return 0;
-        };
-        return CDname[CDid] + '冷却:' + time.h + 'h' + time.m + 'm' + time.s + 's';
-    };
-    return 0;
-};
-//插件CD检测
-export const GenerateCDplugin = async (usr_qq, CDid, CDnameplugin) => {
-    const remainTime = await redis.ttl('xiuxian:player:' + usr_qq + ':' + CDid);
-    const time = {
-        h: 0,
-        m: 0,
-        s: 0
-    };
-    if (remainTime != -1) {
-        time.h = Math.floor(remainTime / 60 / 60);
-        time.h = time.h < 0 ? 0 : time.h;
-        time.m = Math.floor((remainTime - time.h * 60 * 60) / 60);
-        time.m = time.m < 0 ? 0 : time.m;
-        time.s = Math.floor((remainTime - time.h * 60 * 60 - time.m * 60));
-        time.s = time.s < 0 ? 0 : time.s;
-        if (time.h == 0 && time.m == 0 && time.s == 0) {
-            return 0;
-        };
-        return CDnameplugin[CDid] + '冷却:' + time.h + 'h' + time.m + 'm' + time.s + 's';
-    };
-    return 0;
-};
 //写入
 export const Write_Forum = async (wupin) => {
     await Write(`Forum`, wupin, __PATH.Forum);

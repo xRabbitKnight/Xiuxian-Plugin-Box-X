@@ -1,8 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { __PATH, Write_player, point_map,Read_action,GenerateCD, Read_player, Read_wealth, Write_Life, Read_Life, Add_lingshi } from '../Xiuxian/Xiuxian.js';
+import { __PATH, Write_player, point_map,Read_action, Read_player, Read_wealth, Write_Life, Read_Life, Add_lingshi } from '../Xiuxian/Xiuxian.js';
 import { get_player_img } from '../ShowImeg/showData.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { CheckCD } from '../../model/CD/CheckCD.js';
+import { AddActionCD } from '../../model/CD/AddCD.js';
 export class UserModify extends plugin {
     constructor() {
         super({
@@ -24,9 +26,13 @@ export class UserModify extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Change_name = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inAction)) {
+        if (!CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
+
+        if(CheckCD(e, 'ReName')){
+            return ;
+        }
         const usr_qq = e.user_id;
         const action =await Read_action(usr_qq);
         const address_name='联盟';
@@ -53,16 +59,7 @@ export class UserModify extends plugin {
             e.reply(`需${lingshi}灵石`);
             return;
         };
-        const CDid = '3';
-        const now_time = new Date().getTime();
-        const CDTime = this.xiuxianConfigData.CD.Name;
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
+
         await Add_lingshi(usr_qq, -lingshi);
         const life = await Read_Life();
         life.forEach((item) => {
@@ -72,12 +69,17 @@ export class UserModify extends plugin {
         });
         await Write_Life(life);
         this.Show_player(e);
+        await AddActionCD(e, 'ReName');
         return;
     };
     Change_autograph = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inAction)) {
+        if (!CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
+
+        if(CheckCD(e, 'Autograph')){
+            return ;
+        }
         const usr_qq = e.user_id;
         const player = await Read_player(usr_qq);
         let new_msg = e.msg.replace('#设置道宣', '');
@@ -90,19 +92,10 @@ export class UserModify extends plugin {
             e.reply('请正确设置,且道宣最多50字符');
             return;
         };
-        const CDid = '4';
-        const now_time = new Date().getTime();
-        const CDTime = this.xiuxianConfigData.CD.Autograph;
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`,now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
         player.autograph = new_msg;
         await Write_player(usr_qq, player);
         this.Show_player(e);
+        await AddActionCD(e, 'Autograph');
         return;
     };
     Show_player = async (e) => {

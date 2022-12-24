@@ -3,8 +3,10 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import fs from 'fs';
 import { segment } from 'oicq';
-import { existplayer, __PATH, Write_player, GenerateCD, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray, writeWarehouse } from '../Xiuxian/Xiuxian.js';
+import { existplayer, __PATH, Write_player, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray, writeWarehouse } from '../Xiuxian/Xiuxian.js';
 import { get_player_img } from '../ShowImeg/showData.js';
+import { CheckCD } from '../../model/CD/CheckCD.js';
+import { AddActionCD } from '../../model/CD/AddCD.js';
 export class UserStart extends plugin {
     constructor() {
         super({
@@ -135,14 +137,9 @@ export class UserStart extends plugin {
     };
     reCreate_player = async (e) => {
         const usr_qq = e.user_id;
-        const CDTime = this.xiuxianConfigData.CD.Reborn;
-        const CDid = '8';
-        const now_time = new Date().getTime();
-        const CD = await GenerateCD(usr_qq, CDid);
-        if (CD != 0) {
-            e.reply(CD);
-            return;
-        };
+        if(CheckCD(e, 'ReBorn')){
+            return ;
+        }
         await offaction(usr_qq);
         fs.rmSync(`${__PATH.player}/${usr_qq}.json`);
         let life = await Read_Life();
@@ -150,8 +147,7 @@ export class UserStart extends plugin {
         await Write_Life(life);
         e.reply([segment.at(usr_qq), '来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断']);
         await this.Create_player(e);
-        await redis.set(`xiuxian:player:${usr_qq}:${CDid}`, now_time);
-        await redis.expire(`xiuxian:player:${usr_qq}:${CDid}`, CDTime * 60);
+        await AddActionCD(e, 'ReBorn');
         return;
     };
 };
