@@ -2,7 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
 import { getWarehouseImg, get_najie_img } from '../ShowImeg/showData.js';
 import { segment } from 'oicq';
-import { existplayer, Go, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
+import { existplayer, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class UserAction extends plugin {
     constructor() {

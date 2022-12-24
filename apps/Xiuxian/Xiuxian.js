@@ -788,60 +788,7 @@ export const offaction = async (qq) => {
     };
     return;
 };
-/**
- * 状态封锁查询
- */
-export const Gomini = async (e) => {
-    if (!e.isGroup) {
-        return false;
-    };
-    const usr_qq = e.user_id;
-    const ifexistplay = await existplayer(usr_qq);
-    if (!ifexistplay) {
-        return false;
-    };
-    let action = await redis.get('xiuxian:player:' + usr_qq + ':action');
-    if (action != undefined) {
-        action = JSON.parse(action);
-        if (action.actionName == undefined) {
-            e.reply('存在旧版本残留,请联系主人使用#删除数据');
-            return false;
-        };
-        e.reply(action.actionName + '中...')
-        return false;
-    };
-    return true;
-};
 
-/**
- * 状态封锁查询
- */
-export const Go = async (e) => {
-    if (!e.isGroup) {
-        return false;
-    };
-    const usr_qq = e.user_id;
-    const ifexistplay = await existplayer(usr_qq);
-    if (!ifexistplay) {
-        return false;
-    };
-    let action = await redis.get('xiuxian:player:' + usr_qq + ':action');
-    if (action != undefined) {
-        action = JSON.parse(action);
-        if (action.actionName == undefined) {
-            e.reply('存在旧版本残留,请联系主人使用#删除数据');
-            return false;
-        };
-        e.reply(action.actionName + '中...')
-        return false;
-    };
-    const player = await Read_battle(usr_qq);
-    if (player.nowblood <= 1) {
-        e.reply('血量不足...');
-        return false;
-    };
-    return true;
-};
 //0     1     2      3      4     5       6     7      8      9     10    11   12   13   14
 const CDname = ['攻击', '降妖', '闭关', '改名', '道宣', '赠送', '突破', '破体', '转世', '行为', '击杀', '  ', '  ', '  ', '  '];
 /**
