@@ -27,11 +27,11 @@ export class Battle extends plugin {
 
 
     Attack = async (e) => {
-        if (!CheckStatu(e, StatuLevel.canBattle)) {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
         }
 
-        if(CheckCD(e, 'Attack')){
+        if(await CheckCD(e, 'Attack')){
             return ;
         }
 

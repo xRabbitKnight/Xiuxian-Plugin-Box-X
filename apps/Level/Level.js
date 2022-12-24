@@ -34,11 +34,11 @@ export class Level extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     LevelMax_up = async (e) => {
-        if(!CheckStatu(e, StatuLevel.canLevelUp)){
+        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
             return ;
         }
 
-        if(CheckCD(e, 'LevelMaxUp')){
+        if(await CheckCD(e, 'LevelMaxUp')){
             return ;
         }
 
@@ -95,11 +95,11 @@ export class Level extends plugin {
         return;
     };
     Level_up = async (e) => {
-        if(!CheckStatu(e, StatuLevel.canLevelUp)){
+        if(!await CheckStatu(e, StatuLevel.canLevelUp)){
             return ;
         }
         
-        if(CheckCD(e, 'LevelUp')){
+        if(await CheckCD(e, 'LevelUp')){
             return ;
         }
 

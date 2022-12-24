@@ -26,11 +26,11 @@ export class UserModify extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Change_name = async (e) => {
-        if (!CheckStatu(e, StatuLevel.inAction)) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
 
-        if(CheckCD(e, 'ReName')){
+        if(await CheckCD(e, 'ReName')){
             return ;
         }
         const usr_qq = e.user_id;
@@ -73,11 +73,11 @@ export class UserModify extends plugin {
         return;
     };
     Change_autograph = async (e) => {
-        if (!CheckStatu(e, StatuLevel.inAction)) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
 
-        if(CheckCD(e, 'Autograph')){
+        if(await CheckCD(e, 'Autograph')){
             return ;
         }
         const usr_qq = e.user_id;

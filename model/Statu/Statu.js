@@ -80,7 +80,7 @@ export const StatuLevel = {
  * @description: 根据状态等级，逐级检查是否可继续进行，内部回复状态封锁原因
  * @param {*} _e plugin参数e
  * @param {number} _statuLevel 状态等级，见上方StatuLevel
- * @return {boolean} 返回状态 false->不可进行 
+ * @return {Promise<boolean>} 返回状态 false->不可进行 
  */
 export async function CheckStatu(_e, _statuLevel) {
     let res = true;

@@ -29,11 +29,11 @@ export class BattleSite extends plugin {
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
     Kill = async (e) => {
-        if (!CheckStatu(e, StatuLevel.canBattle)) {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
         };
 
-        if(CheckCD(e, 'Kill')){
+        if(await CheckCD(e, 'Kill')){
             return;
         }
         
@@ -59,7 +59,7 @@ export class BattleSite extends plugin {
     };
 
     Exploremonsters = async (e) => {
-        if (!CheckStatu(e, StatuLevel.inAction)) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
 
