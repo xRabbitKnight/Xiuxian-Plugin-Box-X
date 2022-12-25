@@ -1,12 +1,11 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
-import { Read_action, ForwardMsg} from '../Xiuxian/Xiuxian.js';
-import { PVE } from '../../model/Battle/Battle.js';
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
+import { PVE } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
+import { Read_action, ForwardMsg } from '../Xiuxian/Xiuxian.js';
 
 export class BattleSite extends plugin {
     constructor() {
@@ -22,57 +21,50 @@ export class BattleSite extends plugin {
                 },
                 {
                     reg: '^#探索怪物$',
-                    fnc: 'Exploremonsters'
+                    fnc: 'ExploreMonsters'
                 }
             ]
         });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
+
     Kill = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
         };
 
-        if(await CheckCD(e, 'Kill')){
+        if (await CheckCD(e, 'Kill')) {
             return;
         }
-        
-        const usr_qq = e.user_id;
+
+        const action = await Read_action(e.user_id);
         const monsterName = e.msg.replace('#击杀', '');
-        const action = await Read_action(usr_qq);
-        const monsters = MonsterMgr.GetMonsters(action.region);
-        const targetMonster = monsters.find(item => item.name == monsterName);
+        const targetMonster = MonsterMgr.GetMonsters(action.region).find(item => item.name == monsterName);
         if (!targetMonster) {
             e.reply(`这里没有${monsterName},去别处看看吧`);
             return;
         };
-        const msg = [`${usr_qq}的[击杀结果]\n注:怪物每1小时刷新`];
+
+        const msg = [`${e.sender.nickname}的[击杀结果]\n注:怪物每1小时刷新`];
         const battleResult = await PVE(e, targetMonster, msg);
-        if(battleResult){
+        if (battleResult) {
             msg.push(`采集出售从${targetMonster.name}获取的战利品，你获得了${targetMonster.level * 100}灵石`);
             await BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
-            
+
         await AddActionCD(e, 'Kill');
         await ForwardMsg(e, msg);
         return;
     };
 
-    Exploremonsters = async (e) => {
+    ExploreMonsters = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         };
 
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const msg = [];
+        const action = await Read_action(e.user_id);
         const monsters = MonsterMgr.GetMonsters(action.region);
-        monsters.forEach((item) => {
-            msg.push(
-                '怪名:' + item.name + '\n' +
-                '等级:' + item.level + '\n'
-            );
-        });
+        const msg = [];
+        monsters.forEach(monster => msg.push(`怪名:${monster.name}\n等级:${monster.level}`));
         await ForwardMsg(e, msg);
         return;
     };
