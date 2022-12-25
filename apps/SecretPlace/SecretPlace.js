@@ -113,8 +113,7 @@ export class SecretPlace extends plugin {
             e.reply([segment.at(e.user_id), `成功抵达${address}`]);
         }, timeCost * 1000); //参数是ms，所以*1000
 
-        redis.set(`xiuxian:player:${e.user_id}:moving`, `正在前往${address}`);
-        redis.expire(`xiuxian:player:${e.user_id}:moving`, timeCost);
+        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost,`正在前往${address}`);
 
         e.reply(`正在前往${address}...\n需要${timeCost}秒`);
     };
@@ -172,8 +171,7 @@ export class SecretPlace extends plugin {
             e.reply([segment.at(e.user_id), `成功传送至${address}`]);
         }, 1000 * timeCost); //参数是ms，所以*1000
 
-        redis.set(`xiuxian:player:${e.user_id}:moving`, `正在前往${address}`);
-        redis.expire(`xiuxian:player:${e.user_id}:moving`, timeCost);
+        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost,`正在前往${address}`);
 
         e.reply(`传送${address}\n需要${timeCost}秒`);
         return;
