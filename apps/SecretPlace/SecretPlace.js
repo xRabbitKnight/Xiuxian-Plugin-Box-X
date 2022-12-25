@@ -2,11 +2,11 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
 import { segment } from 'oicq';
-import { Read_action, Read_level, ForwardMsg,existplayer, Read_wealth, Write_action, Write_wealth, Read_battle, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { Read_action, ForwardMsg, Read_wealth, Write_action, Write_wealth, Read_battle, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-const forwardsetTime = []
-const deliverysetTime = [];
-const useraction = [];
+import { inRange, rand } from '../../model/mathCommon.js';
+
+const isMoving = [];
 export class SecretPlace extends plugin {
     constructor() {
         super({
@@ -17,195 +17,165 @@ export class SecretPlace extends plugin {
             rule: [
                 {
                     reg: '^#坐标信息$',
-                    fnc: 'xyzaddress'
+                    fnc: 'ShowCoordinate'
                 },
                 {
                     reg: '^#前往.*$',
-                    fnc: 'forward'
+                    fnc: 'GoTo'
                 },
                 {
                     reg: '^#回到原地$',
-                    fnc: 'returnpoint'
+                    fnc: 'GoBack'
                 },
                 {
                     reg: '^#传送.*$',
-                    fnc: 'delivery'
+                    fnc: 'Teleport'
                 },
                 {
                     reg: '^#位置信息$',
-                    fnc: 'show_city'
+                    fnc: 'ShowCity'
                 }
             ]
         });
     };
-    show_city = async (e) => {
-        if (!e.isGroup) {
+
+    ShowCity = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action=await Read_action(usr_qq);
-        if(action.address!=1){
+        }
+
+        const action = await Read_action(e.user_id);
+        if (action.address != 1) {
             e.reply('你对这里并不了解...');
             return;
-        };
-        const addressId=`${action.z}-${action.region}-${action.address}`;
-        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`));
-        const address=[];
-        const msg=[];
-        point.forEach((item)=>{
-            if(item.id.includes(addressId)){
-                address.push(item);
-            };
-        });
-        address.forEach((item)=>{
-            msg.push(`地点名:${item.name}\n坐标(${item.x},${item.y})`)
-        });
-        await ForwardMsg(e,msg);
-        return;
+        }
+
+        const addressId = `${action.z}-${action.region}-${action.address}`;
+        const points = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).filter(item => item.id.includes(addressId));
+        const msg = [];
+        points.forEach(point => msg.push(`地点名:${point.name}\n坐标:(${point.x},${point.y})`));
+        await ForwardMsg(e, msg);
     };
-    returnpoint = async (e) => {
+
+    GoBack = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
+            return;
+        }
+
+        redis.del(`xiuxian:player:${e.user_id}:moving`);
+        clearTimeout(isMoving[e.user_id]);
+        e.reply('你回到了原地');
+    };
+
+    ShowCoordinate = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        forwardsetTime[usr_qq] = 0;
-        clearTimeout(useraction[usr_qq]);
-        e.reply('你回到了原地');
-        return;
-    };
-    xyzaddress = async (e) => {
-        if (!e.isGroup) {
-            return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action = await Read_action(usr_qq);
+        }
+
+        const action = await Read_action(e.user_id);
         const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
-        const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.x1 <= action.x && item.y1 <= action.y && item.x2 >= action.x && item.y2 >= action.y);
-        const msg = [
-            `坐标(${action.x},${action.y},${action.z})`
-        ]
+        const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => inRange(action.x, item.x1, item.x2) && inRange(action.y, item.y1, item.y2));
+        const msg = [`坐标:(${action.x},${action.y})`];
         if (position) {
             msg.push(`所在区域: ${position.name}`);
-        };
+        }
         if (point) {
             msg.push(`所在地点: ${point.name}`);
-        };
+        }
+
         await ForwardMsg(e, msg);
-        return;
     };
-    forward = async (e) => {
+
+    GoTo = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        if (forwardsetTime[usr_qq] == 1) {
-            return;
-        };
-        const action = await Read_action(usr_qq);
-        const x = action.x;
-        const y = action.y;
+        }
+
         const address = e.msg.replace('#前往', '');
         const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.name == address);
         if (!point) {
+            await e.reply(`地图上没有${address}!`);
             return;
-        };
-        const mx = point.x;
-        const my = point.y;
-        const PointId = point.id.split('-');
-        const level = await Read_level(usr_qq);
-        if (level.level_id < PointId[3]) {
-            e.reply('[修仙联盟]守境者\n道友请留步');
-            return;
-        };
-        const a = x - mx >= 0 ? x - mx : mx - x;
-        const b = y - my >= 0 ? y - my : my - y;
-        const battle = await Read_battle(usr_qq);
-        const the = Math.floor((a + b)-(a + b)*battle.speed*0.01);
-        const time = the >= 0 ? the : 1;
-        useraction[usr_qq] = setTimeout(async () => {
-            forwardsetTime[usr_qq] = 0;
-            action.x = mx;
-            action.y = my;
-            action.region = PointId[1];
-            action.address = PointId[2];
-            await Write_action(usr_qq, action);
-            e.reply([segment.at(usr_qq), `成功抵达${address}`]);
-        }, 1000 * time);
-        forwardsetTime[usr_qq] = 1;
-        e.reply(`正在前往${address}...\n需要${time}秒`);
-        return;
+        }
+
+        const action = await Read_action(e.user_id);
+        const distance = Math.abs(action.x - point.x) + Math.abs(action.y - point.y);
+        const speed = (await Read_battle(e.user_id)).speed;
+        const timeCost = Math.floor(distance * (1 - speed * 0.01)) + 1;
+
+        isMoving[e.user_id] = setTimeout(async () => {
+            const [_, regionId, addressId] = point.id.split('-');
+            action.x = point.x;
+            action.y = point.y;
+            action.region = regionId;
+            action.address = addressId;
+            await Write_action(e.user_id, action);
+            e.reply([segment.at(e.user_id), `成功抵达${address}`]);
+        }, timeCost * 1000); //参数是ms，所以*1000
+
+        redis.set(`xiuxian:player:${e.user_id}:moving`, `正在前往${address}`);
+        redis.expire(`xiuxian:player:${e.user_id}:moving`, timeCost);
+
+        e.reply(`正在前往${address}...\n需要${timeCost}秒`);
     };
-    delivery = async (e) => {
+
+    Teleport = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
         };
-        const usr_qq = e.user_id;
-        if (deliverysetTime[usr_qq] == 1) {
-            return;
-        };
-        const action = await Read_action(usr_qq);
-        const x = action.x;
-        const y = action.y;
+
         const address = e.msg.replace('#传送', '');
         const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.name == address);
         if (!position) {
+            await e.reply(`地图上没有${address}!`);
             return;
         };
-        const positionID = position.id.split('-');
-        const level = await Read_level(usr_qq);
-        if (level.level_id < positionID[3]) {
-            e.reply('[修仙联盟]守境者\n道友请留步');
-            return;
-        };
-        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`));
-        let key = 0;
-        point.forEach((item) => {
-            if (item.id.split('-')[4] == 2 && item.x == x && item.y == y)
-                key = 1;
-        });
 
-        const najie_scroll = await exist_najie_thing_id(usr_qq, "6-1-3");
-        if (key == 0 && najie_scroll == 1) {
+        const action = await Read_action(e.user_id);
+        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
+        const inPortal = point?.id.split('-')[4] == 2;                                 //是否在传送阵
+        const haveScroll = (await exist_najie_thing_id(e.user_id, "6-1-3")) != 1;      //是否有传送卷轴
+
+        if (!inPortal && !haveScroll) {
             await e.reply('请前往传送阵或者使用传送卷轴！');
             return;
         };
 
-        const wealth = await Read_wealth(usr_qq);
-        const lingshi = 1000;
-        if (wealth.lingshi < lingshi) {
-            e.reply(`[修仙联盟]守阵者\n需要花费${lingshi}灵石`);
+        const wealth = await Read_wealth(e.user_id);
+        const cost = 1000;
+        if (wealth.lingshi < cost) {
+            e.reply(`传送需要花费${cost}灵石`);
             return;
         };
-        wealth.lingshi -= lingshi;
-        await Write_wealth(usr_qq, wealth);
-        if(key == 0){ //不在传送点， 消耗传送卷轴
-            let najie = await Read_najie(usr_qq);
-            najie = await Add_najie_thing(najie, najie_scroll, -1);
-            await Write_najie(usr_qq, najie);
-        }   
-        const mx = Math.floor((Math.random() * (position.x2 - position.x1))) + Number(position.x1);
-        const my = Math.floor((Math.random() * (position.y2 - position.y1))) + Number(position.y1);
-        const the = Math.floor(((x - mx >= 0 ? x - mx : mx - x) + (y - my >= 0 ? y - my : my - y)) / 100);
-        const time = the > 0 ? the : 1;
-        setTimeout(async () => {
-            deliverysetTime[usr_qq] = 0;
-            action.x = mx;
-            action.y = my;
-            action.region = positionID[1];
-            action.address = positionID[2];
-            await Write_action(usr_qq, action);
-            e.reply([segment.at(usr_qq), `成功传送至${address}`]);
-        }, 1000 * time);
-        deliverysetTime[usr_qq] = 1;
-        e.reply(`[修仙联盟]守阵者\n传送${address}\n需要${time}秒`);
+        wealth.lingshi -= cost;
+        await Write_wealth(e.user_id, wealth);
+
+        if (!inPortal) { //不在传送点， 消耗传送卷轴
+            let najie = await Read_najie(e.user_id);
+            najie = await Add_najie_thing(najie, {"id" : "6-1-3"}, -1);
+            await Write_najie(e.user_id, najie);
+        }
+
+        const target = { 
+            "x": rand(position.x1, position.x2), 
+            "y": rand(position.y1, position.y2) 
+        };
+        const distance = Math.abs(action.x - target.x) + Math.abs(action.y - target.y);
+        const timeCost = Math.floor(distance / 100) + 1;
+        isMoving[e.user_id] = setTimeout(async () => {
+            const [_, regionId, addressId] = position.id.split('-');
+            action.x = target.x;
+            action.y = target.y;
+            action.region = regionId;
+            action.address = addressId;
+            await Write_action(e.user_id, action);
+            e.reply([segment.at(e.user_id), `成功传送至${address}`]);
+        }, 1000 * timeCost); //参数是ms，所以*1000
+
+        redis.set(`xiuxian:player:${e.user_id}:moving`, `正在前往${address}`);
+        redis.expire(`xiuxian:player:${e.user_id}:moving`, timeCost);
+
+        e.reply(`传送${address}\n需要${timeCost}秒`);
         return;
     };
 };

@@ -42,6 +42,18 @@ const action = async (_e) => {
 }
 
 /******* 
+ * @description: 检查是否在赶路中
+ */
+const moving = async (_e) => {
+    const action = await redis.get(`xiuxian:player:${_e.user_id}:moving`);
+    if (action != undefined) {
+        _e.reply(action + '中...');
+        return false;
+    };
+    return true;
+}
+
+/******* 
  * @description: 检查血量是否充足
  */
 const blood = async (_e) => {
@@ -60,6 +72,7 @@ const checkList = [
     existPlayer,
     isGroup,
     action,
+    moving,
     blood,
 ];
 
@@ -70,10 +83,11 @@ export const StatuLevel = {
     "exist": 0,
     "inGroup": 1,
     "inAction": 2,
-    "canBattle": 3,
-    "canMove": 3,
-    "canGive": 3,
-    "canLevelUp": 3,
+    "isMoving" : 3,
+    "canBattle": 4,
+    "canMove": 4,
+    "canGive": 4,
+    "canLevelUp": 4,
 }
 
 /******* 
