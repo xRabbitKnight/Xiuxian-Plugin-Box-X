@@ -83,7 +83,7 @@ export async function AddItemById(_uid, _itemId, _count){
  */
  export async function GetItemByName(_uid, _itemName){
     const backpackInfo = await GetBackpackInfo(_uid);
-    return backpackInfo?.thing.find(item => item.name = _itemName);
+    return backpackInfo?.thing.find(item => item.name == _itemName);
 }
 
 /*******--------------------------------------------------------------内部函数
