@@ -23,6 +23,11 @@ export async function SetActionInfo(_uid, _actionInfo) {
     SetInfo(_uid, _actionInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
+/******* 
+ * @description: 获取玩家所在区域
+ * @param {string} _uid 玩家id
+ * @return {number} 区域编号，获取失败返回undefined
+ */
 export async function GetPlayerRegion(_uid){
     const actionInfo = await GetActionInfo(_uid);
     return actionInfo?.region;
