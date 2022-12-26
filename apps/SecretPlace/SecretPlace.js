@@ -126,7 +126,7 @@ export class SecretPlace extends plugin {
         const address = e.msg.replace('#传送', '');
         const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.name == address);
         if (!position) {
-            await e.reply(`地图上没有${address}!`);
+            e.reply(`地图上没有${address}!`);
             return;
         };
 
