@@ -93,7 +93,7 @@ export class UserTransaction extends plugin {
             return;
         };
         
-        AddSpiritStone(e.user_id, -commodities_price);
+        await AddSpiritStone(e.user_id, -commodities_price);      //异步写入目前没有太好的解决方案，短时间连续相同写入请加await等待执行完成
         AddItemByObj(e.user_id, ifexist, count)
         
         e.reply(`[凡仙堂]薛仁贵\n你花[${commodities_price}]灵石购买了[${name}]*${count},`);
@@ -121,7 +121,7 @@ export class UserTransaction extends plugin {
             return;
         }
         
-        AddSpiritStone(e.user_id, prop.price * count);
+        await AddSpiritStone(e.user_id, prop.price * count);        //异步写入目前没有太好的解决方案，短时间连续相同写入请加await等待执行完成
         AddItemByObj(e.user_id, prop, -count)
         
         e.reply(`[凡仙堂]欧阳峰\n出售得${prop.price * count}灵石 `);
