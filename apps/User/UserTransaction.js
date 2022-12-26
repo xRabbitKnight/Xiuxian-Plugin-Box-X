@@ -1,7 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
-import { Numbers, Read_wealth, Add_lingshi, point_map, exist_najie_thing_name,Add_najie_thing,  existplayer, ForwardMsg, __PATH, Read_najie, Write_najie, Read_action } from '../Xiuxian/Xiuxian.js';
+import { point_map, ForwardMsg, __PATH, Read_action } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { clamp, forceNumber } from '../../model/mathCommon.js';
+import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/Backpack.js';
 export class UserTransaction extends plugin {
     constructor() {
         super({
@@ -12,11 +15,11 @@ export class UserTransaction extends plugin {
             rule: [
                 {
                     reg: '^#购买.*$',
-                    fnc: 'Buy_comodities'
+                    fnc: 'Buy'
                 },
                 {
                     reg: '^#出售.*$',
-                    fnc: 'Sell_comodities'
+                    fnc: 'Sell'
                 },
                 {
                     reg: '^#凡仙堂$',
@@ -26,15 +29,15 @@ export class UserTransaction extends plugin {
         });
     };
     ningmenghome = async (e) => {
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
+
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
-        const action =await Read_action(usr_qq);
-        const address_name='凡仙堂';
-        const map=await point_map(action,address_name);
-        if(!map){
+        }
+        const usr_qq = e.user_id;
+        const action = await Read_action(usr_qq);
+        const address_name = '凡仙堂';
+        const map = await point_map(action, address_name);
+        if (!map) {
             e.reply(`需回${address_name}`);
             return;
         };
@@ -54,101 +57,73 @@ export class UserTransaction extends plugin {
             else if (id[0] == 5) {
                 msg.push(`物品:${item.name}\n天赋:${item.size}%\n价格:${item.price}`);
             }
-            else{
+            else {
                 msg.push(`物品:${item.name}\n价格:${item.price}`);
             };
         });
-        await ForwardMsg(e, msg);
-        return;
+        ForwardMsg(e, msg);
     };
-    Buy_comodities = async (e) => {
-        if (!e.isGroup) {
+
+    Buy = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
+        }
+
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action =await Read_action(usr_qq);
-        const address_name='凡仙堂';
-        const map=await point_map(action,address_name);
-        if(!map){
+        const action = await Read_action(usr_qq);
+        const address_name = '凡仙堂';
+        const map = await point_map(action, address_name);
+        if (!map) {
             e.reply(`需回${address_name}`);
             return;
         };
-        const thing = e.msg.replace('#购买', '');
-        const code = thing.split('\*');
-        const [thing_name,thing_acount] = code;
-        const the={
-            "quantity":99,
-            "najie":{}
-        };
-        the.quantity = await Numbers(thing_acount);
-        if (the.quantity > 99) {
-            the.quantity = 99;
-        };
-        const ifexist = JSON.parse(fs.readFileSync(`${data.__PATH.all}/commodities.json`)).find(item => item.name == thing_name);
+
+        let [name, count] = e.msg.replace('#购买', '').split('\*');
+        count = clamp(forceNumber(count), 1, 99);
+
+        const ifexist = JSON.parse(fs.readFileSync(`${data.__PATH.all}/commodities.json`)).find(item => item.name == name);
         if (!ifexist) {
             e.reply(`[凡仙堂]小二\n不卖:${thing_name}`);
             return;
         };
-        const player = await Read_wealth(usr_qq);
-        const lingshi = player.lingshi;
-        const commodities_price = ifexist.price * the.quantity;
-        if (lingshi < commodities_price) {
+
+        const commodities_price = ifexist.price * count;
+        if ((await GetSpiritStoneCount(e.user_id)) < commodities_price) {
             e.reply(`[凡仙堂]小二\n灵石不足`);
             return;
         };
-        the.najie = await Read_najie(usr_qq);
-        the.najie = await Add_najie_thing(the.najie, ifexist, the.quantity);
-        await Write_najie(usr_qq, the.najie);
-        await Add_lingshi(usr_qq, -commodities_price);
-        e.reply(`[凡仙堂]薛仁贵\n你花[${commodities_price}]灵石购买了[${thing_name}]*${the.quantity},`);
-        return;
+        
+        AddSpiritStone(e.user_id, -commodities_price);
+        AddItemByObj(e.user_id, ifexist, count)
+        
+        e.reply(`[凡仙堂]薛仁贵\n你花[${commodities_price}]灵石购买了[${name}]*${count},`);
     };
-    Sell_comodities = async (e) => {
-        if (!e.isGroup) {
+
+    Sell = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
+        }
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action =await Read_action(usr_qq);
-        const address_name='凡仙堂';
-        const map=await point_map(action,address_name);
-        if(!map){
+        const action = await Read_action(usr_qq);
+        const address_name = '凡仙堂';
+        const map = await point_map(action, address_name);
+        if (!map) {
             e.reply(`需回${address_name}`);
             return;
         };
-        const thing = e.msg.replace('#出售', '');
-        const code = thing.split('\*');
-        const [thing_name,thing_acount] = code;//数量
-        const the={
-            "quantity":99,
-            "najie":{}
-        };
-        the.quantity = await Numbers(thing_acount);
-        if (the.quantity > 99) {
-            the.quantity = 99;
-        };
-        const najie_thing = await exist_najie_thing_name(usr_qq, thing_name);
-        if (najie_thing == 1) {
-            e.reply(`[凡仙堂]小二\n你没[${thing_name}]`);
+
+        let [name, count] = e.msg.replace('#出售', '').split('\*');
+        count = clamp(forceNumber(count), 1, 99);
+
+        const prop = await GetItemByName(e.user_id, name);
+        if (prop == undefined || prop.acount < count) {
+            e.reply(`[凡仙堂]小二\n你没似乎没有${propName} * ${count}`);
             return;
-        };
-        if (najie_thing.acount < the.quantity) {
-            e.reply('[凡仙堂]小二\n数量不足');
-            return;
-        };
-        the.najie = await Read_najie(usr_qq);
-        the.najie = await Add_najie_thing(the.najie, najie_thing, -the.quantity);
-        await Write_najie(usr_qq, the.najie);
-        const commodities_price = najie_thing.price * the.quantity;
-        await Add_lingshi(usr_qq, commodities_price);
-        e.reply(`[凡仙堂]欧阳峰\n出售得${commodities_price}灵石 `);
-        return;
+        }
+        
+        AddSpiritStone(e.user_id, prop.price * count);
+        AddItemByObj(e.user_id, prop, -count)
+        
+        e.reply(`[凡仙堂]欧阳峰\n出售得${prop.price * count}灵石 `);
     };
 };

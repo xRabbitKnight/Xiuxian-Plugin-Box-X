@@ -3,8 +3,11 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import { segment } from 'oicq';
 import fs from 'node:fs';
-import { Read_action, point_map, Read_level, Read_najie, Add_najie_thing, Write_najie, exist_najie_thing_name, Numbers, Add_lingshi, At, Read_wealth, Write_wealth, Write_action } from '../Xiuxian/Xiuxian.js';
+import { Read_action, point_map, Read_level, Read_najie, Add_najie_thing, Write_najie, Add_lingshi, At, Write_action } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { forceNumber } from '../../model/mathCommon.js';
+import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/Backpack.js';
+
 export class MoneyOperation extends plugin {
     constructor() {
         super({
@@ -15,11 +18,11 @@ export class MoneyOperation extends plugin {
             rule: [
                 {
                     reg: '^#赠送灵石.*$',
-                    fnc: 'Give_lingshi'
+                    fnc: 'GiveSpiritStone'
                 },
                 {
                     reg: '^#赠送.*$',
-                    fnc: 'Give_prop'
+                    fnc: 'GiveProp'
                 },
                 {
                     reg: '^#联盟报到$',
@@ -62,7 +65,7 @@ export class MoneyOperation extends plugin {
         return;
     };
 
-    Give_lingshi = async (e) => {
+    GiveSpiritStone = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
         };
@@ -71,33 +74,27 @@ export class MoneyOperation extends plugin {
         const doneeId = await At(e);
 
         if (doneeId == 0) {
-            await e.reply("获赠者不存在！");
+            e.reply("获赠者不存在！");
             return;
         };
 
         if (doneeId == giverId) {
-            await e.reply("请不要赠送给自己！");
+            e.reply("请不要赠送给自己！");
             return;
         }
 
-        let lingshi = await Numbers(e.msg.replace('#赠送灵石', ''));
-        lingshi = Math.max(lingshi, 50);
-
-        const giverWealth = await Read_wealth(giverId);
-        if (giverWealth.lingshi < lingshi) {
-            await e.reply([segment.at(giverId), `似乎没有${lingshi}灵石`]);
+        const count = Math.max(forceNumber(e.msg.replace('#赠送灵石', '')), 1);
+        if ((await GetSpiritStoneCount(giverId)) < count) {
+            e.reply([segment.at(giverId), `似乎没有${count}灵石.`]);
             return;
         };
 
-        giverWealth.lingshi -= lingshi;
-        await Write_wealth(giverId, giverWealth);
-        await Add_lingshi(doneeId, lingshi);
-        await e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${lingshi}灵石`]);
+        AddSpiritStone(giverId, -count);
+        AddSpiritStone(doneeId, count);
+        e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${count}灵石.`]);
+    }
 
-        return;
-    };
-
-    Give_prop = async (e) => {
+    GiveProp = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
         };
@@ -106,33 +103,26 @@ export class MoneyOperation extends plugin {
         const doneeId = await At(e);
 
         if (doneeId == 0) {
-            await e.reply("获赠者不存在！");
+            e.reply("获赠者不存在！");
             return;
         };
 
         if (doneeId == giverId) {
-            await e.reply("请不要赠送给自己！");
+            e.reply("请不要赠送给自己！");
             return;
         }
 
-        let [propName, count] = await e.msg.replace('#赠送', '').replace('{at:*}', '').split('*');
-        count = count == undefined ? 1 : count;
-
-        let prop = await exist_najie_thing_name(giverId, propName);
-        if (prop == 1 || prop.acount < count) {
-            await e.reply([segment.at(giverId), `似乎没有${propName} * ${count}`]);
+        let [propName, count] = e.msg.replace('#赠送', '').replace('{at:*}', '').split('*');
+        count = Math.max(forceNumber(count), 1);
+        
+        const prop = await GetItemByName(giverId, propName);
+        if (prop == undefined || prop.acount < count) {
+            e.reply([segment.at(giverId), `似乎没有${propName} * ${count}`]);
             return;
         }
 
-        let giverPack = await Read_najie(giverId);
-        let doneePack = await Read_najie(doneeId);
-
-        giverPack = await Add_najie_thing(giverPack, prop, -count);
-        doneePack = await Add_najie_thing(doneePack, prop, count);
-        await Write_najie(giverId, giverPack);
-        await Write_najie(doneeId, doneePack);
-
-        await e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${propName} * ${count}`]);
-        return;
+        AddItemByObj(giverId, prop, -count);
+        AddItemByObj(doneeId, prop, count);
+        e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${propName} * ${count}`]);
     }
 };

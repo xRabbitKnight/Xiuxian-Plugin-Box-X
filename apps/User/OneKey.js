@@ -1,6 +1,8 @@
 import plugin from '../../../../lib/plugins/plugin.js';
+import { AddSpiritStone, GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/Backpack.js';
 import config from '../../model/Config.js';
-import { Add_lingshi, existplayer,point_map,Read_action, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { point_map, Read_action } from '../Xiuxian/Xiuxian.js';
 export class OneKey extends plugin {
     constructor() {
         super({
@@ -28,41 +30,36 @@ export class OneKey extends plugin {
      */
 
     OneKey_all = async (e) => {
-        if (!e.isGroup) {
+        if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
-        };
+        }
+
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action=await Read_action(usr_qq);
-        const address_name='万宝楼';
-        const map=await point_map(action,address_name);
-        if(!map){
+        const action = await Read_action(usr_qq);
+        const address_name = '万宝楼';
+        const map = await point_map(action, address_name);
+        if (!map) {
             e.reply(`需回${address_name}`);
             return;
         };
-        let najie = await Read_najie(usr_qq);
+
+        const backpack = await GetBackpackInfo(e.user_id);
         let money = 0;
-        for (let item of najie.thing) {
+        for (let item of backpack.thing) {
             money += item.acount * item.price;
         };
-        await Add_lingshi(usr_qq, money);
-        najie.thing = [];
-        await Write_najie(usr_qq, najie);
+        AddSpiritStone(e.user_id, money);
+        backpack.thing = [];
+        SetBackpackInfo(e.user_id, backpack);
+
         e.reply(`[蜀山派]叶铭\n这是${money}灵石,道友慢走`);
         return;
     };
+
     OneKey_key = async (e) => {
-        if (!e.isGroup) {
+        if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
+        }
         return;
     };
 };
