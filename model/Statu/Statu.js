@@ -1,4 +1,5 @@
-import { Read_battle, Read_Life } from "../../apps/Xiuxian/Xiuxian.js";
+import { Read_Life } from "../../apps/Xiuxian/Xiuxian.js";
+import { GetBattleInfo } from "../Cache/Battle.js";
 
 /******* 
  * @description: 检查有无此人存档
@@ -35,7 +36,7 @@ const isGroup = async (_e) => {
 const action = async (_e) => {
     const action = await redis.get(`xiuxian:player:${_e.user_id}:action`);
     if (action != undefined) {
-        _e.reply((await JSON.parse(action)).actionName + '中...');
+        _e.reply(JSON.parse(action).actionName + '中...');
         return false;
     };
     return true;
@@ -57,7 +58,7 @@ const moving = async (_e) => {
  * @description: 检查血量是否充足
  */
 const blood = async (_e) => {
-    if ((await Read_battle(_e.user_id)).nowblood <= 1) {
+    if ((await GetBattleInfo(_e.user_id)).nowblood <= 1) {
         _e.reply("血量不足......");
         return false;
     }

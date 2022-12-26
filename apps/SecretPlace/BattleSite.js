@@ -5,7 +5,8 @@ import { PVE } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
-import { Read_action, ForwardMsg } from '../Xiuxian/Xiuxian.js';
+import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
+import { GetPlayerRegion } from '../../model/Cache/Action.js';
 
 export class BattleSite extends plugin {
     constructor() {
@@ -36,9 +37,8 @@ export class BattleSite extends plugin {
             return;
         }
 
-        const action = await Read_action(e.user_id);
         const monsterName = e.msg.replace('#击杀', '');
-        const targetMonster = MonsterMgr.GetMonsters(action.region).find(item => item.name == monsterName);
+        const targetMonster = MonsterMgr.GetMonsters(await GetPlayerRegion(e.user_id)).find(item => item.name == monsterName);
         if (!targetMonster) {
             e.reply(`这里没有${monsterName},去别处看看吧`);
             return;
@@ -51,8 +51,8 @@ export class BattleSite extends plugin {
             await BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
 
-        await AddActionCD(e, 'Kill');
-        await ForwardMsg(e, msg);
+        AddActionCD(e, 'Kill');
+        ForwardMsg(e, msg);
         return;
     };
 
@@ -61,11 +61,9 @@ export class BattleSite extends plugin {
             return;
         };
 
-        const action = await Read_action(e.user_id);
-        const monsters = MonsterMgr.GetMonsters(action.region);
+        const monsters = MonsterMgr.GetMonsters(await GetPlayerRegion(e.user_id));
         const msg = [];
         monsters.forEach(monster => msg.push(`怪名:${monster.name}\n等级:${monster.level}`));
-        await ForwardMsg(e, msg);
-        return;
+        ForwardMsg(e, msg);
     };
 };

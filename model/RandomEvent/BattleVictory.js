@@ -1,8 +1,10 @@
 import fs from 'node:fs'
 import data from '../XiuxianData.js'
 import RandomEvent from "./RandomEvent.js";
-import { Add_experience, Add_experiencemax, Add_lingshi, Add_najie_thing, Read_battle, Read_najie, Write_battle, Write_najie } from "../../apps/Xiuxian/Xiuxian.js";
 import { rand, clamp } from '../mathCommon.js'
+import { GetBattleInfo, SetBattleInfo } from '../Cache/Battle.js';
+import { AddExp, AddExpMax } from '../Cache/Level.js';
+import { AddItemByObj, AddSpiritStone } from '../Cache/Backpack.js';
 
 const MaxLevel = 10;    //目前掉落物品的最高最低等级
 const MinLevel = 0;
@@ -14,7 +16,7 @@ const addLargeExp = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const exp = rand(700, 1000) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你发现了一颗完整的内丹，服下后你的修为提升了${exp}！！`);
-        await Add_experience(_e.user_id, exp);
+        AddExp(_e.user_id, exp);
     }
 });
 
@@ -24,7 +26,7 @@ const addMediumExp = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const exp = rand(200, 500) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你发现了怪物的内丹被拍碎了，只剩下一颗残破的内丹，服下后你的修为提升了${exp}！`);
-        await Add_experience(_e.user_id, exp);
+        AddExp(_e.user_id, exp);
     }
 });
 
@@ -34,7 +36,7 @@ const addLargeExpHP = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const expHP = rand(700, 1000) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你提炼出一瓶高品质精血，服下后你的气血提升了${expHP}！！`);
-        await Add_experiencemax(_e.user_id, expHP);
+        AddExpMax(_e.user_id, expHP);
     }
 });
 
@@ -44,7 +46,7 @@ const addMediumExpHP = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const expHP = rand(200, 500) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你提炼出一瓶带有瑕疵的精血，服下后你的气血提升了${expHP}！`);
-        await Add_experiencemax(_e.user_id, expHP);
+        AddExpMax(_e.user_id, expHP);
     }
 });
 
@@ -54,7 +56,7 @@ const getLargeMoney = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const money = rand(700, 1000) * _monster.level;
         _msg.push(`跟随濒死的${_monster.name}，你发现了一条灵石矿脉，你获得了${money}灵石！！`);
-        await Add_lingshi(_e.user_id, money);
+        AddSpiritStone(_e.user_id, money);
     }
 });
 
@@ -64,7 +66,7 @@ const getMediumMoney = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const money = rand(200, 500) * _monster.level;
         _msg.push(`击杀${_monster.name}，你在旁边发现一个储物袋，你获得了${money}灵石！`);
-        await Add_lingshi(_e.user_id, money);
+        AddSpiritStone(_e.user_id, money);
     }
 });
 
@@ -76,7 +78,7 @@ const getAheadEquipment = new RandomEvent({
         const equipmentList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsEquipment.json`)).filter(item => item.level >= targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`跟随濒死的${_monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`);
-        await Write_najie(_e.user_id, await Add_najie_thing(await Read_najie(_e.user_id), equipment, 1));
+        AddItemByObj(_e.user_id, equipment, 1);
     }
 });
 
@@ -88,7 +90,7 @@ const getRelateEquipment = new RandomEvent({
         const equipmentList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsEquipment.json`)).filter(item => item.level == targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`在${_monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`);
-        await Write_najie(_e.user_id, await Add_najie_thing(await Read_najie(_e.user_id), equipment, 1));
+        AddItemByObj(_e.user_id, equipment, 1);
     }
 });
 
@@ -100,7 +102,7 @@ const getAheadGongfa = new RandomEvent({
         const gongfaList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsGongfa.json`)).filter(item => item.level >= targetLevel);
         const gongfa = gongfaList[rand(0, gongfaList.length)];
         _msg.push(`跟随濒死的${_monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${gongfa.name}！！`);
-        await Write_najie(_e.user_id, await Add_najie_thing(await Read_najie(_e.user_id), gongfa, 1));
+        AddItemByObj(_e.user_id, gongfa, 1);
     }
 });
 
@@ -112,7 +114,7 @@ const getRelateGongfa = new RandomEvent({
         const gongfaList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsGongfa.json`)).filter(item => item.level == targetLevel);
         const gongfa = gongfaList[rand(0, gongfaList.length)];
         _msg.push(`在${_monster.name}旁边，你发现一件东西掉在地上，你获得了${gongfa.name}！！`);
-        await Write_najie(_e.user_id, await Add_najie_thing(await Read_najie(_e.user_id), gongfa, 1));
+        AddItemByObj(_e.user_id, gongfa, 1);
     }
 });
 
@@ -120,11 +122,11 @@ const getRelateGongfa = new RandomEvent({
 const addMaxAttack = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await Read_battle(_e.user_id);
+        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
         battleInfo.attack += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你攻击力提升了${amount}！！`);
-        await Write_battle(_e.user_id, battleInfo);
+        SetBattleInfo(_e.user_id, battleInfo);
     }
 });
 
@@ -132,11 +134,11 @@ const addMaxAttack = new RandomEvent({
 const addMaxBlood = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await Read_battle(_e.user_id);
+        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(50, 500) * _monster.level;
         battleInfo.blood += amount;
         _msg.push(`在和${_monster.name}战斗后，你浑身气血涌动，你生命值提升了${amount}！！`);
-        await Write_battle(_e.user_id, battleInfo);
+        SetBattleInfo(_e.user_id, battleInfo);
     }
 });
 
@@ -144,11 +146,11 @@ const addMaxBlood = new RandomEvent({
 const addMaxDefense = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await Read_battle(_e.user_id);
+        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
         battleInfo.defense += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你防御力提升了${amount}！！`);
-        await Write_battle(_e.user_id, battleInfo);
+        SetBattleInfo(_e.user_id, battleInfo);
     }
 });
 
