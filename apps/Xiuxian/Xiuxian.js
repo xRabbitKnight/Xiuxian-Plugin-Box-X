@@ -6,17 +6,17 @@ import data from '../../model/XiuxianData.js';
 export const __dirname = `${path.resolve()}${path.sep}plugins${path.sep}Xiuxian-Plugin-Box`;
 //插件地址链
 export const __PATH = {
-    player: path.join(__dirname, '/resources/data/birth/xiuxian/player'),
-    action: path.join(__dirname, '/resources/data/birth/xiuxian/action'),
-    battle: path.join(__dirname, '/resources/data/birth/xiuxian/battle'),
-    equipment: path.join(__dirname, '/resources/data/birth/xiuxian/equipment'),
-    level: path.join(__dirname, '/resources/data/birth/xiuxian/level'),
-    talent: path.join(__dirname, '/resources/data/birth/xiuxian/talent'),
-    wealth: path.join(__dirname, '/resources/data/birth/xiuxian/wealth'),
-    najie: path.join(__dirname, '/resources/data/birth/xiuxian/najie'),
+    player: path.join(__dirname, '/resources/data/birth/player/player'),
+    action: path.join(__dirname, '/resources/data/birth/player/action'),
+    battle: path.join(__dirname, '/resources/data/birth/player/battle'),
+    equipment: path.join(__dirname, '/resources/data/birth/player/equipment'),
+    level: path.join(__dirname, '/resources/data/birth/player/level'),
+    talent: path.join(__dirname, '/resources/data/birth/player/talent'),
+    wealth: path.join(__dirname, '/resources/data/birth/player/wealth'),
+    najie: path.join(__dirname, '/resources/data/birth/player/najie'),
+    life: path.join(__dirname, '/resources/data/birth/player/life'),
     Exchange: path.join(__dirname, '/resources/data/birth/Exchange'),
     Forum: path.join(__dirname, '/resources/data/birth/Forum'),
-    life: path.join(__dirname, '/resources/data/birth/xiuxian/life'),
 
     warehouse: path.join(__dirname, '/resources/data/birth/xiuxian/warehouse')
 };
