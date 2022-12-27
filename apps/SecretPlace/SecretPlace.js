@@ -2,11 +2,12 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
 import { segment } from 'oicq';
-import { Read_action, ForwardMsg, Write_action, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { Read_action, ForwardMsg, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { inRange, rand } from '../../model/mathCommon.js';
 import { AddSpiritStone, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 import { GetSpeed } from '../../model/Cache/player/Battle.js';
+import { GetActionInfo, SetActionInfo } from '../../model/Cache/player/Action.js';
 
 const isMoving = [];
 export class SecretPlace extends plugin {
@@ -100,7 +101,7 @@ export class SecretPlace extends plugin {
             return;
         }
 
-        const action = await Read_action(e.user_id);
+        const action = await GetActionInfo(e.user_id);
         const distance = Math.abs(action.x - point.x) + Math.abs(action.y - point.y);
         const speed = await GetSpeed(e.user_id);
         const timeCost = Math.floor(distance * (1 - speed * 0.01)) + 1;
@@ -111,11 +112,11 @@ export class SecretPlace extends plugin {
             action.y = point.y;
             action.region = regionId;
             action.address = addressId;
-            await Write_action(e.user_id, action);
+            SetActionInfo(e.user_id, action);
             e.reply([segment.at(e.user_id), `成功抵达${address}`]);
         }, timeCost * 1000); //参数是ms，所以*1000
 
-        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost,`正在前往${address}`);
+        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost, `正在前往${address}`);
 
         e.reply(`正在前往${address}...\n需要${timeCost}秒`);
     };
@@ -132,7 +133,7 @@ export class SecretPlace extends plugin {
             return;
         };
 
-        const action = await Read_action(e.user_id);
+        const action = await GetActionInfo(e.user_id);
         const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
         const inPortal = point?.id.split('-')[4] == 2;                                 //是否在传送阵
         const haveScroll = (await exist_najie_thing_id(e.user_id, "6-1-3")) != 1;      //是否有传送卷轴
@@ -148,18 +149,18 @@ export class SecretPlace extends plugin {
             e.reply(`传送需要花费${cost}灵石`);
             return;
         };
-        AddSpiritStone(_e.user_id, -cost);
-        
+        AddSpiritStone(e.user_id, -cost);
+
 
         if (!inPortal) { //不在传送点， 消耗传送卷轴
             let najie = await Read_najie(e.user_id);
-            najie = await Add_najie_thing(najie, {"id" : "6-1-3"}, -1);
+            najie = await Add_najie_thing(najie, { "id": "6-1-3" }, -1);
             await Write_najie(e.user_id, najie);
         }
 
-        const target = { 
-            "x": rand(position.x1, position.x2), 
-            "y": rand(position.y1, position.y2) 
+        const target = {
+            "x": rand(position.x1, position.x2),
+            "y": rand(position.y1, position.y2)
         };
         const distance = Math.abs(action.x - target.x) + Math.abs(action.y - target.y);
         const timeCost = Math.floor(distance / 100) + 1;
@@ -169,11 +170,11 @@ export class SecretPlace extends plugin {
             action.y = target.y;
             action.region = regionId;
             action.address = addressId;
-            await Write_action(e.user_id, action);
+            SetActionInfo(e.user_id, action);
             e.reply([segment.at(e.user_id), `成功传送至${address}`]);
         }, 1000 * timeCost); //参数是ms，所以*1000
 
-        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost,`正在前往${address}`);
+        redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost, `正在前往${address}`);
 
         e.reply(`传送${address}\n需要${timeCost}秒`);
         return;

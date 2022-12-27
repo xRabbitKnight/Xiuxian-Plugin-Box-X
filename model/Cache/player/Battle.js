@@ -29,6 +29,6 @@ export async function SetBattleInfo(_uid, _battleInfo) {
  * @return {Promise<number>} 返回移动速度，获取失败时返回undefined
  */
 export async function GetSpeed(_uid){
-    const battleInfo = GetBattleInfo(_uid);
+    const battleInfo = await GetBattleInfo(_uid);
     return battleInfo?.speed;
 }
