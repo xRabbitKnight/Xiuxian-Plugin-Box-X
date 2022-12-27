@@ -22,3 +22,13 @@ export async function GetBattleInfo(_uid) {
 export async function SetBattleInfo(_uid, _battleInfo) {
     SetInfo(_uid, _battleInfo, redisKey, `${PATH}/${_uid}.json`);
 }
+
+/*******
+ * @description: 获取玩家移动速度
+ * @param {string} _uid 玩家id
+ * @return {Promise<number>} 返回移动速度，获取失败时返回undefined
+ */
+export async function GetSpeed(_uid){
+    const battleInfo = GetBattleInfo(_uid);
+    return battleInfo?.speed;
+}

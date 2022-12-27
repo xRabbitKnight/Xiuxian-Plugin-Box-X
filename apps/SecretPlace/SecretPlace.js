@@ -2,9 +2,11 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
 import { segment } from 'oicq';
-import { Read_action, ForwardMsg, Read_wealth, Write_action, Write_wealth, Read_battle, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { Read_action, ForwardMsg, Write_action, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { inRange, rand } from '../../model/mathCommon.js';
+import { AddSpiritStone, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
+import { GetSpeed } from '../../model/Cache/player/Battle.js';
 
 const isMoving = [];
 export class SecretPlace extends plugin {
@@ -100,7 +102,7 @@ export class SecretPlace extends plugin {
 
         const action = await Read_action(e.user_id);
         const distance = Math.abs(action.x - point.x) + Math.abs(action.y - point.y);
-        const speed = (await Read_battle(e.user_id)).speed;
+        const speed = await GetSpeed(e.user_id);
         const timeCost = Math.floor(distance * (1 - speed * 0.01)) + 1;
 
         isMoving[e.user_id] = setTimeout(async () => {
@@ -136,18 +138,18 @@ export class SecretPlace extends plugin {
         const haveScroll = (await exist_najie_thing_id(e.user_id, "6-1-3")) != 1;      //是否有传送卷轴
 
         if (!inPortal && !haveScroll) {
-            await e.reply('请前往传送阵或者使用传送卷轴！');
+            e.reply('请前往传送阵或者使用传送卷轴！');
             return;
         };
 
-        const wealth = await Read_wealth(e.user_id);
+        const wealth = await GetSpiritStoneCount(e.user_id);
         const cost = 1000;
-        if (wealth.lingshi < cost) {
+        if (wealth != undefined && wealth < cost) {
             e.reply(`传送需要花费${cost}灵石`);
             return;
         };
-        wealth.lingshi -= cost;
-        await Write_wealth(e.user_id, wealth);
+        AddSpiritStone(_e.user_id, -cost);
+        
 
         if (!inPortal) { //不在传送点， 消耗传送卷轴
             let najie = await Read_najie(e.user_id);
