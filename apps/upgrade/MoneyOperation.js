@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import { Read_action, point_map, Read_level, Read_najie, Add_najie_thing, Write_najie, Add_lingshi, At, Write_action } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { forceNumber } from '../../model/mathCommon.js';
-import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/Backpack.js';
+import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 
 export class MoneyOperation extends plugin {
     constructor() {

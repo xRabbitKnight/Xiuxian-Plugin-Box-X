@@ -1,8 +1,8 @@
-import { __PATH } from '../../apps/Xiuxian/Xiuxian.js';
-import { forceNumber } from '../mathCommon.js';
+import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:BackpackInfo";
+const redisKey = "xiuxian:player:backpackInfo";
 const PATH = __PATH.najie;
 
 //--------------------------------------------------------------全部背包基础信息获取与更新方法

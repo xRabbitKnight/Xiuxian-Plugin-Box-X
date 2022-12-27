@@ -1,5 +1,5 @@
-import { __PATH } from '../../apps/Xiuxian/Xiuxian.js';
-import { ReadSync, WriteAsync } from '../File/File.js';
+import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import { ReadSync, WriteAsync } from '../../File/File.js';
 
 /** ***** 
  * @description: 从cache里获取玩家的信息, 若没有则读文件, 读文件失败返回undefine

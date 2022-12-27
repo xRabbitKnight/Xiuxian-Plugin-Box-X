@@ -1,5 +1,5 @@
 import { Read_Life } from "../../apps/Xiuxian/Xiuxian.js";
-import { GetBattleInfo } from "../Cache/Battle.js";
+import { GetBattleInfo } from "../Cache/player/Battle.js";
 
 /******* 
  * @description: 检查有无此人存档

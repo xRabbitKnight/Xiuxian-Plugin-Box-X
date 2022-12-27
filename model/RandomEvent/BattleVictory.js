@@ -2,9 +2,9 @@ import fs from 'node:fs'
 import data from '../XiuxianData.js'
 import RandomEvent from "./RandomEvent.js";
 import { rand, clamp } from '../mathCommon.js'
-import { GetBattleInfo, SetBattleInfo } from '../Cache/Battle.js';
-import { AddExp, AddExpMax } from '../Cache/Level.js';
-import { AddItemByObj, AddSpiritStone } from '../Cache/Backpack.js';
+import { GetBattleInfo, SetBattleInfo } from '../Cache/player/Battle.js';
+import { AddExp, AddExpMax } from '../Cache/player/Level.js';
+import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';
 
 const MaxLevel = 10;    //目前掉落物品的最高最低等级
 const MinLevel = 0;

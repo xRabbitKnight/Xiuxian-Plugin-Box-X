@@ -1,7 +1,7 @@
-import { __PATH } from '../../apps/Xiuxian/Xiuxian.js';
+import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:ActionInfo";
+const redisKey = "xiuxian:player:actionInfo";
 const PATH = __PATH.action;
 
 /******* 

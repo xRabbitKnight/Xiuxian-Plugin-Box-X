@@ -1,8 +1,8 @@
-import { __PATH } from '../../apps/Xiuxian/Xiuxian.js';
-import { forceNumber } from '../mathCommon.js';
+import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:LevelInfo";
+const redisKey = "xiuxian:player:levelInfo";
 const PATH = __PATH.level;
 
 /******* 

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import { point_map, ForwardMsg, __PATH, Read_action } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { clamp, forceNumber } from '../../model/mathCommon.js';
-import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/Backpack.js';
+import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 export class UserTransaction extends plugin {
     constructor() {
         super({

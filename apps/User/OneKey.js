@@ -1,5 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { AddSpiritStone, GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/Backpack.js';
+import { AddSpiritStone, GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
 import config from '../../model/Config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { point_map, Read_action } from '../Xiuxian/Xiuxian.js';

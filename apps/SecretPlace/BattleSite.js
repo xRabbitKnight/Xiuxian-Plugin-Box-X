@@ -6,7 +6,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
-import { GetPlayerRegion } from '../../model/Cache/Action.js';
+import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 
 export class BattleSite extends plugin {
     constructor() {

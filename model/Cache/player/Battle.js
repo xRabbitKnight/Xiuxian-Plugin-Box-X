@@ -1,7 +1,7 @@
-import { __PATH } from '../../apps/Xiuxian/Xiuxian.js';
+import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:BattleInfo";
+const redisKey = "xiuxian:player:battleInfo";
 const PATH = __PATH.battle;
 
 /******* 

@@ -1,6 +1,6 @@
 import MonsterMgr from "../Region/MonsterMgr.js";
 import { Model_1v1 } from "./BattleModel_1v1.js";
-import { GetBattleInfo, SetBattleInfo } from "../Cache/Battle.js";
+import { GetBattleInfo, SetBattleInfo } from "../Cache/player/Battle.js";
 
 /**
  * @description: PVE 1v1战斗
