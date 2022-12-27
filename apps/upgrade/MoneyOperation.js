@@ -3,10 +3,11 @@ import data from '../../model/XiuxianData.js';
 import config from '../../model/Config.js';
 import { segment } from 'oicq';
 import fs from 'node:fs';
-import { Read_action, point_map, Read_level, Read_najie, Add_najie_thing, Write_najie, Add_lingshi, At, Write_action } from '../Xiuxian/Xiuxian.js';
+import { Read_level, Read_najie, Add_najie_thing, Write_najie, Add_lingshi, At, Write_action } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { forceNumber } from '../../model/mathCommon.js';
-import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
+import { AddItemByObj as bpAddItem, AddSpiritStone as bpAddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
+import { AddItemByObj as whAddItem, AddSpiritStone as whAddSpiritStone } from '../../model/Cache/player/Warehouse.js';
 
 export class MoneyOperation extends plugin {
     constructor() {
@@ -32,12 +33,12 @@ export class MoneyOperation extends plugin {
         });
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
-    
+
     New_lingshi = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
         };
-        
+
         if (!await IfAtSpot(e.user_id, '联盟')) {
             e.reply(`需回联盟`);
             return;
@@ -89,8 +90,8 @@ export class MoneyOperation extends plugin {
             return;
         };
 
-        AddSpiritStone(giverId, -count);
-        AddSpiritStone(doneeId, count);
+        bpAddSpiritStone(giverId, -count);
+        whAddSpiritStone(doneeId, count);
         e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${count}灵石.`]);
     }
 
@@ -114,15 +115,15 @@ export class MoneyOperation extends plugin {
 
         let [propName, count] = e.msg.replace('#赠送', '').replace('{at:*}', '').split('*');
         count = Math.max(forceNumber(count), 1);
-        
+
         const prop = await GetItemByName(giverId, propName);
         if (prop == undefined || prop.acount < count) {
             e.reply([segment.at(giverId), `似乎没有${propName} * ${count}`]);
             return;
         }
 
-        AddItemByObj(giverId, prop, -count);
-        AddItemByObj(doneeId, prop, count);
+        bpAddItem(giverId, prop, -count);
+        whAddItem(doneeId, prop, count);
         e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的${propName} * ${count}`]);
     }
 };
