@@ -6,7 +6,7 @@ import data from '../../model/XiuxianData.js';
 export const __dirname = `${path.resolve()}${path.sep}plugins${path.sep}Xiuxian-Plugin-Box`;
 //插件地址链
 export const __PATH = {
-    player: path.join(__dirname, '/resources/data/birth/player/player'),
+    players: path.join(__dirname, '/resources/data/birth/player/players.json'),
     action: path.join(__dirname, '/resources/data/birth/player/action'),
     battle: path.join(__dirname, '/resources/data/birth/player/battle'),
     equipment: path.join(__dirname, '/resources/data/birth/player/equipment'),
