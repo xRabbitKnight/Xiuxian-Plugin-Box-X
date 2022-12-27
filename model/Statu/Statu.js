@@ -1,11 +1,11 @@
-import { Read_Life } from "../../apps/Xiuxian/Xiuxian.js";
 import { GetBattleInfo } from "../Cache/player/Battle.js";
+import { GetLifeInfo } from "../Cache/player/Life.js";
 
 /******* 
  * @description: 检查有无此人存档
  */
 const existPlayer = async (_e) => {
-    const life = (await Read_Life()).find(player => player.qq == _e.user_id);
+    const life = await GetLifeInfo(_e.user_id);
     if (life == undefined) {
         _e.reply("生死簿上查无此人，请先#降临世界！");
         return false;
