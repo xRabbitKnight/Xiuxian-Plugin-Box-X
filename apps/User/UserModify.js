@@ -1,11 +1,12 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
-import { __PATH, point_map, Read_action } from '../Xiuxian/Xiuxian.js';
+import { __PATH } from '../Xiuxian/Xiuxian.js';
 import { get_player_img } from '../ShowImeg/showData.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
+import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 export class UserModify extends plugin {
     constructor() {
         super({
@@ -36,14 +37,10 @@ export class UserModify extends plugin {
             return;
         }
 
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const address_name = '联盟';
-        const map = await point_map(action, address_name);
-        if (!map) {
-            e.reply(`需回${address_name}`);
+        if (!await IfAtSpot(e.user_id, '联盟')) {
+            e.reply(`需回联盟`);
             return;
-        };
+        }
 
         let new_name = e.msg.replace('#改名', '');
         if (new_name.length == 0) {

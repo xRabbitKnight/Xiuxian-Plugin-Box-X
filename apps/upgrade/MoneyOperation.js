@@ -32,18 +32,18 @@ export class MoneyOperation extends plugin {
         });
         this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     };
+    
     New_lingshi = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
         };
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const address_name = '联盟';
-        const map = await point_map(action, address_name);
-        if (!map) {
-            e.reply(`需回${address_name}`);
+        
+        if (!await IfAtSpot(e.user_id, '联盟')) {
+            e.reply(`需回联盟`);
             return;
-        };
+        }
+
+        const usr_qq = e.user_id;
         const level = await Read_level(usr_qq);
         if (level.level_id != 1) {
             return;

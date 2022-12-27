@@ -1,10 +1,11 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
-import { point_map, ForwardMsg, __PATH, Read_action } from '../Xiuxian/Xiuxian.js';
+import { ForwardMsg, __PATH } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { clamp, forceNumber } from '../../model/mathCommon.js';
 import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
+import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 export class UserTransaction extends plugin {
     constructor() {
         super({
@@ -29,18 +30,15 @@ export class UserTransaction extends plugin {
         });
     };
     ningmenghome = async (e) => {
-
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const address_name = '凡仙堂';
-        const map = await point_map(action, address_name);
-        if (!map) {
-            e.reply(`需回${address_name}`);
+        
+        if (!await IfAtSpot(e.user_id, '凡仙堂')) {
+            e.reply(`需回凡仙堂`);
             return;
-        };
+        }
+
         const msg = [
             '___[凡仙堂]___\n#购买+物品名*数量\n不填数量,默认为1'
         ];
@@ -69,14 +67,10 @@ export class UserTransaction extends plugin {
             return;
         }
 
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const address_name = '凡仙堂';
-        const map = await point_map(action, address_name);
-        if (!map) {
-            e.reply(`需回${address_name}`);
+        if (!await IfAtSpot(e.user_id, '凡仙堂')) {
+            e.reply(`需回凡仙堂`);
             return;
-        };
+        }
 
         let [name, count] = e.msg.replace('#购买', '').split('\*');
         count = clamp(forceNumber(count), 1, 99);
@@ -92,10 +86,10 @@ export class UserTransaction extends plugin {
             e.reply(`[凡仙堂]小二\n灵石不足`);
             return;
         };
-        
+
         await AddSpiritStone(e.user_id, -commodities_price);      //异步写入目前没有太好的解决方案，短时间连续相同写入请加await等待执行完成
         AddItemByObj(e.user_id, ifexist, count)
-        
+
         e.reply(`[凡仙堂]薛仁贵\n你花[${commodities_price}]灵石购买了[${name}]*${count},`);
     };
 
@@ -103,14 +97,11 @@ export class UserTransaction extends plugin {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
-        const usr_qq = e.user_id;
-        const action = await Read_action(usr_qq);
-        const address_name = '凡仙堂';
-        const map = await point_map(action, address_name);
-        if (!map) {
-            e.reply(`需回${address_name}`);
+
+        if (!await IfAtSpot(e.user_id, '凡仙堂')) {
+            e.reply(`需回凡仙堂`);
             return;
-        };
+        }
 
         let [name, count] = e.msg.replace('#出售', '').split('\*');
         count = clamp(forceNumber(count), 1, 99);
@@ -120,10 +111,10 @@ export class UserTransaction extends plugin {
             e.reply(`[凡仙堂]小二\n你没似乎没有${propName} * ${count}`);
             return;
         }
-        
+
         await AddSpiritStone(e.user_id, prop.price * count);        //异步写入目前没有太好的解决方案，短时间连续相同写入请加await等待执行完成
         AddItemByObj(e.user_id, prop, -count)
-        
+
         e.reply(`[凡仙堂]欧阳峰\n出售得${prop.price * count}灵石 `);
     };
 };

@@ -1,8 +1,9 @@
 import Show from '../model/show.js';
 import plugin from '../../../../../lib/plugins/plugin.js';
 import puppeteer from '../../../../../lib/puppeteer/puppeteer.js';
-
-import { Read_Exchange, ForwardMsg, __PATH, existplayer, Write_Exchange, Write_najie, Read_action, Numbers, exist_najie_thing_name, Write_action, Read_najie, Add_najie_thing, Read_wealth, Write_wealth, point_map } from '../../../apps/Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
+import { Read_Exchange, __PATH, Write_Exchange, Write_najie, Read_action, Numbers, exist_najie_thing_name, Write_action, Read_najie, Add_najie_thing, Read_wealth, Write_wealth } from '../../../apps/Xiuxian/Xiuxian.js';
+import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
 export class Exchange extends plugin {
     constructor() {
         super({
@@ -37,29 +38,20 @@ export class Exchange extends plugin {
 
 
     supermarket = async (e) => {
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
-        const action=await Read_action(usr_qq);
-        const address_name='弱水阁';
-        const map=await point_map(action,address_name);
-        if(!map){
-            await e.reply(`需回${address_name}`);
-            return;
-        };
-        const Exchange = await Read_Exchange();
-        
-        //1武器2护具3法宝4丹药5功法6道具
-        const item_list = [[],[],[],[],[],[],[]];
+        }
 
-        // const msg = [
-        //     '___[弱水阁]___\n#上架+物品名*数量*价格\n#选购+编号\n#下架+编号\n不填数量,默认为1'
-        // ];
+        if (!await IfAtSpot(e.user_id, '弱水阁')) {
+            e.reply(`需回弱水阁`);
+            return;
+        }
+
+        const Exchange = await Read_Exchange();
+
+        const item_list = [[], [], [], [], [], [], []];
 
         Exchange.forEach((item) => {
-            // msg.push( `编号:${item.id}\n物品:${item.thing.name}\n数量:${item.thing.acount}\n价格:${item.money}\n`);
             item_list[item.thing.id.split('-')[0]].push({
                 "id": item.id,
                 "thing": item.thing,
@@ -74,36 +66,33 @@ export class Exchange extends plugin {
             fabao: item_list[3],
             danyao: item_list[4],
             gongfa: item_list[5],
-            daoju : item_list[6],
+            daoju: item_list[6],
         };
         const data1 = await new Show(e).get_Data("Exchange", "exchange", item_data);
         const img = await puppeteer.screenshot('exchange', {
             ...data1,
         });
 
-        await e.reply(img);
-        // await ForwardMsg(e, msg);
-        return;
+        e.reply(img);
     };
+
     onsell = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
+            return;
+        }
+
+        if (!await IfAtSpot(e.user_id, '弱水阁')) {
+            e.reply(`需回弱水阁`);
+            return;
+        }
+
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action=await Read_action(usr_qq);
-        const address_name='弱水阁';
-        const map=await point_map(action,address_name);
-        if(!map){
-            e.reply(`需回${address_name}`);
-            return;
-        };
         const thing = e.msg.replace('#上架', '');
         const code = thing.split('\*');
-        const [thing_name,thing_acount,thing_money] = code;//价格
-        const the={
-            quantity:0,
-            money:0
+        const [thing_name, thing_acount, thing_money] = code;//价格
+        const the = {
+            quantity: 0,
+            money: 0
         };
         the.quantity = await Numbers(thing_acount);
         if (the.quantity > 99) {
@@ -128,10 +117,9 @@ export class Exchange extends plugin {
         };
         najie_thing.acount = the.quantity;
         const exchange = await Read_Exchange();
-        //const sum=Math.floor((Math.random() * (99 - 1) + 1));
 
         let thingid = Math.floor((Math.random() * (9999 - 1) + 1));
-        for(var flag = false; flag; flag = false){
+        for (var flag = false; flag; flag = false) {
             for (var i = 0; i < exchange.length; i++) {
                 if (exchange[i].id == thingid) {
                     flag = true;
@@ -157,21 +145,19 @@ export class Exchange extends plugin {
         najie = await Add_najie_thing(najie, najie_thing, -the.quantity);
         await Write_najie(usr_qq, najie);
         e.reply(`成功上架:${najie_thing.name}*${najie_thing.acount}`);
-        return;
-    };
+    }
+
     Offsell = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
+            return;
+        }
+
+        if (!await IfAtSpot(e.user_id, '弱水阁')) {
+            e.reply(`需回弱水阁`);
+            return;
+        }
+
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action=await Read_action(usr_qq);
-        const address_name='弱水阁';
-        const map=await point_map(action,address_name);
-        if(!map){
-            e.reply(`需回${address_name}`);
-            return;
-        };
         let thingid = e.msg.replace('#下架', '');
         thingid = await Numbers(thingid);
         let x = 888888888;
@@ -197,21 +183,20 @@ export class Exchange extends plugin {
         exchange = exchange.filter(item => item.id != thingid);
         await Write_Exchange(exchange);
         e.reply("成功下架" + thingid);
-        return;
-    };
+    }
+
+
     purchase = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
+            return;
+        }
+
+        if (!await IfAtSpot(e.user_id, '弱水阁')) {
+            e.reply(`需回弱水阁`);
+            return;
+        }
+
         const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const action=await Read_action(usr_qq);
-        const address_name='弱水阁';
-        const map=await point_map(action,address_name);
-        if(!map){
-            e.reply(`需回${address_name}`);
-            return;
-        };
         let thingid = e.msg.replace('#选购', '');
         thingid = await Numbers(thingid);
         let x = 888888888;

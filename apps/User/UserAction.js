@@ -2,8 +2,9 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import config from '../../model/Config.js';
 import { getWarehouseImg, get_najie_img } from '../ShowImeg/showData.js';
 import { segment } from 'oicq';
-import { existplayer, Read_najie, point_map,Read_action,Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
+import { existplayer, Read_najie, Add_lingshi, Write_najie, Numbers, Add_najie_lingshi, Read_wealth, exist_najie_thing_name, Add_najie_thing, readWarehouse, modifyWarehouseItem, writeWarehouse, findWarehouseItemByName } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 export class UserAction extends plugin {
     constructor() {
         super({
@@ -57,13 +58,12 @@ export class UserAction extends plugin {
             return;
         };
         const usr_qq = e.user_id;
-        const action=await Read_action(usr_qq);
-        const address_name='炼器师协会';
-        const map=await point_map(action,address_name);
-        if(!map){
-            e.reply(`需回${address_name}`);
+        
+        if(!await IfAtSpot(e.user_id, '炼器师协会')){
+            e.reply(`需回炼器师协会`);
             return;
         };
+
         const najie = await Read_najie(usr_qq);
         const player = await Read_wealth(usr_qq);
         const najie_num = this.xiuxianConfigData.najie_num
@@ -131,31 +131,29 @@ export class UserAction extends plugin {
     /**
      * 仓库查看及存取相关功能
      */
-    warehousePre = async (e) => {
-        const usr_qq = e.user_id;
-        if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
-            return false;
-        };
-        const action = await Read_action(usr_qq);
-        const address_name = '万宝楼';
-        const map = await point_map(action, address_name);
-        if(!map){
-            e.reply(`需回${address_name}`);     // 玩家位于「万宝楼」
-            return false;
-        };
-        return true;
-    };
-
     showWarehouse = async (e) => {
-        let pre = await this.warehousePre(e);
-        if(!pre) return;
+        if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
+            return;
+        }
+
+        if(!await IfAtSpot(e.user_id, '万宝楼')){
+            e.reply(`需回万宝楼`);     
+            return;
+        }
+
         const img = await getWarehouseImg(e);
         e.reply(img)
     }
 
     accessWarehouse = async (e) => {
-        let pre = await this.warehousePre(e);
-        if(!pre) return;
+        if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
+            return;
+        }
+
+        if(!await IfAtSpot(e.user_id, '万宝楼')){
+            e.reply(`需回万宝楼`);     
+            return;
+        }
         
         const usr_qq = e.user_id;
         const op = e.msg.substr(1, 1);
