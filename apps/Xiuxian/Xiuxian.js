@@ -12,13 +12,11 @@ export const __PATH = {
     equipment: path.join(__dirname, '/resources/data/birth/player/equipment'),
     level: path.join(__dirname, '/resources/data/birth/player/level'),
     talent: path.join(__dirname, '/resources/data/birth/player/talent'),
-    wealth: path.join(__dirname, '/resources/data/birth/player/wealth'),
     najie: path.join(__dirname, '/resources/data/birth/player/najie'),
     life: path.join(__dirname, '/resources/data/birth/player/life'),
+    warehouse: path.join(__dirname, '/resources/data/birth/player/warehouse'),
     Exchange: path.join(__dirname, '/resources/data/birth/Exchange'),
     Forum: path.join(__dirname, '/resources/data/birth/Forum'),
-
-    warehouse: path.join(__dirname, '/resources/data/birth/xiuxian/warehouse')
 };
 //配置地址
 export class Xiuxian extends plugin {

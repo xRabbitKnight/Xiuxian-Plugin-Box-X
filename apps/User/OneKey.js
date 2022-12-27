@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
-import { GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
+import { AddSpiritStone, GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class OneKey extends plugin {
     constructor() {
@@ -34,11 +34,19 @@ export class OneKey extends plugin {
         }
 
         const backpack = await GetBackpackInfo(e.user_id);
+
+        if (backpack.lingshi >= backpack.lingshimax) {
+            e.reply('储物袋灵石已经满了！');
+            return;
+        }
+
+        let money = 0;
         for (let item of backpack.thing) {
-            backpack.lingshi += item.acount * item.price;
+            money += item.acount * item.price;
         }
         backpack.thing = [];
-        SetBackpackInfo(e.user_id, backpack);
+        await SetBackpackInfo(e.user_id, backpack);
+        AddSpiritStone(e.user_id, money);
 
         e.reply(`[蜀山派]叶铭\n这是${money}灵石,道友慢走`);
     }
