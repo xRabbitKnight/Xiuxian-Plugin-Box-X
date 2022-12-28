@@ -3,9 +3,9 @@ import config from '../../model/Config.js';
 import { forceNumber } from '../../model/mathCommon.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { getWarehouseImg, get_najie_img } from '../ShowImeg/showData.js';
 import { GetBackpackInfo, SetBackpackInfo, AddItemByObj as bpAddItem, GetItemByName as bpGetItem } from '../../model/Cache/player/Backpack.js';
 import { GetWarehouseInfo, SetWarehouseInfo, AddItemByObj as whAddItem, GetItemByName as whGetItem } from '../../model/Cache/player/Warehouse.js';
+import { GetBackpackImage, GetWarehouseImage} from '../../model/Image/player.js';
 
 export class UserAction extends plugin {
     constructor() {
@@ -44,11 +44,8 @@ export class UserAction extends plugin {
         if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
-
-        const img = await get_najie_img(e);
-        e.reply(img);
-        return;
-    };
+        e.reply(await GetBackpackImage(e.user_id));
+    }
 
     UpgradeBackpack = async (e) => {
         if (!await CheckStatu(e, StatuLevel.isMoving)) {
@@ -78,6 +75,18 @@ export class UserAction extends plugin {
         backpack.grade += 1;
         SetBackpackInfo(e.user_id, backpack);
         e.reply('储物袋升级完毕！');
+    }
+
+    ShowWarehouse = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.isMoving)) {
+            return;
+        }
+
+        if (!await IfAtSpot(e.user_id, '万宝楼')) {
+            e.reply(`需回万宝楼`);
+            return;
+        }
+        e.reply(await GetWarehouseImage(e.user_id));
     }
 
     AccessSpiritStone = async (e) => {
@@ -113,20 +122,6 @@ export class UserAction extends plugin {
         SetBackpackInfo(e.user_id, backpack);
         SetWarehouseInfo(e.user_id, warehouse);
         e.reply(`操作完成！储物袋灵石:${backpack.lingshi}, 仓库灵石:${warehouse.lingshi}`);
-    }
-
-    ShowWarehouse = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.isMoving)) {
-            return;
-        }
-
-        if (!await IfAtSpot(e.user_id, '万宝楼')) {
-            e.reply(`需回万宝楼`);
-            return;
-        }
-
-        const img = await getWarehouseImg(e);
-        e.reply(img)
     }
 
     AccessItem = async (e) => {

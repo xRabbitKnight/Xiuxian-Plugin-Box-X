@@ -1,5 +1,5 @@
 @font-face {
-  font-family:"xiuxian";
+  font-family: "xiuxian";
   src: url('../../../font/_GBK.TTF');
   font-weight: normal;
   font-style: normal;
@@ -15,8 +15,8 @@ body {
 }
 
 .user_top {
-  display:grid;
-  grid-template-columns:auto auto auto;
+  display: grid;
+  grid-template-columns: auto auto auto;
   padding: 20px;
   margin: 40px;
   background-color: rgba(19, 21, 22, 0.486);
@@ -50,97 +50,102 @@ body {
   width: 100%;
 }
 
-.user_top_right_font0{
+.user_top_right_font0 {
   font-size: 25px;
   color: rgb(255, 255, 255);
   padding: 10px;
-  border-top-right-radius:25px;
-  border-top-left-radius:25px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
   background-color: rgba(19, 21, 22, 0.842);
-
-  
 }
 
-.user_top_right_font1{
-  font-size: 25px;
-  color: rgb(255, 255, 255);
-  padding: 10px;
-  background-color: rgba(19, 21, 22, 0.563);
-  display:grid;
-  grid-template-columns:auto auto auto;
-}
-
-.user_top_right_font{
+.user_top_right_font {
   font-size: 25px;
   color: rgb(255, 255, 255);
   padding: 10px;
   background-color: rgba(19, 21, 22, 0.448);
-  display:grid;
-  grid-template-columns:auto auto auto;
 }
 
-.user_top_right_font2{
+.user_top_right_font1 {
   font-size: 25px;
   color: rgb(255, 255, 255);
   padding: 10px;
-  border-bottom-right-radius:25px;
-  border-bottom-left-radius:25px;
+  background-color: rgba(19, 21, 22, 0.563);
+}
+
+.user_top_right_font2 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
   background-color: rgba(19, 21, 22, 0.666);
-  display:grid;
-  grid-template-columns:auto auto auto;
   margin-bottom: 10px;
 }
 
-.use_data {
+.user_data {
   padding-bottom: 20px;
 }
 
-.user_font {
-  text-align: left;
-  margin: 9px;
-  font-size: 25.6px;
-  padding: 15px;
-  padding-left: 60px;
-  font-weight: 600;
+.item_name {
+  font-size: 25px;
   color: rgb(255, 255, 255);
-  border-radius: 20px;
-  background-color: rgba(19, 21, 22, 0.486);
+  padding: 10px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.842);
 }
 
-.gonfa{
-  display: flex;
-  flex-wrap: wrap;
+.equipment1 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
 }
 
-.gonfa2{
-  display: flex;
-  flex-grow: 2;
-  width: 33.33%;
-  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+.equipment2 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
 }
 
-
-.user_bottom0 {
-  padding-top: 80px;
-  padding-bottom: 20px;
-  border-radius: 20px;
-  width: 90%;
-  height: 380px;
-  margin: auto;
+.danyao {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
 }
 
+.gongfa {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.448);
+  display: grid;
+  grid-template-columns: 100%;
+}
 
+.price {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.666);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-bottom: 10px;
+}
 
 .user_bottom1 {
   border-radius: 20px;
   width: 90%;
   margin: auto;
-}
-
-
-.user_bottom2 {
-  border-radius: 20px;
-  width: 90%;
-  margin: auto;
-  height: 20px;
 }

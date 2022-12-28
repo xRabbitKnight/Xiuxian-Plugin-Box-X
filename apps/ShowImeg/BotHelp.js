@@ -1,6 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import Help from '../../model/help.js';
-import Cache from '../../model/cache.js';
+import { GetHelpImage, GetAdminHelpImage } from '../../model/Image/help.js';
 export class BotHelp extends plugin {
     constructor() {
         super({
@@ -11,29 +10,21 @@ export class BotHelp extends plugin {
             rule: [
                 {
                     reg: '^#修仙帮助$',
-                    fnc: 'Xiuxianhelp1'
+                    fnc: 'Help'
                 },
                 {
                     reg: '^#修仙管理$',
-                    fnc: 'adminsuper',
+                    fnc: 'Admin',
                 }
             ]
         });
-    };
-    Xiuxianhelp1 = async (e) => {
-        const data = await Help.gethelp(e, 'Help');
-        if (!data) {
-            return
-        };
-        const img = await Cache.helpcache(data, 1);
-        await e.reply(img);
-    };
-    adminsuper = async (e) => {
-        const data = await Help.gethelp(e, 'Admin');
-        if (!data) {
-            return
-        };
-        const img = await Cache.helpcache(data, 0);
-        await e.reply(img);
-    };
+    }
+
+    Help = async (e) => {
+        e.reply(await GetHelpImage());
+    }
+
+    Admin = async (e) => {
+        e.reply(await GetAdminHelpImage());
+    }
 };

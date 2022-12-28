@@ -183,11 +183,9 @@ export const get_najie_img = async (e) => {
         let id = item.id.split('-');
         if (id[0] == 4) {
             danyao_list.push(item);
-            // thing.splice(index, 1);
         }
         else if (id[0] == 6) {
             daoju_list.push(item);
-            // thing.splice(index, 1);
         }
         else {
             thing_list.push(item);

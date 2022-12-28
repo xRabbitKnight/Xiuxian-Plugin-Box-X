@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="{{pluResPath}}/html/User/najie/najie.css" />
+  <link rel="stylesheet" type="text/css" href="{{cssPath}}" />
 </head>
 
 <body>
@@ -12,73 +12,61 @@
 
   <div class="user_top">
     <div class="user_top_left">
-      <div class="user_top_right_font0">账号:{{user_id}}</div>
+      <div class="user_top_right_font0">账号:{{uid}}</div>
       <div class="user_top_right_font1">道号:{{life.name}}</div>
-      <div class="user_top_right_font"> 等级:{{najie.grade}}</div>
+      <div class="user_top_right_font"> 储物袋等级:{{backpack.grade}}</div>
       <div class="user_top_right_font2">
-        储量:{{najie.lingshi}}/{{najie.lingshimax}}
+        灵石:{{backpack.lingshi}}/{{backpack.lingshimax}}
       </div>
     </div>
     <div class="user_top_right">
       <div class="user_top_img_bottom">
-        <img class="user_top_img" src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{user_id}}" onerror="whenError(this)" />
+        <img class="user_top_img" src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{uid}}" onerror="whenError(this)" />
       </div>
     </div>
   </div>
 
   <div class="user_bottom1">
-    <div class="use_data">
-      {{each thing item}}
-      <div class="user_top_right_font0">{{item.name}}</div>
-      <div class="user_top_right_font1">
-        <div> 攻击:{{item.attack}}%</div>
-        <div> 防御:{{item.defense}}% </div>
+    <div class="user_data">
+      {{each backpack.thing item}}
+      <div class="item_name">{{item.name}}</div>
+      
+      {{if item.id[0] == '1' || item.id[0] == '2' || item.id[0] == '3'}}
+      <div class="equipment1">
+        <div> 攻击:{{item.attack}}% </div>
+        <div> 防御:{{item.defense}}% </div> 
         <div> 血量:{{item.blood}}% </div>
       </div>
-      <div class="user_top_right_font">
-        <div> 天赋:{{item.size}}% </div>
+      <div class="equipment2">
         <div> 暴击:{{item.burst}}% </div>
         <div> 暴伤:{{item.burstmax}}% </div>
-      </div>
-      <div class="user_top_right_font2">
         <div> 敏捷:{{item.speed}} </div>
-        <div> 数量:{{item.acount}}</div>
-        <div> 价格:{{item.price}}</div>
       </div>
-      {{/each}}
-      
-      {{each danyao_list item}}
-      <div class="user_top_right_font0">{{item.name}}</div>
-      <div class="user_top_right_font1">
+      {{/if}}
+
+      {{if item.id[0] == '4'}} 
+      <div class="danyao">
         <div> 血量:{{item.blood}}% </div>
-        <div> 气血:{{item.experiencemax}}% </div>
-        <div> 修为:{{item.experience}}</div>
+        <div> 气血:{{item.experiencemax}} </div>
+        <div> 修为:{{item.experience}} </div>
       </div>
-      <div class="user_top_right_font2">
-        <div> 数量:{{item.acount}}</div>
-        <div> 价格:{{item.price}}</div>
+      {{/if}}
+
+      {{if item.id[0] == '5'}} 
+      <div class="gongfa">
+        <div> 天赋:{{item.size}}% </div>
       </div>
-      {{/each}}
-      
-      {{each daoju_list item}}
-      <div class="user_top_right_font0">{{item.name}}</div>
-      <div class="user_top_right_font2">
-        <div> 数量:{{item.acount}}</div>
-        <div> 价格:{{item.price}}</div>
+      {{/if}}
+
+      <div class="price">
+        <div> 数量:{{item.acount}} </div>
+        <div> 价格:{{item.price}} </div>
       </div>
       {{/each}}
 
     </div>
   </div>
 
-  </div>
-  <style>
-
-  </style>
-
 </body>
-
-<script>
-</script>
 
 </html>

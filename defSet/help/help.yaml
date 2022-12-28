@@ -9,18 +9,15 @@
     - icon: help-icon_56
       title: "#储物袋 #升级储物袋"
       desc: "物品查询,容量提升"
-    - icon: help-icon_56
-      title: "#存灵石123"
-      desc: "将灵石存入储物袋"
-    - icon: help-icon_56
-      title: "#取灵石全部"
-      desc: "从储物袋中取出灵石"
     - icon: help-icon_5
       title: "#仓库"
       desc: "查看仓库"
+    - icon: help-icon_56
+      title: "#存(取)灵石123"
+      desc: "将灵石存入仓库"
     - icon: help-icon_16
-      title: "#存/取物品名*2"
-      desc: "仓库存取物品，数量默认为1"
+      title: "#存(取)物品名*1"
+      desc: "仓库存取物品,数量不填默认为1"
     
 - group: 
   list:
@@ -72,7 +69,7 @@
       desc: "随机降临区域"
     - icon: help-icon_98
       title: "#回到原地"
-      desc: "取消走路行为"
+      desc: "取消当前移动"
 
 - group: 
   list:
@@ -96,16 +93,16 @@
   list:
     - icon: help-icon_53
       title: "#凡仙堂"
-      desc: "商店(可私聊)"
+      desc: "官方商店"
     - icon: help-icon_53
       title: "#弱水阁"
-      desc: "交易(可私聊)"
+      desc: "玩家交易"
     - icon: help-icon_10
       title: "#赠送灵石1000 @群友"
       desc: "赠送灵石"
     - icon: help-icon_9
-      title: "#赠送物品名*2 @群友"
-      desc: "赠送物品，数量默认为1"
+      title: "#赠送物品名*1 @群友"
+      desc: "赠送物品,数量不填默认为1"
       
 - group: 
   list:

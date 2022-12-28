@@ -22,8 +22,6 @@ body {
   height: 650px;
   background-image: url('map.png');
   background-size: 100% 100%;
-  display:grid;
-  grid-template-columns:auto auto auto auto auto auto auto auto auto auto;
 }
 
 .updata-head-D{

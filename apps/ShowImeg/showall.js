@@ -1,5 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { get_state_img,get_statemax_img,get_map_img,get_updata_img } from '../ShowImeg/showData.js';
+import { GetMap } from '../../model/Image/map.js';
+import { GetLevelImage, GetLevelmaxImage } from '../../model/Image/state.js';
 export class showall extends plugin {
     constructor() {
         super({
@@ -10,19 +11,15 @@ export class showall extends plugin {
             rule: [
                 {
                     reg: '^#练气境界$',
-                    fnc: 'show_Level',
-                },
-                {
-                    reg: '^#练气境界$',
-                    fnc: 'show_Level',
+                    fnc: 'Level',
                 },
                 {
                     reg: '^#炼体境界$',
-                    fnc: 'show_LevelMax',
+                    fnc: 'LevelMax',
                 },
                 {
                     reg: '^#修仙地图$',
-                    fnc: 'show_map',
+                    fnc: 'Map',
                 },
                 {
                     reg: '^#修仙版本$',
@@ -30,25 +27,23 @@ export class showall extends plugin {
                 }
             ]
         });
-    };
-    show_Level = async (e) => {
-        const img = await get_state_img(e);
-        e.reply(img);
-        return;
-    };
-    show_LevelMax = async (e) => {
-        const img = await get_statemax_img(e);
-        e.reply(img);
-        return;
-    };
-    show_map = async (e) => {
-        const img = await get_map_img(e);
-        e.reply(img);
-        return;
-    };
-    show_updata = async (e) => {
-        const img = await get_updata_img(e);
-        e.reply(img);
-        return;
-    };
+    }
+
+    Level = async (e) => {
+        if(!await CheckStatu(e, StatuLevel.exist)){
+            return;
+        }
+        e.reply(await GetLevelImage(e.user_id));
+    }
+
+    LevelMax = async (e) => {
+        if(!await CheckStatu(e, StatuLevel.exist)){
+            return;
+        }
+        e.reply(await GetLevelmaxImage(e.user_id));
+    }
+
+    Map = async (e) => {
+        e.reply(await GetMap());
+    }
 };

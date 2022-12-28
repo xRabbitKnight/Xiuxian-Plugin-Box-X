@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { get_equipment_img, get_player_img } from '../ShowImeg/showData.js';
-import { existplayer } from '../Xiuxian/Xiuxian.js';
+import { GetEquipmentImage, GetPlayerInfoImage } from '../../model/Image/player.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export class UserInformation extends plugin {
     constructor() {
         super({
@@ -11,11 +11,11 @@ export class UserInformation extends plugin {
             rule: [
                 {
                     reg: '^#基础信息$',
-                    fnc: 'Show_player'
+                    fnc: 'PlayerInfo'
                 },
                 {
                     reg: '^#面板信息$',
-                    fnc: 'show_equipment',
+                    fnc: 'PropertyPanel',
                 },
                 {
                     reg: '^#功法信息$',
@@ -24,24 +24,18 @@ export class UserInformation extends plugin {
             ]
         });
     };
-    Show_player = async (e) => {
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
+
+    PlayerInfo = async (e) => {
+        if(!await CheckStatu(e, StatuLevel.exist)){
             return;
-        };
-        const img = await get_player_img(e);
-        e.reply(img);
-        return;
-    };
-    show_equipment = async (e) => {
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
+        }
+        e.reply(await GetPlayerInfoImage(e.user_id));
+    }
+
+    PropertyPanel = async (e) => {
+        if(!await CheckStatu(e, StatuLevel.exist)){
             return;
-        };
-        const img = await get_equipment_img(e);
-        e.reply(img);
-        return;
-    };
+        }
+        e.reply(await GetEquipmentImage(e.user_id));
+    }
 };
