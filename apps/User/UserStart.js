@@ -4,7 +4,6 @@ import config from '../../model/Config.js';
 import fs from 'fs';
 import { segment } from 'oicq';
 import { existplayer, __PATH, Write_player, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray, writeWarehouse } from '../Xiuxian/Xiuxian.js';
-import { get_player_img } from '../ShowImeg/showData.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 export class UserStart extends plugin {
@@ -130,11 +129,7 @@ export class UserStart extends plugin {
         e.reply(`你来到一个修仙世界\n你对修仙充满了好奇\n你可以#前往极西联盟\n进行#联盟报到\n会得到[修仙联盟]的帮助\n更快的成为练气修士\n也可以#基础信息\n查看自己的身世\n若想快速去往天山\n建议#前往极西传送阵\n进行#传送天山`);
         return;
     };
-    Show_player = async (e) => {
-        const img = await get_player_img(e);
-        e.reply(img);
-        return;
-    };
+    
     reCreate_player = async (e) => {
         const usr_qq = e.user_id;
         if(CheckCD(e, 'ReBorn')){
