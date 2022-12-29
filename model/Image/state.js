@@ -17,7 +17,7 @@ export async function GetLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '练气境界',
         list: data.Level_list,
-        level : (await GetLevelInfo(_uid)).level_id
+        level : (await GetLevelInfo(_uid)).level
     });
 }
 
@@ -35,6 +35,6 @@ export async function GetLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '炼体境界',
         list: data.LevelMax_list,
-        level : (await GetLevelInfo(_uid)).levelmax_id
+        level : (await GetLevelInfo(_uid)).bodyLevel
     });
 }

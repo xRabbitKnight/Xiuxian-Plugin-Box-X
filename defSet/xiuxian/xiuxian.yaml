@@ -4,7 +4,7 @@ CD:
   #突破                
   LevelUp: 5
   #破体
-  LevelMaxUp: 5     
+  BodyLevelUp: 5     
   #道宣
   Autograph: 60
   #改名
@@ -27,8 +27,9 @@ Age:
 myconfig:
   #功法最大学习数
   gongfa: 12
-  #装备最大数
-  equipment: 4
+
+#最多装备数
+maxEquipment : 4
 
 biguan: 
   #倍率！

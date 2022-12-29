@@ -16,8 +16,10 @@ class XiuxianData {
             'position': path.join(__dirname, '/resources/data/birth/position')
         };
         //固定不变
-        this.Level_list = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/Level_list.json`));
-        this.LevelMax_list = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/LevelMax_list.json`));
+        this.levelList = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/levelList.json`));
+        this.bodyLevelList = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/bodyLevelList.json`));
+        this.Level_list = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/levelList.json`));
+        this.LevelMax_list = JSON.parse(fs.readFileSync(`${this.__PATH.fixedLevel}/bodyLevelList.json`));
         this.talent_list = JSON.parse(fs.readFileSync(`${this.__PATH.fixedtalent}/talent_list.json`));
         //动态生成
         this.deletelist('all');
