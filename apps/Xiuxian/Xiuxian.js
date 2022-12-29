@@ -140,15 +140,7 @@ export const Write_najie = async (usr_qq, najie) => {
     await Write(usr_qq, najie, __PATH.najie);
     return;
 };
-//读取仓库
-export const readWarehouse = async (usr_qq) => {
-    return await Read(usr_qq, __PATH.warehouse);
-};
-//写入仓库
-export const writeWarehouse = async (usr_qq, warehouse) => {
-    await Write(usr_qq, warehouse, __PATH.warehouse);
-    return;
-};
+
 //读取装备
 export const Read_equipment = async (usr_qq) => {
     return await Read(usr_qq, __PATH.equipment);
@@ -156,47 +148,9 @@ export const Read_equipment = async (usr_qq) => {
 //写入新装备
 export const Write_equipment = async (usr_qq, equipment) => {
     await Write(usr_qq, equipment, __PATH.equipment);
-    await updata_equipment(usr_qq);
     return;
 };
-//计算面板
-export const updata_equipment = async (usr_qq) => {
-    const battle =await Read_battle(usr_qq);
-    const equipment = await Read_equipment(usr_qq);
-    const level = await Read_level(usr_qq);
-    const levelmini = data.Level_list.find(item => item.id == level.level_id);
-    const levelmax = data.LevelMax_list.find(item => item.id == level.levelmax_id);
-    const the = {
-        attack: 0,
-        defense: 0,
-        blood: 0,
-        burst: 0,
-        burstmax: 0,
-        speed: 0,
-        player: 0
-    };
-    equipment.forEach((item) => {
-        the.attack = the.attack + item.attack;
-        the.defense = the.defense + item.defense;
-        the.blood = the.blood + item.blood;
-        the.burst = the.burst + item.burst;
-        the.burstmax = the.burstmax + item.burstmax;
-        the.speed = the.speed + item.speed;
-    });
-    const bloodLimit = levelmini.blood + levelmax.blood + Math.floor((levelmini.blood + levelmax.blood) * the.blood * 0.01);
-    the.player = {
-        nowblood: battle.nowblood > bloodLimit ? bloodLimit : battle.nowblood,
-        attack: levelmini.attack + levelmax.attack + Math.floor((levelmini.attack + levelmax.attack) * the.attack * 0.01),
-        defense: levelmini.defense + levelmax.defense + Math.floor((levelmini.defense + levelmax.defense) * the.defense * 0.01),
-        blood: bloodLimit,
-        burst: levelmini.burst + levelmax.burst + the.burst,
-        burstmax: levelmini.burstmax + levelmax.burstmax + the.burstmax + level.rank_id * 10,
-        speed: levelmini.speed + levelmax.speed + the.speed
-    };
-    the.player.power = the.player.attack + the.player.defense + the.player.blood + the.player.burst + the.player.burstmax + the.player.speed;
-    await Write_battle(usr_qq, the.player);
-    return;
-};
+
 //魔力操作
 export const Add_prestige = async (usr_qq, prestige) => {
     const player = await Read_level(usr_qq);
@@ -607,28 +561,7 @@ export const Add_najie_thing = async (najie, najie_thing, thing_acount) => {
         return najie;
     };
 };
-//根据名字搜仓库物品
-export const findWarehouseItemByName = async (usr_qq, name) => {
-    const warehouse = await readWarehouse(usr_qq);
-    return warehouse.items.find(item => item.name == name);;
-};
-//修改仓库物品
-export const modifyWarehouseItem = async (warehouse, item, num) => {
-    const wItem = warehouse.items.find(i => i.id == item.id);
-    if (wItem) {
-        let acount = wItem.acount + num;
-        if (acount < 1) {
-            warehouse.items = warehouse.items.filter(i => i.id != item.id);
-        } else {
-            warehouse.items.find(i => i.id == item.id).acount = acount;
-        };
-        return warehouse;
-    } else {
-        item.acount = num;
-        warehouse.items.push(item);
-        return warehouse;
-    };
-};
+
 //发送转发消息
 export const ForwardMsg = async (e, data) => {
     const msgList = [];
@@ -755,27 +688,7 @@ export const Numbers = async (value) => {
     };
     return the.value;
 };
-/**
- * 得到状态
- */
-export const getPlayerAction = async (usr_qq) => {
-    const arr = {};
-    let action = await redis.get('xiuxian:player:' + usr_qq + ':action');
-    action = JSON.parse(action);
-    if (action != null) {
-        const action_end_time = action.end_time;
-        const now_time = new Date().getTime();
-        if (now_time <= action_end_time) {
-            const m = parseInt((action_end_time - now_time) / 1000 / 60);
-            const s = parseInt(((action_end_time - now_time) - m * 60 * 1000) / 1000);
-            arr.action = action.action;//当期那动作
-            arr.time = m + 'm' + s + 's';//剩余时间
-            return arr;
-        };
-    };
-    arr.action = '空闲';
-    return arr;
-};
+
 /**
  * 关闭状态
  */
@@ -866,34 +779,6 @@ export const newRead = async (dir) => {
         return 1;
     };
 };
-//判断两者是否可以交互
-export const interactive = async (A, B) => {
-    const a = await Read_action(A);
-    const b = await Read_action(B);
-    //198=1.98=1
-    a.x = Math.floor(a.x / 100);
-    a.y = Math.floor(a.y / 100);
-    //145/100=1.45=1
-    b.x = Math.floor(b.x / 100);
-    b.y = Math.floor(b.y / 100);
-    if (a.x == b.x && b.y == b.y) {
-        return true;
-    };
-    return false;
-};
-//判断两者距离
-export const distance = async (A, B) => {
-    const a = await Read_action(A);
-    const b = await Read_action(B);
-    const h = Math.pow(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2), 1 / 2);
-    return h;
-};
-//两者距离
-export const map_distance = async (A, B) => {
-    const h = Math.pow(Math.pow((A.x - B.x1), 2) + Math.pow((A.y - B.y1), 2), 1 / 2);
-    return h;
-};
-
 
 //输入：模糊搜索名字并判断是否在此地
 export const point_map = async (action, addressName) => {
