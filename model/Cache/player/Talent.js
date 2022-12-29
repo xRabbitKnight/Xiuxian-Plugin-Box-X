@@ -22,3 +22,13 @@ export async function GetTalentInfo(_uid) {
 export async function SetTalentInfo(_uid, _talentInfo) {
     SetInfo(_uid, _talentInfo, redisKey, `${PATH}/${_uid}.json`);
 }
+
+/******* 
+ * @description: 从cache里获取玩家的修炼天赋加成信息
+ * @param {string} _uid 玩家id, plugin参数e.user_id
+ * @return {Promise<number>} 返回的BattleInfo JSON对象
+ */
+export async function GetTalentBuff(_uid){
+    const talentInfo = await GetTalentInfo(_uid);
+    return talentInfo?.talentsize;
+}

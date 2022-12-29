@@ -28,7 +28,33 @@ export async function SetBattleInfo(_uid, _battleInfo) {
  * @param {string} _uid 玩家id
  * @return {Promise<number>} 返回移动速度，获取失败时返回undefined
  */
-export async function GetSpeed(_uid){
+export async function GetSpeed(_uid) {
     const battleInfo = await GetBattleInfo(_uid);
     return battleInfo?.speed;
+}
+
+/**
+ * @description: 血量回复到指定百分比
+ * @param {string} _uid 目标qq 
+ * @param {number} _percent 回复到百分比
+ * @return 无返回
+ */
+export async function AddBloodToPercent(_uid, _percent) {
+    const battleInfo = await GetBattleInfo(_uid);
+    if (battleInfo == undefined) return;
+    battleInfo.nowblood = Math.max(battleInfo.nowblood, Math.floor(battleInfo.blood * _percent * 0.01));
+    SetBattleInfo(_uid, battleInfo);
+}
+
+/**
+ * @description: 回复额外百分比血量
+ * @param {string} _uid 目标qq 
+ * @param {number} _percent 回复到百分比
+ * @return 无返回
+ */
+export async function AddPercentBlood(_uid, _percent) {
+    const battleInfo = await GetBattleInfo(_uid);
+    if (battleInfo == undefined) return;
+    battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * blood * 0.01));
+    SetBattleInfo(_uid, battleInfo);
 }
