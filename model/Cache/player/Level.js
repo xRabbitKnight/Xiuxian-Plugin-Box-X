@@ -33,7 +33,7 @@ export async function SetLevelInfo(_uid, _levelInfo) {
 export async function AddExp(_uid, _count) {
     const levelInfo = await GetLevelInfo(_uid);
     if (levelInfo == undefined) return;
-    levelInfo.experience += forceNumber(_count);
+    levelInfo.exp += forceNumber(_count);
     SetLevelInfo(_uid, levelInfo);
 }
 
@@ -46,6 +46,6 @@ export async function AddExp(_uid, _count) {
 export async function AddExpMax(_uid, _count) {
     const levelInfo = await GetLevelInfo(_uid);
     if (levelInfo == undefined) return;
-    levelInfo.experiencemax += forceNumber(_count);
+    levelInfo.bodyExp += forceNumber(_count);
     SetLevelInfo(_uid, levelInfo);
 }

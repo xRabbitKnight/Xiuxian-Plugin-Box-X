@@ -88,3 +88,17 @@ export async function AddAge(_uid, _count) {
         lifeInfo.status = 0;
     SetLifeInfo(_uid, lifeInfo);
 }
+
+/******* 
+ * @description: 增加玩家寿命
+ * @param {string} _uid 玩家id
+ * @param {number} _count 增加的量
+ * @return 无返回值
+ */
+ export async function AddLife(_uid, _count) {
+    const lifeInfo = await GetLifeInfo(_uid);
+    if (lifeInfo == undefined) return;
+
+    lifeInfo.life += forceNumber(_count);
+    SetLifeInfo(_uid, lifeInfo);
+}
