@@ -15,7 +15,8 @@ export class MonsterRefresh extends plugin {
             rule: [
                 {
                     reg: '^#刷新boss$',
-                    fnc: 'refreshBoss'
+                    fnc: 'refreshBoss',
+                    permission : 'master'
                 }
             ]
         });
@@ -38,7 +39,7 @@ export class MonsterRefresh extends plugin {
     }
 
     refreshBoss = async () => {
-        //RefreshBoss();
+        RefreshBoss();
     }
 }
 

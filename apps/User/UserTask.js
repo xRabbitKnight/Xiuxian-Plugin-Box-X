@@ -10,7 +10,7 @@ export class UserTask extends plugin {
             name: 'LifeTask',
             dsc: 'LifeTask',
             event: 'message',
-            priority: 300
+            priority: 300,
         });
 
         this.ageInc = config.getConfig('xiuxian', 'xiuxian').Age.size;
@@ -26,4 +26,4 @@ export class UserTask extends plugin {
         const players = await GetAllUid();
         players.forEach(player => AddAge(player, this.ageInc));
     }
-};
+}
