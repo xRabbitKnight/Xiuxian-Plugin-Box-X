@@ -124,7 +124,7 @@ const addMaxAttack = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
-        battleInfo.attack += amount;
+        battleInfo.base.attack += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你攻击力提升了${amount}！！`);
         SetBattleInfo(_e.user_id, battleInfo);
     }
@@ -136,7 +136,7 @@ const addMaxBlood = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(50, 500) * _monster.level;
-        battleInfo.blood += amount;
+        battleInfo.base.blood += amount;
         _msg.push(`在和${_monster.name}战斗后，你浑身气血涌动，你生命值提升了${amount}！！`);
         SetBattleInfo(_e.user_id, battleInfo);
     }
@@ -148,7 +148,7 @@ const addMaxDefense = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
-        battleInfo.defense += amount;
+        battleInfo.base.defense += amount;
         _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你防御力提升了${amount}！！`);
         SetBattleInfo(_e.user_id, battleInfo);
     }
@@ -199,7 +199,7 @@ class BattleVictory {
         for (let i = 0, done = false; i < eventList.length && !done; ++i) {
             const event = eventList[i];
             done = Math.random() < event.odds;
-            if (done) await event.fnc(_e, _monster, _msg);
+            if (done) event.fnc(_e, _monster, _msg);
         }
     }
 }

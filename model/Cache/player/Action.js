@@ -26,7 +26,7 @@ export async function SetActionInfo(_uid, _actionInfo) {
 /******* 
  * @description: 获取玩家所在区域
  * @param {string} _uid 玩家id
- * @return {number} 区域编号，获取失败返回undefined
+ * @return {Promise<number>} 区域编号，获取失败返回undefined
  */
 export async function GetPlayerRegion(_uid){
     const actionInfo = await GetActionInfo(_uid);

@@ -26,5 +26,6 @@ export async function RefreshBoss() {
     MonsterMgr.BossCount += 1;
     const regions = await GetAllArea();
     const targetRegionId = regions[rand(0, regions.length)].id.split("-")[1];
+    logger.info(targetRegionId);
     MonsterMgr.AddMonster(targetRegionId, new Boss());
 }
