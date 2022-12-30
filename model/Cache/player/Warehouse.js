@@ -66,6 +66,17 @@ export async function AddItemByObj(_uid, _item, _count) {
     SetWarehouseInfo(_uid, warehouseInfo);
 }
 
+/******* 
+ * @description: 背包物品排序
+ * @param {string} _uid 玩家id
+ * @return 无返回值
+ */
+ export async function SortById(_uid){
+    const warehouseInfo = await GetWarehouseInfo(_uid);
+    warehouseInfo.items.sort((a,b) => a.id.localeCompare(b.id));
+    SetWarehouseInfo(_uid, warehouseInfo);
+}
+
 /*******--------------------------------------------------------------内部函数
  * @description: 合法添加物品
  * @return 无返回值

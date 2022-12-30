@@ -5,8 +5,8 @@ import { GetEquipmentInfo } from '../Cache/player/Equipment.js';
 import { GetLevelInfo } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLifeInfo } from '../Cache/player/Life.js';
-import { GetBackpackInfo } from '../Cache/player/Backpack.js';
-import { GetWarehouseInfo } from '../Cache/player/Warehouse.js';
+import { GetBackpackInfo, SortById as SortBackpack } from '../Cache/player/Backpack.js';
+import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
 
 /******* 
  * @description: 获取玩家装备以及面板信息
@@ -53,6 +53,7 @@ export async function GetPlayerInfoImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetBackpackImage(_uid) {
+    await SortBackpack(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/najie/najie.html',
@@ -71,6 +72,7 @@ export async function GetBackpackImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetWarehouseImage(_uid) {
+    await SortWarehouse(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/warehouse/warehouse.html',

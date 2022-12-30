@@ -78,6 +78,17 @@ export async function AddItemById(_uid, _itemId, _count) {
 
 }
 
+/******* 
+ * @description: 背包物品排序
+ * @param {string} _uid 玩家id
+ * @return 无返回值
+ */
+export async function SortById(_uid){
+    const backpackInfo = await GetBackpackInfo(_uid);
+    backpackInfo.thing.sort((a,b) => a.id.localeCompare(b.id));
+    SetBackpackInfo(_uid, backpackInfo);
+}
+
 //--------------------------------------------------------------背包中各信息：获取数量方法
 /*******
  * @description: 获取玩家背包灵石数量
