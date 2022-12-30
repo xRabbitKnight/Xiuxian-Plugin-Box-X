@@ -18,8 +18,8 @@ export class Monster{
         this.level = _level;
 
         //TODO:我认为这个怪物应该有一套单独的面板机制= =， 还没想好, 暂定练气炼体各半取随机相加
-        const tmpInfo0 = Data.Level_list.find(item => item.id == _level);
-        const tmpInfo1 = Data.LevelMax_list.find(item => item.id == _level);
+        const tmpInfo0 = Data.levelList.find(item => item.id == _level);
+        const tmpInfo1 = Data.bodyLevelList.find(item => item.id == _level);
         const percent0 = Math.random() * 0.3 + 0.5;
         const percent1 = Math.random() * 0.5 + 0.5;
         this.battleInfo = {

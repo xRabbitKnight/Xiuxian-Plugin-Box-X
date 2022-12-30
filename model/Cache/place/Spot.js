@@ -6,7 +6,7 @@ const filePath = `${data.__PATH.position}/point.json`;
 const redisKey = 'xiuxian:spots';
 
 /** ***** 
- * @description: 从cache里所有地点坐标信息, 若没有则读文件, 读文件失败返回undefine
+ * @description: 从cache里所有地点坐标信息, 若没有则读文件, 读文件失败返回undefined
  * @return {Promise<JSON>} 返回的对应信息 JSON对象 坐标信息数组
  */
 export async function GetAllSpot() {
