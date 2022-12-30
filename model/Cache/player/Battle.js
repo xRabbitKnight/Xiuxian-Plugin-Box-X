@@ -57,7 +57,7 @@ export async function AddBloodToPercent(_uid, _percent) {
 export async function AddPercentBlood(_uid, _percent) {
     const battleInfo = await GetBattleInfo(_uid);
     if (battleInfo == undefined) return;
-    battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * blood * 0.01));
+    battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * _percent * 0.01));
     SetBattleInfo(_uid, battleInfo);
 }
 

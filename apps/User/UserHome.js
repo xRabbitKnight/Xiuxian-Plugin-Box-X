@@ -1,6 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
-import { existplayer, exist_najie_thing_name, Read_najie, Add_experiencemax, Write_najie, Numbers, Add_najie_thing, AddPercentBlood, Add_experience, get_talent, Write_talent, player_efficiency, Read_talent, Read_level} from '../Xiuxian/Xiuxian.js';
+import { AddPercentBlood } from '../../model/Cache/player/Battle.js'
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
+import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
+import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
+
 export class UserHome extends plugin {
     constructor() {
         super({
@@ -11,179 +15,90 @@ export class UserHome extends plugin {
             rule: [
                 {
                     reg: '^#服用.*$',
-                    fnc: 'consumption_danyao'
+                    fnc: 'consumePellet'
                 },
                 {
                     reg: '^#学习.*$',
-                    fnc: 'add_gongfa'
+                    fnc: 'LearnManual'
                 },
                 {
                     reg: '^#忘掉.*$',
-                    fnc: 'delete_gongfa'
-                },
-                {
-                    reg: '^#消耗.*$',
-                    fnc: 'consumption_daoju'
+                    fnc: 'ForgetManual'
                 }
             ]
-        });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
-    };
-    consumption_danyao = async (e) => {
-        if (!e.isGroup) {
-            return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        let thing = e.msg.replace('#服用', '');
-        const code = thing.split('\*');
-        let [thing_name, thing_acount] = code;
-        thing_acount = await Numbers(thing_acount);
-        const najie_thing = await exist_najie_thing_name(usr_qq, thing_name);
-        if (najie_thing == 1) {
-            e.reply(`没有${thing_name}`);
-            return;
-        };
-        if (najie_thing.acount < thing_acount) {
-            e.reply('数量不足');
-            return;
-        };
-        
-        const id = najie_thing.id.split('-');
-        if(id[0] != 4) {
-            e.reply(`不可服用${thing_name}`);
-            return;
-        };
+        })
+    }
 
-        if (id[1] == 1) {
-            let blood = parseInt(najie_thing.blood);
-            await AddPercentBlood(usr_qq, blood);
-            e.reply(`血量恢复${blood}%`);
+    consumePellet = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
+            return;
         }
-        else if (id[1] == 2) {
-            let experience = parseInt(najie_thing.experience);
-            await Add_experience(usr_qq, thing_acount * experience);
-            e.reply(`修为增加${thing_acount * najie_thing.experience}`);
+
+        const name = e.msg.replace('#服用', '');
+        const pellet = await GetItemByName(e.user_id, name);
+        if (pellet == undefined) {
+            e.reply(`没有${name}`);
+            return;
         }
-        else if (id[1] == 3) {
-            let experiencemax = parseInt(najie_thing.experiencemax);
-            await Add_experiencemax(usr_qq, thing_acount * experiencemax);
-            e.reply(`气血增加${thing_acount * najie_thing.experiencemax}`);
+
+        if (pellet.id[0] != '4') {
+            e.reply(`不可服用${name}`);
+            return;
         }
-        let najie = await Read_najie(usr_qq);
-        najie = await Add_najie_thing(najie, najie_thing, -thing_acount);
-        await Write_najie(usr_qq, najie);
-        return;
-    };
-    add_gongfa = async (e) => {
-        if (!e.isGroup) {
+
+        if (pellet.id[2] == '1') {
+            AddPercentBlood(e.user_id, pellet.blood);
+            e.reply(`血量恢复${pellet.blood}%`);
+        }
+        else if (pellet.id[2] == '2') {
+            AddExp(e.user_id, pellet.experience);
+            e.reply(`修为增加${pellet.experience}`);
+        }
+        else if (pellet.id[2] == '3') {
+            AddExpMax(e.user_id, pellet.experiencemax)
+            e.reply(`气血增加${pellet.experiencemax}`);
+        }
+
+        AddItemByObj(e.user_id, pellet, -1);
+    }
+
+    LearnManual = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
+        }
+
+        const name = e.msg.replace('#学习', '');
+        const manual = await GetItemByName(e.user_id, name);
+        if (manual == undefined) {
+            e.reply(`没有[${name}]`);
             return;
-        };
-        const thing_name = e.msg.replace('#学习', '');
-        const najie_thing = await exist_najie_thing_name(usr_qq, thing_name);
-        if (najie_thing == 1) {
-            e.reply(`没有[${thing_name}]`);
+        }
+
+        if (manual.id[0] != '5') {
+            e.reply(`${name}不是功法`);
             return;
-        };
-        const id = najie_thing.id.split('-');
-        if (id[0] != 5) {
-            return;
-        };
-        const talent = await Read_talent(usr_qq);
-        const islearned = talent.AllSorcery.find(item => item.id == najie_thing.id);
-        if (islearned) {
-            e.reply('学过了');
-            return;
-        };
-        if (talent.AllSorcery.length >= this.xiuxianConfigData.myconfig.gongfa) {
+        }
+
+        if (!await AddManual(e.user_id, manual)) {
             e.reply('你反复看了又看,却怎么也学不进');
             return;
-        };
-        talent.AllSorcery.push(najie_thing);
-        await Write_talent(usr_qq, talent);
-        await player_efficiency(usr_qq);
-        let najie = await Read_najie(usr_qq);
-        najie = await Add_najie_thing(najie, najie_thing, -1);
-        await Write_najie(usr_qq, najie);
-        e.reply(`学习${thing_name}`);
-        return;
-    };
-    delete_gongfa = async (e) => {
-        if (!e.isGroup) {
-            return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
         }
-        const thing_name = e.msg.replace('#忘掉', '');
-        const talent = await Read_talent(usr_qq);
-        const islearned = talent.AllSorcery.find(item => item.name == thing_name);
-        if (!islearned) {
-            e.reply(`没学过${thing_name}`);
-            return;
-        };
-        talent.AllSorcery = talent.AllSorcery.filter(item => item.name != thing_name);
-        await Write_talent(usr_qq, talent);
-        await player_efficiency(usr_qq);
-        let najie = await Read_najie(usr_qq);
-        najie = await Add_najie_thing(najie, islearned, 1);
-        await Write_najie(usr_qq, najie);
-        e.reply(`忘了${thing_name}`);
-        return;
+
+        AddItemByObj(e.user_id, manual, -1);
+        e.reply(`学习${name}`);
     }
-    consumption_daoju = async (e) => {
-        if (!e.isGroup) {
+
+    ForgetManual = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (!ifexistplay) {
-            return;
-        };
-        const thing_name = e.msg.replace('#消耗', '');
-        const najie_thing = await exist_najie_thing_name(usr_qq, thing_name);
-        if (najie_thing == 1) {
-            e.reply(`没有[${thing_name}]`);
-            return;
-        };
-        const id = najie_thing.id.split('-')
-        if (id[0] != 6) {
-            return;
-        };
-        if (id[2] == 1) {
-            const player = await Read_level(usr_qq);
-            if (player.level_id > 5) {
-                e.reply('[天机门]石昊\n你灵根已定\n此生不可再洗髓');
-                return;
-            };
-            const talent = await Read_talent(usr_qq);
-            talent.talent = await get_talent();
-            await Write_talent(usr_qq, talent);
-            await player_efficiency(usr_qq);
-            e.reply('使用成功');
         }
-        else if (id[2] == 2) {
-            const talent = await Read_talent(usr_qq);
-            talent.talentshow = 0;
-            await Write_talent(usr_qq, talent);
-            e.reply('显示成功');
-        }
-        else {
+
+        const name = e.msg.replace('#忘掉', '');
+        if (!await DelManual(e.user_id, name)) {
+            e.reply(`没学过${name}`);
             return;
-        };
-        let najie = await Read_najie(usr_qq);
-        najie = await Add_najie_thing(najie, najie_thing, -1);
-        await Write_najie(usr_qq, najie);
-        return;
-    };
-};
+        }
+
+        e.reply(`忘了${name}`);
+    }
+}
