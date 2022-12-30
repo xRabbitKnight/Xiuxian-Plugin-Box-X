@@ -7,6 +7,7 @@ import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
+import { GetDrops } from '../../model/Battle/BattleDrop.js';
 
 export class BattleSite extends plugin {
     constructor() {
@@ -47,8 +48,8 @@ export class BattleSite extends plugin {
         const msg = [`${e.sender.nickname}的[击杀结果]\n注:怪物每1小时刷新`];
         const battleResult = await PVE(e, targetMonster, msg);
         if (battleResult) {
-            msg.push(`采集出售从${targetMonster.name}获取的战利品，你获得了${targetMonster.level * 100}灵石`);
-            await BattleVictory.TriggerEvent(e, targetMonster, msg);
+            await GetDrops(e.user_id, targetMonster, msg);
+            BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
 
         AddActionCD(e, 'Kill');

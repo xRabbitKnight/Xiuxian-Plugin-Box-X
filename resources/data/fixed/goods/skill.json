@@ -1,0 +1,201 @@
+[
+    {
+        "id": "7-1-1",
+        "name": "技能书：叶落归尘",
+        "refer": "",
+        "spiritualRoot": [
+            2
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-2",
+        "name": "技能书：红尘一梦",
+        "refer": "",
+        "spiritualRoot": [
+            8
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-3",
+        "name": "技能书：浮光掠影",
+        "refer": "",
+        "spiritualRoot": [
+            7
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-4",
+        "name": "技能书：镜花水月",
+        "refer": "",
+        "spiritualRoot": [
+            3,
+            7
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-5",
+        "name": "技能书：狱火炼魂",
+        "refer": "",
+        "spiritualRoot": [
+            4
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-6",
+        "name": "技能书：天地同寿",
+        "refer": "",
+        "spiritualRoot": [
+            7,
+            8
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-7",
+        "name": "技能书：终极伏特狂雷闪",
+        "refer": "",
+        "spiritualRoot": [
+            6
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-8",
+        "name": "技能书：绚烂缤纷花怒放",
+        "refer": "",
+        "spiritualRoot": [
+            2
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-9",
+        "name": "技能书：风雷鼓舞三千郎",
+        "refer": "",
+        "spiritualRoot": [
+            6,
+            10
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-10",
+        "name": "技能书：九霄龙吟惊天变",
+        "refer": "",
+        "spiritualRoot": [
+            1
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-11",
+        "name": "技能书：封魔追魂烈焰斩",
+        "refer": "",
+        "spiritualRoot": [
+            2
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-12",
+        "name": "技能书：夤夜对雪长空断",
+        "refer": "",
+        "spiritualRoot": [
+            4
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-13",
+        "name": "技能书：大地荒芜崩山击",
+        "refer": "",
+        "spiritualRoot": [
+            5
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-14",
+        "name": "技能书：八卦游龙惊风破",
+        "refer": "",
+        "spiritualRoot": [
+            10
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-15",
+        "name": "技能书：极烈之枪",
+        "refer": "",
+        "spiritualRoot": [
+            1
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    },
+    {
+        "id": "7-1-16",
+        "name": "技能书：万法归一",
+        "refer": "",
+        "spiritualRoot": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "power": 130,
+        "acount": 1,
+        "price": 9999,
+        "level": 1
+    }
+]

@@ -56,6 +56,20 @@ export async function AddItemByObj(_uid, _item, _count) {
     SetBackpackInfo(_uid, backpackInfo);
 }
 
+/******* 
+ * @description: 批量添加物品进背包
+ * @param {string} _uid 玩家id
+ * @param {[]} _items 物品数组
+ * @return 无返回值
+ */
+export async function AddItemsByObj(_uid, _items) {
+    const backpackInfo = await GetBackpackInfo(_uid);
+    if (backpackInfo == undefined) return;
+
+    _items.forEach(item => addVaild(backpackInfo, item));
+    SetBackpackInfo(_uid, backpackInfo);
+}
+
 export async function AddItemByName(_uid, _itemName, _count) {
 
 }

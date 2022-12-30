@@ -35,7 +35,8 @@ class XiuxianData {
             ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/gongfa1.json`)),
             ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/gongfa2.json`)),
             ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju1.json`)),
-            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju2.json`))
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/daoju2.json`)),
+            ...JSON.parse(fs.readFileSync(`${this.__PATH.fixedgoods}/skill.json`))
         ], 'all');
         this.deletelist('commodities');
         this.addlist([
@@ -83,7 +84,7 @@ class XiuxianData {
         ], 'dropsGongfa');
         /**
          * id数据头规定
-         * 1武器2护具3法宝4道具5功法6丹药
+         * 1武器2护具3法宝4丹药5功法6道具
          * -----------------------------
          * 1-19   为基础段
          * 20-29  为扩展段
