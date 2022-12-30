@@ -104,19 +104,18 @@ export class UserAction extends plugin {
         let count = Math.max(1, forceNumber(e.msg.substr(4)));  //修正灵石数量至少为1
 
         const op = e.msg[1];
-        logger.info([op, count, backpack, warehouse]);
 
         if (op == '存' ? backpack.lingshi < count : warehouse.lingshi < count) {
             e.reply('灵石不足!');
             return;
         }
 
+        count *= (op == '取' ? 1 : -1);
         if (backpack.lingshi + count > backpack.lingshimax) {
             e.reply(`储物袋最多只能存下${backpack.lingshimax - backpack.lingshi}灵石！`);
             return;
         }
 
-        count *= (op == '取' ? 1 : -1);
         backpack.lingshi += count;
         warehouse.lingshi -= count;
         SetBackpackInfo(e.user_id, backpack);
