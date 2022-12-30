@@ -100,7 +100,7 @@ export class PlayerControl extends plugin {
             e.reply('才外出一会儿...');
             return;
         }
-        
+
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
         const exp = Math.floor(this.exerciseBuff * buff * time);
 

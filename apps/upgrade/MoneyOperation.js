@@ -69,7 +69,7 @@ export class MoneyOperation extends plugin {
     GiveSpiritStone = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
-        };
+        }
 
         const giverId = e.user_id;
         const doneeId = await At(e);
@@ -77,7 +77,7 @@ export class MoneyOperation extends plugin {
         if (doneeId == 0) {
             e.reply("获赠者不存在！");
             return;
-        };
+        }
 
         if (doneeId == giverId) {
             e.reply("请不要赠送给自己！");
@@ -88,7 +88,7 @@ export class MoneyOperation extends plugin {
         if ((await GetSpiritStoneCount(giverId)) < count) {
             e.reply([segment.at(giverId), `似乎没有${count}灵石.`]);
             return;
-        };
+        }
 
         bpAddSpiritStone(giverId, -count);
         whAddSpiritStone(doneeId, count);
@@ -98,7 +98,7 @@ export class MoneyOperation extends plugin {
     GiveProp = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
-        };
+        }
 
         const giverId = e.user_id;
         const doneeId = await At(e);
@@ -106,7 +106,7 @@ export class MoneyOperation extends plugin {
         if (doneeId == 0) {
             e.reply("获赠者不存在！");
             return;
-        };
+        }
 
         if (doneeId == giverId) {
             e.reply("请不要赠送给自己！");

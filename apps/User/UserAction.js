@@ -5,7 +5,7 @@ import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetBackpackInfo, SetBackpackInfo, AddItemByObj as bpAddItem, GetItemByName as bpGetItem } from '../../model/Cache/player/Backpack.js';
 import { GetWarehouseInfo, SetWarehouseInfo, AddItemByObj as whAddItem, GetItemByName as whGetItem } from '../../model/Cache/player/Warehouse.js';
-import { GetBackpackImage, GetWarehouseImage} from '../../model/Image/player.js';
+import { GetBackpackImage, GetWarehouseImage } from '../../model/Image/player.js';
 
 export class UserAction extends plugin {
     constructor() {
@@ -38,7 +38,7 @@ export class UserAction extends plugin {
             ]
         });
         this.config = config.getConfig('xiuxian', 'xiuxian').backpack;
-    };
+    }
 
     ShowBackpack = async (e) => {
         if (!await CheckStatu(e, StatuLevel.exist)) {
@@ -92,7 +92,7 @@ export class UserAction extends plugin {
     AccessSpiritStone = async (e) => {
         if (!await CheckStatu(e, StatuLevel.isMoving)) {
             return;
-        };
+        }
 
         if (!await IfAtSpot(e.user_id, '万宝楼')) {
             e.reply(`需回万宝楼`);

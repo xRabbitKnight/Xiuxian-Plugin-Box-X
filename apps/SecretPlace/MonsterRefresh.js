@@ -15,11 +15,11 @@ export class MonsterRefresh extends plugin {
         this.task = {
             name: "定时刷新怪物",
             cron: CRON_REFREASH,
-            fnc : () => this.refreshTask(),
-        }
-    };
+            fnc: () => this.refreshTask(),
+        };
+    }
 
-    refreshTask = async () =>{
+    refreshTask = async () => {
         //Bot.logger.info("怪物已刷新！");
         RefreshMonster();
     }

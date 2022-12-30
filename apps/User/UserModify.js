@@ -1,5 +1,4 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
 import { __PATH } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
@@ -24,13 +23,12 @@ export class UserModify extends plugin {
                 }
             ]
         });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
     }
 
     Rename = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
+        }
 
         if (await CheckCD(e, 'ReName')) {
             return;
@@ -46,9 +44,7 @@ export class UserModify extends plugin {
             return;
         }
         const name = ['尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
-        name.forEach((item) => {
-            new_name = new_name.replace(item, '');
-        });
+        name.forEach(item => new_name = new_name.replace(item, ''));
         if (new_name.length > 8) {
             e.reply('[修仙联盟]白老\n小友的这名可真是稀奇');
             return;
@@ -61,7 +57,7 @@ export class UserModify extends plugin {
     ChangeAutograph = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
+        }
 
         if (await CheckCD(e, 'Autograph')) {
             return;
@@ -70,9 +66,7 @@ export class UserModify extends plugin {
         let new_msg = e.msg.replace('#设置道宣', '');
         new_msg = new_msg.replace(' ', '');
         const name = ['尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
-        name.forEach((item) => {
-            new_msg = new_msg.replace(item, '');
-        });
+        name.forEach(item => new_msg = new_msg.replace(item, ''));
         if (new_msg.length == 0 || new_msg.length > 50) {
             e.reply('请正确设置,且道宣最多50字符');
             return;

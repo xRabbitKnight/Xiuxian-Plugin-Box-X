@@ -23,17 +23,17 @@ export class UserInformation extends plugin {
                 }
             ]
         });
-    };
+    }
 
     PlayerInfo = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.exist)){
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
         e.reply(await GetPlayerInfoImage(e.user_id));
     }
 
     PropertyPanel = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.exist)){
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
         e.reply(await GetEquipmentImage(e.user_id));

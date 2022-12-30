@@ -30,14 +30,14 @@ export class showall extends plugin {
     }
 
     Level = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.exist)){
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
         e.reply(await GetLevelImage(e.user_id));
     }
 
     LevelMax = async (e) => {
-        if(!await CheckStatu(e, StatuLevel.exist)){
+        if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
         e.reply(await GetLevelmaxImage(e.user_id));

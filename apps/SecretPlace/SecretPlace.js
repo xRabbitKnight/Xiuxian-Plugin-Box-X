@@ -40,7 +40,7 @@ export class SecretPlace extends plugin {
                 }
             ]
         });
-    };
+    }
 
     ShowCity = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inGroup)) {
@@ -58,7 +58,7 @@ export class SecretPlace extends plugin {
         const msg = [];
         points.forEach(point => msg.push(`地点名:${point.name}\n坐标:(${point.x},${point.y})`));
         await ForwardMsg(e, msg);
-    };
+    }
 
     GoBack = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
@@ -68,7 +68,7 @@ export class SecretPlace extends plugin {
         redis.del(`xiuxian:player:${e.user_id}:moving`);
         clearTimeout(isMoving[e.user_id]);
         e.reply('你回到了原地');
-    };
+    }
 
     ShowCoordinate = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
@@ -119,19 +119,19 @@ export class SecretPlace extends plugin {
         redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost, `正在前往${address}`);
 
         e.reply(`正在前往${address}...\n需要${timeCost}秒`);
-    };
+    }
 
     Teleport = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
             return;
-        };
+        }
 
         const address = e.msg.replace('#传送', '');
         const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.name == address);
         if (!position) {
             e.reply(`地图上没有${address}!`);
             return;
-        };
+        }
 
         const action = await GetActionInfo(e.user_id);
         const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
@@ -177,6 +177,5 @@ export class SecretPlace extends plugin {
         redis.setEx(`xiuxian:player:${e.user_id}:moving`, timeCost, `正在前往${address}`);
 
         e.reply(`传送${address}\n需要${timeCost}秒`);
-        return;
-    };
-};
+    }
+}

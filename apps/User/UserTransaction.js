@@ -33,15 +33,13 @@ export class UserTransaction extends plugin {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
-        
+
         if (!await IfAtSpot(e.user_id, '凡仙堂')) {
             e.reply(`需回凡仙堂`);
             return;
         }
 
-        const msg = [
-            '___[凡仙堂]___\n#购买+物品名*数量\n不填数量,默认为1'
-        ];
+        const msg = ['___[凡仙堂]___\n#购买+物品名*数量\n不填数量,默认为1'];
         const commodities_list = JSON.parse(fs.readFileSync(`${data.__PATH.all}/commodities.json`));
         commodities_list.forEach((item) => {
             const id = item.id.split('-');
@@ -91,7 +89,7 @@ export class UserTransaction extends plugin {
         AddItemByObj(e.user_id, ifexist, count)
 
         e.reply(`[凡仙堂]薛仁贵\n你花[${commodities_price}]灵石购买了[${name}]*${count},`);
-    };
+    }
 
     Sell = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
@@ -116,5 +114,5 @@ export class UserTransaction extends plugin {
         AddItemByObj(e.user_id, prop, -count)
 
         e.reply(`[凡仙堂]欧阳峰\n出售得${prop.price * count}灵石 `);
-    };
-};
+    }
+}

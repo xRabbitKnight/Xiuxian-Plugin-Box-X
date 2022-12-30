@@ -26,12 +26,12 @@ export class BattleSite extends plugin {
                 }
             ]
         });
-    };
+    }
 
     Kill = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canBattle)) {
             return;
-        };
+        }
 
         if (await CheckCD(e, 'Kill')) {
             return;
@@ -42,7 +42,7 @@ export class BattleSite extends plugin {
         if (!targetMonster) {
             e.reply(`这里没有${monsterName},去别处看看吧`);
             return;
-        };
+        }
 
         const msg = [`${e.sender.nickname}的[击杀结果]\n注:怪物每1小时刷新`];
         const battleResult = await PVE(e, targetMonster, msg);
@@ -53,17 +53,16 @@ export class BattleSite extends plugin {
 
         AddActionCD(e, 'Kill');
         ForwardMsg(e, msg);
-        return;
-    };
+    }
 
     ExploreMonsters = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
-        };
+        }
 
         const monsters = MonsterMgr.GetMonsters(await GetPlayerRegion(e.user_id));
         const msg = [];
         monsters.forEach(monster => msg.push(`怪名:${monster.name}\n等级:${monster.level}`));
         ForwardMsg(e, msg);
-    };
-};
+    }
+}
