@@ -1,5 +1,5 @@
 import MonsterMgr from "../Region/MonsterMgr.js";
-import { Model_1v1 } from "./BattleModel_1v1.js";
+import { _1v1 } from "./BattleModel_1v1.js";
 import { GetBattleInfo, SetBattleInfo } from "../Cache/player/Battle.js";
 
 /**
@@ -11,7 +11,7 @@ import { GetBattleInfo, SetBattleInfo } from "../Cache/player/Battle.js";
  */
 export async function PVE(_e, _monster, _msg){
     //1. 获取1v1战斗模型
-    const battleModel = Model_1v1;
+    const battleModel = _1v1;
 
     //2. 开始战斗
     const attacker = {
