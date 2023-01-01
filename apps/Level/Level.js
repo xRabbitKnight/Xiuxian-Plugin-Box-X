@@ -73,7 +73,7 @@ export class Level extends plugin {
 
         //突破成功
         const MAXRANK = 5;
-        player.bodyLevelExp -= list[player.bodyLevel - 1].exp;
+        player.bodyExp -= list[player.bodyLevel - 1].exp;
 
         player.bodyRank += 1;
         player.bodyLevel += Math.floor(player.bodyRank / MAXRANK);
