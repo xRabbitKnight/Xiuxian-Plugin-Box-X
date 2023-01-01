@@ -82,10 +82,10 @@ export class Level extends plugin {
         player.bodyLevelName = list[player.bodyLevel - 1].name;
 
         SetLevelInfo(e.user_id, player);
-        e.reply(`突破成功至${player.bodyLevelName}${RankName[player.bodyRank - 1]}`);
+        e.reply(`突破成功至${player.bodyLevelName}${RankName[player.bodyRank]}`);
 
         //大境界突破，更新面板
-        if(player.rank == 0){   
+        if(player.bodyRank == 0){   
             AddPowerByLevelUp(e.user_id, list, player.bodyLevel);
         }
     }
@@ -133,7 +133,7 @@ export class Level extends plugin {
 
         
         SetLevelInfo(e.user_id, player);
-        e.reply(`突破成功至${player.levelName}${RankName[player.rank - 1]}！`);
+        e.reply(`突破成功至${player.levelName}${RankName[player.rank]}！`);
         
         //大境界突破，更新面板，增加寿命
         if(player.rank == 0){   

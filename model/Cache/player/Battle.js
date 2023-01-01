@@ -99,6 +99,8 @@ export async function RefreshBattleInfo(_uid) {
     const attr2 = ['burst', 'burstmax', 'speed'];
     attr1.forEach(attr => battleInfo[attr] = Math.floor(battleInfo.base[attr] * (1 + enhancement[attr] / 100)));
     attr2.forEach(attr => battleInfo[attr] = Math.floor(battleInfo.base[attr] + enhancement[attr]));
+
+    battleInfo.power = 0;
     allAttrs.forEach(attr => battleInfo.power += battleInfo[attr]);
 
     SetBattleInfo(_uid, battleInfo);

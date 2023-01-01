@@ -17,7 +17,7 @@ async function normal(_uid, _monster, _msg) {
 
     const pellets = await GetRandItem("4", Math.floor(_monster.level / 5 + 1));
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-    AddItemsByObj(_uid, pellets);
+    await AddItemsByObj(_uid, pellets);
 }
 
 async function boss(_uid, _monster, _msg) {

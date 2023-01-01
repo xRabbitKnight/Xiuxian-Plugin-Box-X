@@ -12,18 +12,13 @@ export class OneKey extends plugin {
             rule: [
                 {
                     reg: '^#一键出售所有$',
-                    fnc: 'OneKey_all'
+                    fnc: 'SellAll'
                 }
             ]
         })
     }
 
-    /**
-     * 此功能需要去#万宝楼
-     * 装备物品个数需要控制！
-     */
-
-    OneKey_all = async (e) => {
+    SellAll = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
         }
