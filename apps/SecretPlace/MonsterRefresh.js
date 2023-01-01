@@ -62,6 +62,7 @@ export class MonsterRefresh extends plugin {
             Object.keys(battleInfo.base).forEach(attr => {
                 battleInfo.base[attr] = forceNumber(data.levelList[levelInfo.level - 1][attr]) + forceNumber(data.bodyLevelList[levelInfo.bodyLevel - 1][attr]);
             });
+            battleInfo.nowblood = battleInfo.base.blood;
             await SetBattleInfo(player, battleInfo);
             RefreshBattleInfo(player);
         });

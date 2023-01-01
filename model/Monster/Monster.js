@@ -18,18 +18,18 @@ export class Monster{
         this.level = _level;
 
         //TODO:我认为这个怪物应该有一套单独的面板机制= =， 还没想好, 暂定练气炼体各半取随机相加
-        const tmpInfo0 = Data.levelList.find(item => item.id == _level);
-        const tmpInfo1 = Data.bodyLevelList.find(item => item.id == _level);
-        const percent0 = Math.random() * 0.3 + 0.5;
-        const percent1 = Math.random() * 0.5 + 0.5;
+        const tmpInfo0 = Data.levelList[_level - 1];
+        const tmpInfo1 = Data.bodyLevelList[_level - 1];
+        const percent0 = Math.random() * 0.5 + 0.5;
+        const percent1 = Math.random() * 0.7 + 0.7;
         this.battleInfo = {
-            "nowblood": tmpInfo0.blood * percent0 + tmpInfo1.blood * percent1,
-            "attack": tmpInfo0.attack * percent0 + tmpInfo1.attack * percent1,
-            "defense": tmpInfo0.defense * percent0 + tmpInfo1.defense * percent1,
-            "blood": tmpInfo0.blood * percent0 + tmpInfo1.blood * percent1,
-            "burst": tmpInfo0.burst * percent0 + tmpInfo1.burst * percent1,
-            "burstmax": tmpInfo0.burstmax * percent0 + tmpInfo1.burstmax * percent1,
-            "speed": tmpInfo0.speed * percent0 + tmpInfo1.speed * percent1,
+            "nowblood": Math.floor(tmpInfo0.blood * percent0 + tmpInfo1.blood * percent1),
+            "attack": Math.floor(tmpInfo0.attack * percent0 + tmpInfo1.attack * percent1),
+            "defense": Math.floor(tmpInfo0.defense * percent0 + tmpInfo1.defense * percent1),
+            "blood": Math.floor(tmpInfo0.blood * percent0 + tmpInfo1.blood * percent1),
+            "burst": Math.floor(tmpInfo0.burst * percent0 + tmpInfo1.burst * percent1),
+            "burstmax": Math.floor(tmpInfo0.burstmax * percent0 + tmpInfo1.burstmax * percent1),
+            "speed": Math.floor(tmpInfo0.speed * percent0 + tmpInfo1.speed * percent1),
         }
     }
 }
