@@ -1,6 +1,6 @@
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
-import config from '../Config.js';
+import config from '../System/config.js';
 
 /******* 
  * @description: 获取帮助指令信息
@@ -14,7 +14,7 @@ export async function GetHelpImage(){
         //模板传入参数
         cssHelp : base.res + 'help/help.css',
         cssCommon : base.res + 'help/common.css',
-        helpData : config.getConfig('help', 'help')
+        helpData : config.GetConfig('help/help.yaml')
     });
 }
 
@@ -30,6 +30,6 @@ export async function GetAdminHelpImage(){
         //模板传入参数
         cssHelp : base.res + 'help/help.css',
         cssCommon : base.res + 'help/common.css',
-        helpData : config.getConfig('help', 'admin')
+        helpData : config.GetConfig('help/admin.yaml')
     });
 }

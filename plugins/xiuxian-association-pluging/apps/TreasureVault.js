@@ -1,6 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import fs from "node:fs"
 import {
     Add_najie_thing,
@@ -42,7 +41,6 @@ export class TreasureVault extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
 

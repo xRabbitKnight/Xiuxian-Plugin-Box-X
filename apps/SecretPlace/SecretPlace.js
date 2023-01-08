@@ -1,16 +1,16 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import data from '../../model/XiuxianData.js';
-import fs from 'node:fs';
 import { segment } from 'oicq';
-import { Read_action, ForwardMsg, exist_najie_thing_id, Add_najie_thing, Read_najie, Write_najie } from '../Xiuxian/Xiuxian.js';
+import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { inRange, rand } from '../../model/mathCommon.js';
-import { AddSpiritStone, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
+import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 import { GetSpeed } from '../../model/Cache/player/Battle.js';
 import { GetActionInfo, SetActionInfo } from '../../model/Cache/player/Action.js';
+import { GetAllSpot, IfAtSpot } from '../../model/Cache/place/Spot.js';
+import { GetAllArea } from '../../model/Cache/place/Area.js';
 
 const isMoving = [];
-export class SecretPlace extends plugin {
+export default class SecretPlace extends plugin {
     constructor() {
         super({
             name: 'SecretPlace',
@@ -47,17 +47,17 @@ export class SecretPlace extends plugin {
             return;
         }
 
-        const action = await Read_action(e.user_id);
-        if (action.address != 1) {
+        const action = await GetActionInfo(e.user_id);
+        if (action.address != '1') {
             e.reply('你对这里并不了解...');
             return;
         }
 
         const addressId = `${action.z}-${action.region}-${action.address}`;
-        const points = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).filter(item => item.id.includes(addressId));
+        const points = (await GetAllSpot()).filter(spot => spot.id.includes(addressId));
         const msg = [];
         points.forEach(point => msg.push(`地点名:${point.name}\n坐标:(${point.x},${point.y})`));
-        await ForwardMsg(e, msg);
+        ForwardMsg(e, msg);
     }
 
     GoBack = async (e) => {
@@ -75,9 +75,9 @@ export class SecretPlace extends plugin {
             return;
         }
 
-        const action = await Read_action(e.user_id);
-        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
-        const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => inRange(action.x, item.x1, item.x2) && inRange(action.y, item.y1, item.y2));
+        const action = await GetActionInfo(e.user_id);
+        const point = (await GetAllSpot()).find(spot => spot.x == action.x && spot.y == action.y);
+        const position = (await GetAllArea()).find(item => inRange(action.x, item.x1, item.x2) && inRange(action.y, item.y1, item.y2));
         const msg = [`坐标:(${action.x},${action.y})`];
         if (position) {
             msg.push(`所在区域: ${position.name}`);
@@ -85,9 +85,8 @@ export class SecretPlace extends plugin {
         if (point) {
             msg.push(`所在地点: ${point.name}`);
         }
-
-        await ForwardMsg(e, msg);
-    };
+        ForwardMsg(e, msg);
+    }
 
     GoTo = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canMove)) {
@@ -95,9 +94,9 @@ export class SecretPlace extends plugin {
         }
 
         const address = e.msg.replace('#前往', '');
-        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.name == address);
+        const point = (await GetAllSpot()).find(item => item.name == address);
         if (!point) {
-            await e.reply(`地图上没有${address}!`);
+            e.reply(`无法前往${address}!`);
             return;
         }
 
@@ -127,41 +126,38 @@ export class SecretPlace extends plugin {
         }
 
         const address = e.msg.replace('#传送', '');
-        const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.name == address);
-        if (!position) {
-            e.reply(`地图上没有${address}!`);
+        const position = (await GetAllArea()).find(item => item.name == address);
+        if (position == undefined) {
+            e.reply(`无法传送${address}!`);
             return;
         }
 
         const action = await GetActionInfo(e.user_id);
-        const point = JSON.parse(fs.readFileSync(`${data.__PATH.position}/point.json`)).find(item => item.x == action.x && item.y == action.y);
-        const inPortal = point?.id.split('-')[4] == 2;                                 //是否在传送阵
-        const haveScroll = (await exist_najie_thing_id(e.user_id, "6-1-3")) != 1;      //是否有传送卷轴
+        const inPortal = await IfAtSpot(e.user_id, '传送阵');           //是否在传送阵
+        const Scroll = await GetItemByName(e.user_id, '传送卷轴');      //是否有传送卷轴
 
-        if (!inPortal && !haveScroll) {
+        if (!inPortal && Scroll == undefined) {
             e.reply('请前往传送阵或者使用传送卷轴！');
             return;
-        };
+        }
 
         const wealth = await GetSpiritStoneCount(e.user_id);
         const cost = 1000;
-        if (wealth != undefined && wealth < cost) {
+        if (wealth == undefined || wealth < cost) {
             e.reply(`传送需要花费${cost}灵石`);
             return;
-        };
+        }
         AddSpiritStone(e.user_id, -cost);
 
 
         if (!inPortal) { //不在传送点， 消耗传送卷轴
-            let najie = await Read_najie(e.user_id);
-            najie = await Add_najie_thing(najie, { "id": "6-1-3" }, -1);
-            await Write_najie(e.user_id, najie);
+            AddItemByObj(e.user_id, Scroll, -1);
         }
 
         const target = {
             "x": rand(position.x1, position.x2),
             "y": rand(position.y1, position.y2)
-        };
+        }
         const distance = Math.abs(action.x - target.x) + Math.abs(action.y - target.y);
         const timeCost = Math.floor(distance / 100) + 1;
         isMoving[e.user_id] = setTimeout(async () => {

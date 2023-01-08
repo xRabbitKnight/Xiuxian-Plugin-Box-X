@@ -1,7 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
-import data from '../../../model/XiuxianData.js'
 import fs from "fs"
 import {ForwardMsg,shijianc,Read_battle, Read_level,Read_action,Write_level} from "../../../apps/Xiuxian/Xiuxian.js";
 
@@ -48,7 +46,6 @@ export class BlessPlace extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
 

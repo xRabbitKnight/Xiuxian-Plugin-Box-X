@@ -1,8 +1,8 @@
-import data from '../../XiuxianData.js'
+import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
 import { GetActionInfo } from '../player/Action.js';
 
-const filePath = `${data.__PATH.position}/point.json`;
+const filePath = data.__gameDataPath.allSpot;
 const redisKey = 'xiuxian:spots';
 
 /** ***** 

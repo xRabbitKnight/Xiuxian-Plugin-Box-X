@@ -1,6 +1,6 @@
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
-import data from '../XiuxianData.js'
+import data from '../System/data.js';
 import { GetLevelInfo } from '../Cache/player/Level.js';
 
 /******* 

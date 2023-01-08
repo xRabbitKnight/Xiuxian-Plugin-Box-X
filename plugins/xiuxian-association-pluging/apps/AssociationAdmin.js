@@ -1,7 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
-import data from '../../../model/XiuxianData.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import { Read_najie, Write_najie,timestampToTime,player_efficiency,Add_najie_thing,
     exist_najie_thing_id,existplayerplugins,
     Read_level,
@@ -50,7 +48,6 @@ export class AssociationAdmin extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
 

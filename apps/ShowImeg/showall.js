@@ -2,7 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import { GetMap } from '../../model/Image/map.js';
 import { GetLevelImage, GetLevelmaxImage } from '../../model/Image/state.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-export class showall extends plugin {
+export default class showall extends plugin {
     constructor() {
         super({
             name: 'showall',

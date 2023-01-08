@@ -1,7 +1,6 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
-import data from '../../../model/XiuxianData.js'
+//import data from '../../../model/XiuxianData.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import {
     Add_najie_thing,
     shijianc,
@@ -41,7 +40,6 @@ export class TreasureCabinet extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
     async Summon_Divine_Beast(e){

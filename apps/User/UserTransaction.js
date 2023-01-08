@@ -1,5 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import data from '../../model/XiuxianData.js';
+//import data from '../../model/XiuxianData.js';
 import fs from 'node:fs';
 import { ForwardMsg, __PATH } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';

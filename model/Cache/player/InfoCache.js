@@ -1,4 +1,3 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
 import { ReadSync, WriteAsync } from '../../File/File.js';
 
 /** ***** 

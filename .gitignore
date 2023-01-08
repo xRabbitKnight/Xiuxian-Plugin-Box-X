@@ -1,0 +1,4 @@
+plugins/xiuxian-association-pluging/resources/Association
+resources/help/help.jpg
+resources/data/birth/**/*.json
+resources/data/birth/*.json

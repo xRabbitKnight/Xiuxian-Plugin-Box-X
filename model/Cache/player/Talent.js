@@ -1,9 +1,9 @@
-import config from '../../Config.js';
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import config from '../../System/config.js';
+import data from '../../System/data.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:talentInfo";
-const PATH = __PATH.talent;
+const PATH = data.__gameDataPath.talent;
 
 /******* 
  * @description: 从cache里获取玩家的天赋信息
@@ -42,7 +42,7 @@ export async function GetTalentBuff(_uid){
  */
 export async function AddManual(_uid, _manual){
     const talentInfo = await GetTalentInfo(_uid);
-    const maxLearnNum = config.getConfig('xiuxian', 'xiuxian').myconfig.gongfa;
+    const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
 
     if(talentInfo.AllSorcery.find(item => item.id == _manual.id) != undefined || talentInfo.AllSorcery.length >= maxLearnNum){
         return false;

@@ -1,0 +1,16 @@
+#玩家行为cd
+action:
+  #突破                
+  levelUp: 5
+  #破体
+  bodyLevelUp: 5     
+  #修改道宣
+  autograph: 60
+  #改名
+  reName: 1240
+  #重生         
+  reborn: 360    
+  #攻击
+  attack: 5
+  #击杀
+  kill: 3

@@ -5,7 +5,7 @@ import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.j
 import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
 
-export class UserHome extends plugin {
+export default class UserHome extends plugin {
     constructor() {
         super({
             name: 'UserHome',

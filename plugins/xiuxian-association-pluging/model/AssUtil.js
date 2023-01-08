@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "path"
-import data from '../../../model/XiuxianData.js'
+import data from "../../../model/System/data.js";
 import { existplayerplugins,player_efficiency,existplayer } from "../../../apps/Xiuxian/Xiuxian.js";
 
 /*
@@ -42,23 +42,23 @@ class AssUtil {
         this.assRelationList = JSON.parse(fs.readFileSync(`${this.assRelation}/AssRelation.json`));
 
 
-        data.addlist([
-            ...JSON.parse(fs.readFileSync(`${this.all}/all.json`)),
-            ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`))
-        ], 'all');
-        data.addlist([
-            ...JSON.parse(fs.readFileSync(`${this.all}/dropsItem.json`)),
-            ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`)).slice(0,2),
-            ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`)).slice(0,2),
-        ], 'dropsItem');
-        data.addposition([
-            ...JSON.parse(fs.readFileSync(`${this.position}/point.json`)),
-            ...JSON.parse(fs.readFileSync(`${this.assRelate}/AssPoint.json`))
-        ], 'point');
-        data.addposition([
-            ...JSON.parse(fs.readFileSync(`${this.position}/position.json`)),
-            ...JSON.parse(fs.readFileSync(`${this.assRelate}/AssPosition.json`))
-        ], 'position');
+        // data.addlist([
+        //     ...JSON.parse(fs.readFileSync(`${this.all}/all.json`)),
+        //     ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`))
+        // ], 'all');
+        // data.addlist([
+        //     ...JSON.parse(fs.readFileSync(`${this.all}/dropsItem.json`)),
+        //     ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`)).slice(0,2),
+        //     ...JSON.parse(fs.readFileSync(`${this.assRelate}/AllAssProducts.json`)).slice(0,2),
+        // ], 'dropsItem');
+        // data.addposition([
+        //     ...JSON.parse(fs.readFileSync(`${this.position}/point.json`)),
+        //     ...JSON.parse(fs.readFileSync(`${this.assRelate}/AssPoint.json`))
+        // ], 'point');
+        // data.addposition([
+        //     ...JSON.parse(fs.readFileSync(`${this.position}/position.json`)),
+        //     ...JSON.parse(fs.readFileSync(`${this.assRelate}/AssPosition.json`))
+        // ], 'position');
     }
 
 

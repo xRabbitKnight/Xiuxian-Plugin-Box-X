@@ -1,14 +1,14 @@
-import Config from "./model/Config.js";
-import index from './model/index.js';
-import { RefreshMonster as InitMonster } from "./model/Region/Region.js";
+import GameMgr from "./model/System/GameMgr.js";
 
-const versionData = Config.getdefSet("version", "version");
-const xiuxain = await index.toindex('apps');
-const plugin = await index.toindex('plugins');
-const apps={...xiuxain,...plugin};
+// const xiuxain = await index.toindex('apps');
+// const plugin = await index.toindex('plugins');
+// const apps={...xiuxain,...plugin};
 
-//初始化所有怪物
-InitMonster();
 
-logger.info(`Xiuxian-Plugin-Box[V${versionData[0].version}]`);
+// logger.info(await GameMgr.apps);
+
+await GameMgr.Init();
+const apps = await GameMgr.apps;
+
+logger.info(`Xiuxian-Plugin-Box[V3]`);
 export {apps};

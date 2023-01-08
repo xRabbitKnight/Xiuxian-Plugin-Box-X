@@ -1,12 +1,11 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
+import config from '../../model/System/config.js';
 import { segment } from 'oicq';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetTalentBuff } from '../../model/Cache/player/Talent.js';
 import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
 import { AddBloodToPercent } from '../../model/Cache/player/Battle.js';
 
-export class PlayerControl extends plugin {
+export default class PlayerControl extends plugin {
     constructor() {
         super({
             name: 'PlayerControl',
@@ -32,12 +31,7 @@ export class PlayerControl extends plugin {
                 }
             ]
         });
-        this.cfg = config.getConfig('xiuxian', 'xiuxian');
-        this.seclusionLeastTime = this.cfg.biguan.time;
-        this.seclusionBuff = this.cfg.biguan.size;
-        this.exerciseLeastTime = this.cfg.work.time;
-        this.exerciseBuff = this.cfg.work.size;
-    };
+    }
 
     InSeclusion = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
@@ -70,14 +64,15 @@ export class PlayerControl extends plugin {
         }
         redis.del(`xiuxian:player:${e.user_id}:action`);
 
+        const cfg = config.GetConfig('game/player.yaml');
         const time = Math.floor((new Date().getTime() - action.startTime) / 60000);
-        if (time < this.seclusionLeastTime) {
+        if (time < cfg.seclusion.minTime) {
             e.reply('只是呆了一会儿...');
             return;
         }
 
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
-        const exp = Math.floor(this.seclusionBuff * buff * time);
+        const exp = Math.floor(cfg.seclusion.efficiency * buff * time);
 
         AddExp(e.user_id, exp);
         AddBloodToPercent(e.user_id, 100);
@@ -95,14 +90,15 @@ export class PlayerControl extends plugin {
         }
         redis.del(`xiuxian:player:${e.user_id}:action`);
 
+        const cfg = config.GetConfig('game/player.yaml');
         const time = Math.floor((new Date().getTime() - action.startTime) / 60000);
-        if (time < this.exerciseLeastTime) {
+        if (time < cfg.exercise.minTime) {
             e.reply('才外出一会儿...');
             return;
         }
 
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
-        const exp = Math.floor(this.exerciseBuff * buff * time);
+        const exp = Math.floor(cfg.exercise.efficiency * buff * time);
 
         AddExpMax(e.user_id, exp);
         AddBloodToPercent(e.user_id, 90);

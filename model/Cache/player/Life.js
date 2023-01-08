@@ -1,9 +1,9 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { forceNumber } from '../../mathCommon.js';
 
 const redisKey = "xiuxian:player:lifeInfo";
-const PATH = __PATH.life;
+const PATH = data.__gameDataPath.life;
 
 /******* 
  * @description: 从cache里获取玩家的生涯信息

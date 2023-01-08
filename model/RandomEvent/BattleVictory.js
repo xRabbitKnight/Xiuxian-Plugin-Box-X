@@ -1,10 +1,9 @@
-import fs from 'node:fs'
-import data from '../XiuxianData.js'
 import RandomEvent from "./RandomEvent.js";
 import { rand, clamp } from '../mathCommon.js'
 import { GetBattleInfo, SetBattleInfo } from '../Cache/player/Battle.js';
 import { AddExp, AddExpMax } from '../Cache/player/Level.js';
 import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';
+import { GetAllItem } from '../Cache/item/Item.js';
 
 const MaxLevel = 10;    //目前掉落物品的最高最低等级
 const MinLevel = 0;
@@ -75,7 +74,7 @@ const getAheadEquipment = new RandomEvent({
     odds: 0.10,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level + 5, MinLevel, MaxLevel);
-        const equipmentList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsEquipment.json`)).filter(item => item.level >= targetLevel);
+        const equipmentList = (await GetAllItem(['1','2','3'])).filter(item => item.level >= targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`跟随濒死的${_monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`);
         AddItemByObj(_e.user_id, equipment, 1);
@@ -87,7 +86,7 @@ const getRelateEquipment = new RandomEvent({
     odds: 0.30,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level, MinLevel, MaxLevel);
-        const equipmentList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsEquipment.json`)).filter(item => item.level == targetLevel);
+        const equipmentList = (await GetAllItem(['1','2','3'])).filter(item => item.level == targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`在${_monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`);
         AddItemByObj(_e.user_id, equipment, 1);
@@ -99,7 +98,7 @@ const getAheadGongfa = new RandomEvent({
     odds: 0.10,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level + 5, MinLevel, MaxLevel);
-        const gongfaList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsGongfa.json`)).filter(item => item.level >= targetLevel);
+        const gongfaList = (await GetAllItem(['5'])).filter(item => item.level >= targetLevel);
         const gongfa = gongfaList[rand(0, gongfaList.length)];
         _msg.push(`跟随濒死的${_monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${gongfa.name}！！`);
         AddItemByObj(_e.user_id, gongfa, 1);
@@ -111,7 +110,7 @@ const getRelateGongfa = new RandomEvent({
     odds: 0.30,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level, MinLevel, MaxLevel);
-        const gongfaList = JSON.parse(fs.readFileSync(`${data.__PATH.all}/dropsGongfa.json`)).filter(item => item.level == targetLevel);
+        const gongfaList = (await GetAllItem(['5'])).filter(item => item.level == targetLevel);
         const gongfa = gongfaList[rand(0, gongfaList.length)];
         _msg.push(`在${_monster.name}旁边，你发现一件东西掉在地上，你获得了${gongfa.name}！！`);
         AddItemByObj(_e.user_id, gongfa, 1);

@@ -2,7 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { GetBackpackInfo, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-export class OneKey extends plugin {
+export default class OneKey extends plugin {
     constructor() {
         super({
             name: 'OneKey',

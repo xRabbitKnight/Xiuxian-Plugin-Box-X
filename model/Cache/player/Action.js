@@ -1,8 +1,8 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:actionInfo";
-const PATH = __PATH.action;
+const PATH = data.__gameDataPath.action;
 
 /******* 
  * @description: 从cache里获取玩家的行为信息

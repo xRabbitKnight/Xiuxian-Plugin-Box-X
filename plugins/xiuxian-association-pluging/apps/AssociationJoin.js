@@ -1,6 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import {timestampToTime,player_efficiency,isNotNull,ForwardMsg, Read_level}  from "../../../apps/Xiuxian/Xiuxian.js";
 
 
@@ -43,7 +42,6 @@ export class AssociationJoin extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
 

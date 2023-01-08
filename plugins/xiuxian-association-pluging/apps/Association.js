@@ -1,7 +1,6 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
-import data from '../../../model/XiuxianData.js'
+import data from '../../../model/System/data.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import fs from "fs"
 import {player_efficiency,ForwardMsg, shijianc,Add_lingshi, Read_level, Read_wealth, Write_wealth} from "../../../apps/Xiuxian/Xiuxian.js";
 import { segment } from "oicq"
@@ -49,7 +48,6 @@ export class Association extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
 
@@ -160,7 +158,7 @@ export class Association extends plugin {
         }
         association_name =assRelation.id;
         const ass = assUtil.getAssOrPlayer(2,association_name);
-        const now_level = data.Level_list.find(item => item.id == player.level_id);
+        const now_level = data.levelList.find(item => item.id == player.level_id);
         const mostMem = numberMaximums[ass.level - 1];//该宗门目前人数上限
         const nowMem = ass.allMembers.length;//该宗门目前人数
         if (mostMem <= nowMem) {
@@ -193,7 +191,8 @@ export class Association extends plugin {
         const nowTime = now.getTime(); //获取当前时间戳
         let addTime;
 
-        const time=this.xiuxianConfigData.CD.joinassociation;//分钟
+        const time= 0;
+        //const time=this.xiuxianConfigData.CD.joinassociation;//分钟
 
         addTime = assPlayer.time[1] + 60000 * time;
 

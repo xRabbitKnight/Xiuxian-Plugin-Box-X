@@ -1,7 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
-import config from '../../model/Config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { Read_action, point_map, existplayer, __PATH, At, battle, Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
 export class Battle extends plugin {
@@ -22,8 +21,7 @@ export class Battle extends plugin {
                 }
             ]
         });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
-    };
+    }
 
 
     Attack = async (e) => {
@@ -31,7 +29,7 @@ export class Battle extends plugin {
             return;
         }
 
-        if(await CheckCD(e, 'Attack')){
+        if(await CheckCD(e, 'attack')){
             return ;
         }
 
@@ -81,7 +79,7 @@ export class Battle extends plugin {
             };
         };
 
-        await AddActionCD(e, 'Attack');
+        await AddActionCD(e, 'attack');
         return;
     };
 

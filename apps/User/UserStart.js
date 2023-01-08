@@ -1,6 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import data from '../../model/XiuxianData.js';
-import config from '../../model/Config.js';
+//import data from '../../model/XiuxianData.js';
 import fs from 'fs';
 import { segment } from 'oicq';
 import { existplayer, __PATH, Write_player, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray } from '../Xiuxian/Xiuxian.js';
@@ -21,18 +20,48 @@ export class UserStart extends plugin {
                 {
                     reg: '^#再入仙途$',
                     fnc: 'reCreate_player'
+                },
+                {
+                    reg: '^#联盟报到$',
+                    fnc: 'New_lingshi'
                 }
             ]
         });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
-    };
-    Create_player = async (e) => {
-        const group = this.xiuxianConfigData.group.white;
-        if (group != 0) {
-            if (e.group_id != group) {
-                return;
-            };
+    }
+
+    New_lingshi = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.canGive)) {
+            return;
         };
+
+        if (!await IfAtSpot(e.user_id, '联盟')) {
+            e.reply(`需回联盟`);
+            return;
+        }
+
+        const usr_qq = e.user_id;
+        const level = await Read_level(usr_qq);
+        if (level.level_id != 1) {
+            return;
+        };
+        if (action.newnoe != 1) {
+            return;
+        };
+        action.newnoe = 0;
+        await Write_action(usr_qq, action);
+        const equipment_name = '烂铁匕首';
+        const money = Number(5);
+        const ifexist = JSON.parse(fs.readFileSync(`${data.__PATH.all}/all.json`)).find(item => item.name == equipment_name);
+        let najie = await Read_najie(usr_qq);
+        najie = await Add_najie_thing(najie, ifexist, Number(1));
+        await Write_najie(usr_qq, najie);
+        await Add_lingshi(usr_qq, money);
+        e.reply(`[修仙联盟]方正\n看你骨骼惊奇\n就送你一把[${equipment_name}]吧\n还有这${money}灵石\n可在必要的时候用到`);
+        e.reply(`你对此高兴万分\n把[${equipment_name}]放进了#储物袋`)
+        return;
+    };
+    
+    Create_player = async (e) => {
         if (!e.isGroup || e.user_id == 80000000) {
             return;
         };
@@ -132,7 +161,7 @@ export class UserStart extends plugin {
     
     reCreate_player = async (e) => {
         const usr_qq = e.user_id;
-        if(CheckCD(e, 'ReBorn')){
+        if(CheckCD(e, 'reBorn')){
             return ;
         }
         await offaction(usr_qq);
@@ -142,7 +171,7 @@ export class UserStart extends plugin {
         await Write_Life(life);
         e.reply([segment.at(usr_qq), '来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断']);
         await this.Create_player(e);
-        await AddActionCD(e, 'ReBorn');
+        await AddActionCD(e, 'reBorn');
         return;
     };
 };

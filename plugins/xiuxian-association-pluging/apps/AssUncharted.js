@@ -1,8 +1,7 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import fs from "node:fs"
-import data from '../../../model/XiuxianData.js'
+import data from '../../../model/System/data.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import Show from '../model/show.js';
 import puppeteer from '../../../../../lib/puppeteer/puppeteer.js';
 import {
@@ -61,7 +60,6 @@ export class AssUncharted extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
     async List_AssUncharted(e){
@@ -298,7 +296,7 @@ export class AssUncharted extends plugin {
                 buff = (buff/10).toFixed(2);
             }
 
-            const LevelMax = data.Level_list.find(item => item.id == levelId);
+            const LevelMax = data.levelList.find(item => item.id == levelId);
 
             const monsters = {
                 'nowblood': Math.floor(LevelMax.blood*buff) ,

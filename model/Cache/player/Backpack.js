@@ -1,9 +1,9 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:backpackInfo";
-const PATH = __PATH.najie;
+const PATH = data.__gameDataPath.backpack;
 
 //--------------------------------------------------------------全部背包基础信息获取与更新方法
 /*******

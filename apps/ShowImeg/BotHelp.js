@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { GetHelpImage, GetAdminHelpImage } from '../../model/Image/help.js';
-export class BotHelp extends plugin {
+export default class BotHelp extends plugin {
     constructor() {
         super({
             name: 'BotHelp',

@@ -1,5 +1,4 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
+import config from '../../model/System/config.js';
 import { forceNumber } from '../../model/mathCommon.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
@@ -7,7 +6,7 @@ import { GetBackpackInfo, SetBackpackInfo, AddItemByObj as bpAddItem, GetItemByN
 import { GetWarehouseInfo, SetWarehouseInfo, AddItemByObj as whAddItem, GetItemByName as whGetItem } from '../../model/Cache/player/Warehouse.js';
 import { GetBackpackImage, GetWarehouseImage } from '../../model/Image/player.js';
 
-export class UserAction extends plugin {
+export default class UserAction extends plugin {
     constructor() {
         super({
             name: 'UserAction',
@@ -37,7 +36,6 @@ export class UserAction extends plugin {
                 }
             ]
         });
-        this.config = config.getConfig('xiuxian', 'xiuxian').backpack;
     }
 
     ShowBackpack = async (e) => {
@@ -58,20 +56,19 @@ export class UserAction extends plugin {
         }
 
         const backpack = await GetBackpackInfo(e.user_id);
-        const capacity = this.config.capacity;
-        const cost = this.config.upgradeCost;
+        const cfg = config.GetConfig('game/backpack.yaml');
 
-        if (backpack.grade == this.config.maxLevel) {
+        if (backpack.grade == cfg.maxLevel) {
             e.reply('已经是最高级的了');
             return;
         }
-        if (backpack.lingshi < cost[backpack.grade]) {
-            e.reply(`灵石不足,还需要准备${cost[backpack.grade] - backpack.lingshi}灵石`);
+        if (backpack.lingshi < cfg.upgradeCost[backpack.grade]) {
+            e.reply(`灵石不足,还需要准备${cfg.upgradeCost[backpack.grade] - backpack.lingshi}灵石`);
             return;
         }
 
-        backpack.lingshi -= cost[backpack.grade];
-        backpack.lingshimax = capacity[backpack.grade];
+        backpack.lingshi -= cfg.upgradeCost[backpack.grade];
+        backpack.lingshimax = cfg.capacity[backpack.grade];
         backpack.grade += 1;
         SetBackpackInfo(e.user_id, backpack);
         e.reply('储物袋升级完毕！');

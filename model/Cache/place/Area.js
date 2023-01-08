@@ -1,7 +1,7 @@
-import data from '../../XiuxianData.js'
+import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
 
-const filePath = `${data.__PATH.position}/position.json`;
+const filePath = data.__gameDataPath.allArea;
 const redisKey = 'xiuxian:areas';
 
 /** ***** 

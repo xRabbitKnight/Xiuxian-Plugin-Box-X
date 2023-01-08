@@ -1,8 +1,8 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:equipmentInfo";
-const PATH = __PATH.equipment;
+const PATH = data.__gameDataPath.equipment;
 
 /******* 
  * @description: 从cache里获取玩家的装备信息

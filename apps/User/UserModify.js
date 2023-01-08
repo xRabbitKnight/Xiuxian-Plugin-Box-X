@@ -1,11 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { __PATH } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
 import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
-export class UserModify extends plugin {
+export default class UserModify extends plugin {
     constructor() {
         super({
             name: 'UserModify',
@@ -30,7 +29,7 @@ export class UserModify extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'ReName')) {
+        if (await CheckCD(e, 'reName')) {
             return;
         }
 
@@ -51,7 +50,7 @@ export class UserModify extends plugin {
         }
 
         SetName(e.user_id, new_name);
-        AddActionCD(e, 'ReName');
+        AddActionCD(e, 'reName');
     }
 
     ChangeAutograph = async (e) => {
@@ -59,7 +58,7 @@ export class UserModify extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'Autograph')) {
+        if (await CheckCD(e, 'autograph')) {
             return;
         }
 
@@ -73,6 +72,6 @@ export class UserModify extends plugin {
         }
 
         SetAutograph(e.user_id, new_msg);
-        AddActionCD(e, 'Autograph');
+        AddActionCD(e, 'autograph');
     }
 }

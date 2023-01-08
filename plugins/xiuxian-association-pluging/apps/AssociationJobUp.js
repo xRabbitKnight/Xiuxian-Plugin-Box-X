@@ -1,6 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import {Write_level, Read_level,battle,Read_action}  from "../../../apps/Xiuxian/Xiuxian.js";
 
 //要DIY的话，确保这两个数组长度相等
@@ -34,7 +33,6 @@ export class AssociationJobUp extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
     async FetchJob(e){

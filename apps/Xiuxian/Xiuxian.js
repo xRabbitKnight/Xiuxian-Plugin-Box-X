@@ -1,7 +1,7 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import fs from 'fs';
 import path from 'path';
-import data from '../../model/XiuxianData.js';
+//import data from '../../model/XiuxianData.js';
 //插件地址
 export const __dirname = `${path.resolve()}${path.sep}plugins${path.sep}Xiuxian-Plugin-Box`;
 //插件地址链

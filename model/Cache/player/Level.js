@@ -1,9 +1,9 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:levelInfo";
-const PATH = __PATH.level;
+const PATH = data.__gameDataPath.level;
 
 /******* 
  * @description: 从cache里获取玩家的等级信息, 若没有则读文件, 读文件失败返回undefine

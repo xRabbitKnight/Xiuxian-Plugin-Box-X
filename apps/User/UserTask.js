@@ -1,10 +1,8 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
+import config from '../../model/System/config.js';
 import { AddAge } from '../../model/Cache/player/Life.js';
 import { GetAllUid } from '../../model/Cache/player/players.js';
-import { __PATH } from '../Xiuxian/Xiuxian.js';
 
-export class UserTask extends plugin {
+export default class UserTask extends plugin {
     constructor() {
         super({
             name: 'LifeTask',
@@ -13,17 +11,15 @@ export class UserTask extends plugin {
             priority: 300,
         });
 
-        this.ageInc = config.getConfig('xiuxian', 'xiuxian').Age.size;
-        this.set = config.getConfig('task', 'task');
         this.task = {
             name: 'LifeTask',
-            cron: this.set.LifeTask,
+            cron: config.GetConfig('task/age.yaml').cron,
             fnc: () => this.levelTask(),
         }
     }
 
     levelTask = async () => {
         const players = await GetAllUid();
-        players.forEach(player => AddAge(player, this.ageInc));
+        players.forEach(player => AddAge(player, config.GetConfig('task/age.yaml').ageInc));
     }
 }

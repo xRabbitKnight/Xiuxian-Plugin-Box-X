@@ -1,7 +1,7 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { ReadSync, WriteAsync } from '../../File/File.js';
 
-const filePath = __PATH.players;
+const filePath = data.__gameDataPath.players;
 const redisKey = 'xiuxian:players';
 
 /** ***** 

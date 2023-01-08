@@ -1,11 +1,10 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-import config from '../../model/Config.js';
+import config from '../../model/System/config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddEquipment, DelEquipment, GetEquipmentCount } from '../../model/Cache/player/Equipment.js';
 import { RefreshBattleInfo } from '../../model/Cache/player/Battle.js';
 
-export class Userequipment extends plugin {
+export default class Userequipment extends plugin {
     constructor() {
         super({
             name: 'Userequipment',
@@ -23,7 +22,6 @@ export class Userequipment extends plugin {
                 }
             ]
         });
-        this.maxEquipment = config.getConfig('xiuxian', 'xiuxian').maxEquipment;
     }
 
     Equip = async (e) => {
@@ -43,7 +41,7 @@ export class Userequipment extends plugin {
             return;
         }
 
-        if (await GetEquipmentCount(e.user_id) >= this.maxEquipment) {
+        if (await GetEquipmentCount(e.user_id) >= config.GetConfig('game/player.yaml').maxEquipment) {
             e.reply(`装备数已达上限！`);
             return;
         }

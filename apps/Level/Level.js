@@ -1,7 +1,4 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-import data from '../../model/XiuxianData.js';
-import config from '../../model/Config.js';
-import { __PATH } from '../Xiuxian/Xiuxian.js';
+import data from '../../model/System/data.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { CheckCD } from '../../model/CD/CheckCD.js';
 import { AddActionCD } from '../../model/CD/AddCD.js';
@@ -11,7 +8,7 @@ import { AddLife } from '../../model/Cache/player/Life.js';
 
 const RankName = ["初期", "中期", "后期", "巅峰", "圆满"];
 
-export class Level extends plugin {
+export default class Level extends plugin {
     constructor() {
         super({
             name: 'Level',
@@ -37,18 +34,17 @@ export class Level extends plugin {
                 },
             ]
         });
-        this.xiuxianConfigData = config.getConfig('xiuxian', 'xiuxian');
-    };
+    }
 
     BodyLevelUp = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canLevelUp)) {
             return;
         }
 
-        if (await CheckCD(e, 'BodyLevelUp')) {
+        if (await CheckCD(e, 'bodyLevelUp')) {
             return;
         }
-        AddActionCD(e, 'BodyLevelUp');
+        AddActionCD(e, 'bodyLevelUp');
 
         const player = await GetLevelInfo(e.user_id);
 
@@ -95,10 +91,10 @@ export class Level extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'LevelUp')) {
+        if (await CheckCD(e, 'levelUp')) {
             return;
         }
-        AddActionCD(e, 'LevelUp');
+        AddActionCD(e, 'levelUp');
 
         const player = await GetLevelInfo(e.user_id);
 

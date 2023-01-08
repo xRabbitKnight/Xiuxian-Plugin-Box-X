@@ -1,0 +1,19 @@
+#最多学习功法数
+maxManual: 12
+  
+#最多装备数
+maxEquipment : 4
+
+#闭关
+seclusion: 
+  #效率
+  efficiency: 5 
+  #最少时间
+  minTime: 10 
+
+#降妖
+exercise: 
+  #效率
+  efficiency: 2 
+  #最少时间
+  minTime: 10 

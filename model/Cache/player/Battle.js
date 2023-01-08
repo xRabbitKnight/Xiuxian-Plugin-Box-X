@@ -1,10 +1,10 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetEquipmentInfo } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:battleInfo";
-const PATH = __PATH.battle;
+const PATH = data.__gameDataPath.battle;
 
 /******* 
  * @description: 从cache里获取玩家的战斗面板信息

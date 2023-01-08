@@ -1,9 +1,9 @@
-import { __PATH } from '../../../apps/Xiuxian/Xiuxian.js';
+import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:warehouseInfo";
-const PATH = __PATH.warehouse;
+const PATH = data.__gameDataPath.warehouse;
 
 /******* 
  * @description: 从cache里获取玩家的仓库信息

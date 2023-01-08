@@ -1,6 +1,5 @@
 import plugin from '../../../../../lib/plugins/plugin.js'
 import assUtil from '../model/AssUtil.js'
-import config from "../../../model/Config.js"
 import { exist_najie_thing_id, ForwardMsg, Read_najie, Write_najie,Add_najie_thing,existplayerplugins,Write_action} from "../../../apps/Xiuxian/Xiuxian.js";
 import fs from "node:fs"
 
@@ -37,16 +36,9 @@ export class AssociationExtend extends plugin {
                 }
             ]
         })
-        this.xiuxianConfigData = config.getConfig("xiuxian", "xiuxian");
     }
 
     async refreshAssPlayer(e){
-        let group= this.xiuxianConfigData.group.white;
-        if(group!=0){
-            if(e.group_id!=group){
-                return;
-            }
-        }
         if (!e.isMaster) {
             return;
         }

@@ -1,7 +1,7 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { GetEquipmentImage, GetPlayerInfoImage } from '../../model/Image/player.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-export class UserInformation extends plugin {
+export default class UserInformation extends plugin {
     constructor() {
         super({
             name: 'UserInformation',

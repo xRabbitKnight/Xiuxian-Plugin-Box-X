@@ -2,7 +2,7 @@ import plugin from "../../../../lib/plugins/plugin.js";
 import { GetBattleInfo, RefreshBattleInfo, SetBattleInfo } from "../../model/Cache/player/Battle.js";
 import { GetLevelInfo } from "../../model/Cache/player/Level.js";
 import { forceNumber } from "../../model/mathCommon.js";
-import data from "../../model/XiuxianData.js"
+import data from "../../model/System/data.js";
 import { RefreshBoss, RefreshMonster } from "../../model/Region/Region.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
 
@@ -10,7 +10,7 @@ import { GetAllUid } from "../../model/Cache/player/players.js";
 const CRON_REFREASH_MONSTER = '0 0 0/1 * * ?';
 const CRON_REFREASH_BOSS = '0 0 0/12 * * ?';
 
-export class MonsterRefresh extends plugin {
+export default class MonsterRefresh extends plugin {
     constructor() {
         super({
             name: "刷新怪物",

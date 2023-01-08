@@ -9,7 +9,7 @@ import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 import { GetDrops } from '../../model/Battle/BattleDrop.js';
 
-export class BattleSite extends plugin {
+export default class BattleSite extends plugin {
     constructor() {
         super({
             name: 'BattleSite',
@@ -34,7 +34,7 @@ export class BattleSite extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'Kill')) {
+        if (await CheckCD(e, 'kill')) {
             return;
         }
 
@@ -52,7 +52,7 @@ export class BattleSite extends plugin {
             BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
 
-        AddActionCD(e, 'Kill');
+        AddActionCD(e, 'kill');
         ForwardMsg(e, msg);
     }
 
