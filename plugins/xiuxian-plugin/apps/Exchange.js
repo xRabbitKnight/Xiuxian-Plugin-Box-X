@@ -11,33 +11,28 @@ export class Exchange extends plugin {
             dsc: '交易模块',
             event: 'message',
             priority: 600,
-            rule: [
-                {
-                    reg: '^#弱水阁$',
-                    fnc: 'supermarket'
-                },
-                {
-                    reg: '^#上架.*$',
-                    fnc: 'onsell'
-                },
-                {
-                    reg: '^#下架.*$',
-                    fnc: 'Offsell'
-                },
-                {
-                    reg: '^#选购.*$',
-                    fnc: 'purchase'
-                }
-            ]
+            // rule: [
+            //     {
+            //         reg: '^#弱水阁$',
+            //         fnc: 'Market'
+            //     },
+            //     {
+            //         reg: '^#上架.*$',
+            //         fnc: 'OnSell'
+            //     },
+            //     {
+            //         reg: '^#下架.*$',
+            //         fnc: 'OffSell'
+            //     },
+            //     {
+            //         reg: '^#选购.*$',
+            //         fnc: 'Purchase'
+            //     }
+            // ]
         });
     };
 
-    /**
-     * 此功能需要回  #弱水阁
-     */
-
-
-    supermarket = async (e) => {
+     Market = async (e) => {
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
