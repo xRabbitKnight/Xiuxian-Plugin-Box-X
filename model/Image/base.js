@@ -1,6 +1,4 @@
-/******* 
- * @description: 提供puppeteer截图需要的路径数据
- */
+/** 提供puppeteer截图需要的路径数据 */
 const prePath = {
   //模板html路径
   html : `./plugins/Xiuxian-Plugin-Box/resources/html/`,

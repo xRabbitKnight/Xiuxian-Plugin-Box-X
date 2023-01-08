@@ -1,5 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { GetHelpImage, GetAdminHelpImage } from '../../model/Image/help.js';
+import { GetHelpImage } from '../../model/Image/help.js';
 export default class BotHelp extends plugin {
     constructor() {
         super({
@@ -11,10 +11,6 @@ export default class BotHelp extends plugin {
                 {
                     reg: '^#修仙帮助$',
                     fnc: 'Help'
-                },
-                {
-                    reg: '^#修仙管理$',
-                    fnc: 'Admin',
                 }
             ]
         });
@@ -22,9 +18,5 @@ export default class BotHelp extends plugin {
 
     Help = async (e) => {
         e.reply(await GetHelpImage());
-    }
-
-    Admin = async (e) => {
-        e.reply(await GetAdminHelpImage());
     }
 };

@@ -83,7 +83,7 @@ async function getApps() {
 
             const cls = (await import(filePath))['default'];
             if (cls != undefined && new cls() instanceof plugin) {
-                apps[file.replace('.js', '')] = cls;
+                apps[file] = cls;
             }
         }
         dirs.shift();

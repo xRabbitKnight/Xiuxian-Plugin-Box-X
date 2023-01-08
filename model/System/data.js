@@ -14,7 +14,7 @@ import path from 'path';
 
 
 /** 插件根目录地址前缀 */
-const __prePath = `${path.resolve()}${path.sep}plugins${path.sep}Xiuxian-Plugin-Box`;
+const __prePath = path.join(path.resolve(), 'plugins', 'Xiuxian-Plugin-Box');
 
 /** 游戏数据地址前缀 */
 const __gameDataPrePath = path.join(__prePath, 'resources', 'data', 'birth');
@@ -38,7 +38,7 @@ class Data {
         return Data.instance;
     }
 
-    /** 插件根目录地址前缀 */
+    /** 游戏根目录地址前缀 */
     get __prePath() { return __prePath; }
     /** 不同模块游戏数据地址 */
     get __gameDataPath() { return __gameDataPath; }
