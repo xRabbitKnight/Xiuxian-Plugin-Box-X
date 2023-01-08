@@ -1,0 +1,31 @@
+yunzai全局变量：
+    Bot: oicq Client实例
+
+    logger: 日志记录 7个方法 trace, debug, info, warn, error, fatal, mark
+
+    redis: redis Client实例 
+        操作Redis, API参考: https://github.com/redis/node-redis https://redis.io/commands/
+    
+    plugin: plugin基础类
+
+
+如何让yunzai识别插件：
+    1. 单独js文件或者少量js文件：
+        直接放置在插件目录下，或者新建一层文件夹放置其中。
+
+    2. 大量js文件    
+        插件根目录下创建 index.js ，注意当存在 index.js 文件时，同目录下其他js文件会被忽略
+        index文件中保存所有继承plugin的类的引用，并导出为 apps
+        apps 内容格式 { name : [class xxx extends plugin] , ...} name随意， value 是继承自plugin的类的引用，可通过 import()获得
+
+
+关于yunzai截图：
+    1. 使用 art-template html模板 
+        语法操作参考: http://aui.github.io/art-template/zh-cn/docs/index.html https://blog.csdn.net/weixin_45054614/article/details/120277072
+
+    2. 模板html不填路径的话，生成在yunzai根目录下 data/html 中，所以html里边css路径建议使用绝对路径
+
+    3. 关于css中 font字体，不知道为什么无法获取前几级目录中的字体文件，未解决
+
+
+修仙相关英文名参考: https://www.sohu.com/a/273528415_684688

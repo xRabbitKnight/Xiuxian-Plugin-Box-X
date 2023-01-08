@@ -1,5 +1,0 @@
-备忘
-
-1. yunzai全局变量 redis 操作Redis， 详细API ： https://github.com/redis/node-redis  https://www.runoob.com/redis/redis-keys.html https://redis.io/commands/
-2. puppeteer art-template 操作参考 http://aui.github.io/art-template/zh-cn/docs/index.html https://blog.csdn.net/weixin_45054614/article/details/120277072
-3. 英文名参考 https://www.sohu.com/a/273528415_684688
