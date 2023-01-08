@@ -1,0 +1,45 @@
+- group: 凡仙堂
+  list:
+    - icon: help-icon_53
+      title: "#凡仙堂"
+      desc: "查看商店"
+    - icon: help-icon_53
+      title: "#购买+物品名*1"
+      desc: "购买物品，数量不填默认为1"
+    - icon: help-icon_44
+      title: "#出售+物品名*1"
+      desc: "出售物品，数量不填默认为1"
+
+
+- group: 弱水阁
+  list:
+    - icon: help-icon_53
+      title: "#弱水阁"
+      desc: "玩家交易中心"
+    - icon: help-icon_53
+      title: "#上架+物品名*数量*价格"
+      desc: "上架物品，数量不填默认为1"
+    - icon: help-icon_44
+      title: "#选购+编号"
+      desc: "购买选择物品"
+    - icon: help-icon_44
+      title: "#下架+编号"
+      desc: "下架物品"  
+
+- group: 万宝楼
+  list:
+    - icon: help-icon_44
+      title: "#一键出售所有"
+      desc: "出售储物袋里所有物品"  
+
+- group: 
+  list:
+    - icon: help-icon_60
+      title: "#至尊榜"
+      desc: "凡人战力榜(可私聊)"
+    - icon: help-icon_60
+      title: "#封神榜"
+      desc: "仙人战力榜(可私聊)"
+    - icon: help-icon_60
+      title: "#杀神榜"
+      desc: "罪恶魔力榜(可私聊)"

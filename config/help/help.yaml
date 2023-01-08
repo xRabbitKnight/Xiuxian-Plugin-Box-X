@@ -36,9 +36,30 @@
 
 - group: 
   list:
+    - icon: help-icon_44
+      title: "#学习+功法名"
+      desc: "学习功法"
+    - icon: help-icon_44
+      title: "#忘掉+功法名"
+      desc: "忘掉功法"
+    - icon: help-icon_42
+      title: "#消耗+道具名"
+      desc: "消耗道具"
+    - icon: help-icon_6
+      title: "#服用+丹药名"
+      desc: "服用丹药"
+    - icon: help-icon_46
+      title: "#装备+装备名"
+      desc: "装备物品"
+    - icon: help-icon_46
+      title: "#卸下+装备名"
+      desc: "卸下装备"
+      
+- group: 
+  list:
     - icon: help-icon_54
       title: "#攻击 @群友"
-      desc: "可掉装备"
+      desc: "掀起血雨腥风吧"
     - icon: help-icon_107
       title: "#洗手"
       desc: "清魔力值"
@@ -48,7 +69,6 @@
     - icon: help-icon_98
       title: "#探索怪物"
       desc: "查看所在地的怪物"
-
 
 - group: 
   list:
@@ -60,7 +80,7 @@
       desc: "查看自己的坐标"
     - icon: help-icon_98
       title: "#位置信息"
-      desc: "神识搜索位置"
+      desc: "神识查看周围环境"
     - icon: help-icon_98
       title: "#前往+位置名"
       desc: "前往指定位置"
@@ -91,12 +111,6 @@
 
 - group: 
   list:
-    - icon: help-icon_53
-      title: "#凡仙堂"
-      desc: "官方商店"
-    - icon: help-icon_53
-      title: "#弱水阁"
-      desc: "玩家交易"
     - icon: help-icon_10
       title: "#赠送灵石1000 @群友"
       desc: "赠送灵石"
