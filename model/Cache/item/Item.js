@@ -1,8 +1,7 @@
 import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
-import { rand } from '../../mathCommon.js';
+import { rand, forceNumber } from '../../mathCommon.js';
 
-const filePath = data.__gameDataPath.allItem;
 const redisKey = 'xiuxian:items';
 
 /** ***** 
@@ -12,7 +11,7 @@ const redisKey = 'xiuxian:items';
 export async function GetAll() {
     let value = await redis.get(redisKey);
     if (value == null) {
-        value = ReadSync(filePath);
+        value = ReadSync(data.__gameDataPath.allItem);
         if (value == undefined) return undefined;
 
         redis.set(redisKey, value);
@@ -40,9 +39,9 @@ export async function GetAllItem(_types) {
  * @return {Promise<[]>} 物品数组，获取物品失败时返回undefined
  */
 export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
-    const items = await GetAllItem([_type]);
+    let items = await GetAllItem([_type]);
     if (items == undefined) return undefined;
-    if (_dropLevel != undefined) items = items.filter(item => item._dropLevel <= _dropLevel);
+    if (_dropLevel != undefined) items = items.filter(item => item.dropLevel <= _dropLevel);
 
     const ret = [];
     for (let i = 0; i < _count; ++i) {
@@ -58,4 +57,21 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
         }
     }
     return ret;
+}
+
+/******* 
+ * @description: 根据名字获取物品实例
+ * @param {string} _name 物品名
+ * @param {number} _count 获取数量
+ * @return {Promise<any>} 对应物品
+ */
+export async function GetItemByName(_name, _count) {
+    const items = await GetAll();
+    if (items == undefined) return undefined;
+
+    const item = items.find(item => item.name == _name);
+    if (item == undefined) return undefined;
+
+    item.acount = forceNumber(_count);
+    return item;
 }

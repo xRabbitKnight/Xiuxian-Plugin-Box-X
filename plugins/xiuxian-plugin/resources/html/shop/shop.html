@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="{{cssPath}}" />
+</head>
+
+<body>
+  <div style="height: 1px;"></div>
+
+  <div class="user_top">
+    <h1>凡 仙 堂</h1>
+  </div>
+  <div class="user_top user_help">
+    <span>#购买</span><span>物品名 * 数量</span>
+    <span>#出售</span><span>物品名 * 数量</span>
+  </div>
+
+  <div class="user_bottom1">
+    <div class="user_data">
+      {{each commodities item}}
+      <div class="item_name">{{item.name}}</div>
+
+      {{if item.id[0] == '1' || item.id[0] == '2' || item.id[0] == '3'}}
+      <div class="equipment1">
+        <div> 攻击:{{item.attack}}% </div>
+        <div> 防御:{{item.defense}}% </div>
+        <div> 血量:{{item.blood}}% </div>
+      </div>
+      <div class="equipment2">
+        <div> 暴击:{{item.burst}}% </div>
+        <div> 暴伤:{{item.burstmax}}% </div>
+        <div> 敏捷:{{item.speed}} </div>
+      </div>
+      {{/if}}
+
+      {{if item.id[0] == '4'}}
+      <div class="danyao">
+        <div> 血量:{{item.blood}}% </div>
+        <div> 气血:{{item.experiencemax}} </div>
+        <div> 修为:{{item.experience}} </div>
+      </div>
+      {{/if}}
+
+      {{if item.id[0] == '5'}}
+      <div class="gongfa">
+        <div> 天赋:{{item.size}}% </div>
+      </div>
+      {{/if}}
+
+      <div class="price">
+        <div> 数量:{{item.acount}} </div>
+        <div> 价格:{{item.price}} </div>
+      </div>
+      {{/each}}
+
+    </div>
+  </div>
+
+</body>
+
+</html>

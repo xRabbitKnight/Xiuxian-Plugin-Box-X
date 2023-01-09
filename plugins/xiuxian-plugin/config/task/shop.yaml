@@ -1,0 +1,18 @@
+#商店相关设置
+
+#刷新间隔时间 4小时一次
+cron: 0 0 0/4 * * ?
+
+#丹药刷新数量与最高等级
+pellet:
+  count: 30
+  maxLevel: 2
+
+#道具刷新数量
+item: 
+  count: 0
+
+#功法刷新数量与最高等级
+manual:
+  count: 1
+  maxLevel: 4

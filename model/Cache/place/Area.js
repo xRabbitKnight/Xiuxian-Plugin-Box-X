@@ -1,7 +1,6 @@
 import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
 
-const filePath = data.__gameDataPath.allArea;
 const redisKey = 'xiuxian:areas';
 
 /** ***** 
@@ -11,7 +10,7 @@ const redisKey = 'xiuxian:areas';
 export async function GetAllArea() {
     let value = await redis.get(redisKey);
     if (value == null) {
-        value = ReadSync(filePath);
+        value = ReadSync(data.__gameDataPath.allArea);
         if (value == undefined) return undefined;
 
         redis.set(redisKey, value);

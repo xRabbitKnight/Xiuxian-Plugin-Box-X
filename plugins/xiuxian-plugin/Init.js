@@ -1,8 +1,9 @@
+import Shop from "./apps/Shop.js";
 
-export function Init(){
-
+export function dataInit(){
+    
 }
 
-export function Load(){
-
+export function gameInit(){
+    new Shop().RefreshShop();
 }

@@ -1,0 +1,153 @@
+@font-face {
+  font-family: "xiuxian";
+  src: url('../../font/_GBK.TTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  background-image: url('shop.jpg');
+  background-size: 100% auto;
+  font-family: xiuxian;
+}
+
+.user_top {
+  grid-template-columns: auto auto auto;
+  padding: 15px;
+  margin: 40px;
+  background-image: linear-gradient(to bottom, rgb(19, 21, 22, 0.9), rgba(19, 21, 22, 0.486));
+  border-radius: 50px;
+  color: white;
+}
+
+.user_top h1 {
+  font-size: 40px;
+  line-height: 50px;
+  margin: 5px 0;
+}
+
+.user_help {
+  display: grid;
+  grid-template-columns: 100px 190px;
+  grid-row-gap: 8px;
+  margin-top: -30px;
+  justify-items: start;
+  justify-content: center;
+  background-image: none;
+  background-color: rgba(19, 21, 22, 0.6);
+  padding-left: 80px;
+  font-size: 20px
+}
+
+.user_top_left {
+  text-align: left;
+  margin: auto;
+}
+
+.user_top_right {
+  height: 100%;
+  width: 100%;
+}
+
+.user_top_right_font0 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.842);
+}
+
+.user_top_right_font {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.448);
+}
+
+.user_top_right_font1 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+}
+
+.user_top_right_font2 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.666);
+  margin-bottom: 10px;
+}
+
+.user_data {
+  padding-bottom: 20px;
+}
+
+.item_name {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.842);
+}
+
+.equipment1 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+.equipment2 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+.danyao {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+.gongfa {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.448);
+  display: grid;
+  grid-template-columns: 100%;
+}
+
+.price {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.666);
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-bottom: 10px;
+}
+
+.user_bottom1 {
+  border-radius: 20px;
+  width: 90%;
+  margin: auto;
+}

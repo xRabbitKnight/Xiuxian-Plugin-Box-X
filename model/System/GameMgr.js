@@ -2,7 +2,7 @@
  description: 
     游戏管理器，目前负责游戏开始前所有内容的初始化
     关于插件的初始化，请在插件根目录下创建 Init.js
-    并实现方法 Init() 即可
+    并实现方法 dataInit() 或 gameInit() 即可
  -----------------------------------------------**/
 
 import plugin from '../../../../lib/plugins/plugin.js'
@@ -21,26 +21,19 @@ class GameMgr {
 
     async Init() {
         //游戏数据部分
-        init();
-        await pluginInit();
-        save();
+        data.Init();
+        await pluginDataInit();
+        data.Save();
 
         //游戏内容部分
         InitMonster();
+        await pluginGameInit();
     }
 
 }
 export default new GameMgr();
 
-function init() {
-    data.Init();
-}
-
-function save(){
-    data.Save();
-}
-
-async function pluginInit() {
+async function pluginDataInit() {
     const dir = path.join(data.__prePath, 'plugins');
 
     const plugins = fs.readdirSync(dir);
@@ -48,7 +41,21 @@ async function pluginInit() {
         const targetFile = path.join(dir, plugin, 'Init.js');
         if (!fs.existsSync(targetFile)) continue;
 
-        const init = (await import(targetFile))['Init'];
+        const init = (await import(targetFile))['dataInit'];
+        if (init == undefined) continue;
+        init();
+    }
+}
+
+async function pluginGameInit(){
+    const dir = path.join(data.__prePath, 'plugins');
+
+    const plugins = fs.readdirSync(dir);
+    for (var plugin of plugins) {
+        const targetFile = path.join(dir, plugin, 'Init.js');
+        if (!fs.existsSync(targetFile)) continue;
+
+        const init = (await import(targetFile))['gameInit'];
         if (init == undefined) continue;
         init();
     }

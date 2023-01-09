@@ -2,7 +2,6 @@ import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
 import { GetActionInfo } from '../player/Action.js';
 
-const filePath = data.__gameDataPath.allSpot;
 const redisKey = 'xiuxian:spots';
 
 /** ***** 
@@ -12,7 +11,7 @@ const redisKey = 'xiuxian:spots';
 export async function GetAllSpot() {
     let value = await redis.get(redisKey);
     if (value == null) {
-        value = ReadSync(filePath);
+        value = ReadSync(data.__gameDataPath.allSpot);
         if (value == undefined) return undefined;
 
         redis.set(redisKey, value);
