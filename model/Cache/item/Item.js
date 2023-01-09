@@ -25,9 +25,9 @@ export async function GetAll() {
  * @param {[]} _types 指定类型数组 见id数据头 1武器2护具3法宝4丹药5功法6道具7技能书
  * @return {Promise<[]>} 物品数组，获取物品失败时返回undefined
  */
-export async function GetAllItem(_types){
+export async function GetAllItem(_types) {
     const items = await GetAll();
-    if(items == undefined) return undefined;
+    if (items == undefined) return undefined;
 
     return items.filter(item => undefined != _types.find(type => type == item.id.split('-')[0]));
 }
@@ -36,11 +36,13 @@ export async function GetAllItem(_types){
  * @description: 获取随机数量的物品
  * @param {string} _type 物品种类，见id数据头 1武器2护具3法宝4丹药5功法6道具7技能书
  * @param {number} _count 需获取物品的数量, 不填默认为1
+ * @param {number} _dropLevel 设置掉落等级，不填则全掉落
  * @return {Promise<[]>} 物品数组，获取物品失败时返回undefined
  */
-export async function GetRandItem(_type, _count = 1) {
+export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
     const items = await GetAllItem([_type]);
     if (items == undefined) return undefined;
+    if (_dropLevel != undefined) items = items.filter(item => item._dropLevel <= _dropLevel);
 
     const ret = [];
     for (let i = 0; i < _count; ++i) {

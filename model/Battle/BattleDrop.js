@@ -15,7 +15,7 @@ async function normal(_uid, _monster, _msg) {
     await AddSpiritStone(_uid, _monster.level * 100);
     _msg.push(`采集出售从${_monster.name}获取的战利品，你获得了${_monster.level * 100}灵石`);
 
-    const pellets = await GetRandItem("4", Math.floor(_monster.level / 5 + 1));
+    const pellets = await GetRandItem("4", Math.floor(_monster.level / 5 + 1), _monster.level);
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
     await AddItemsByObj(_uid, pellets);
 }

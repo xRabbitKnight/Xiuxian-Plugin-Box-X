@@ -12,7 +12,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 100
+        "price": 100,
+        "dropLevel": 1
     },
     {
         "id": "4-2-11",
@@ -27,7 +28,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 132
+        "price": 132,
+        "dropLevel": 1
     },
     {
         "id": "4-2-12",
@@ -42,7 +44,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 195
+        "price": 195,
+        "dropLevel": 2
     },
     {
         "id": "4-2-13",
@@ -57,7 +60,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 311
+        "price": 311,
+        "dropLevel": 2
     },
 
     {
@@ -73,7 +77,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 427
+        "price": 427,
+        "dropLevel": 3
     },
     {
         "id": "4-2-15",
@@ -88,7 +93,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 879
+        "price": 879,
+        "dropLevel": 3
     },
     {
         "id": "4-2-16",
@@ -103,7 +109,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 1331
+        "price": 1331,
+        "dropLevel": 4
     },
     {
         "id": "4-2-17",
@@ -118,7 +125,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 2179
+        "price": 2179,
+        "dropLevel": 4
     },
     {
         "id": "4-2-18",
@@ -133,7 +141,8 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 3027
+        "price": 3027,
+        "dropLevel": 5
     },
     {
         "id": "4-2-19",
@@ -148,6 +157,7 @@
         "experiencemax": 0,
         "speed": 0,
         "acount": 1,
-        "price": 4676
+        "price": 4676,
+        "dropLevel": 5
     }
 ]
