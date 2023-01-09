@@ -1,7 +1,7 @@
 import config from "../../../model/System/config.js"
 import data from "../model/System/data.js";
 import { IfAtSpot } from "../../../model/Cache/place/Spot.js";
-import { AddItemByObj, AddSpiritStone, GetSpiritStoneCount, GetItemByName as GetBackpackItem } from "../../../model/Cache/player/Backpack.js";
+import { AddItemByObj, AddSpiritStone, GetSpiritStoneCount, GetItemByName as GetBackpackItem, CheckSpiritStone } from "../../../model/Cache/player/Backpack.js";
 import { CheckStatu, StatuLevel } from "../../../model/Statu/Statu.js";
 import { GetCommodities, SetCommodities } from "../model/Cache/shop.js";
 import { GetShopImage } from "../model/Image/pluginImage.js";
@@ -104,6 +104,11 @@ export default class Shop extends plugin {
         }
 
         const money = commodity.price * count;
+        if(!await CheckSpiritStone(e.user_id, money)){
+            e.reply(`[凡仙堂]小二\n你的储物袋装不下这么${money}灵石！`);
+            return;
+        }
+
         await AddSpiritStone(e.user_id, money);
         AddItemByObj(e.user_id, commodity, -count);
 

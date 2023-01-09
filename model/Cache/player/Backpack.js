@@ -39,6 +39,18 @@ export async function AddSpiritStone(_uid, _count) {
     SetBackpackInfo(_uid, backpackInfo);
 }
 
+/*******
+ * @description: 检查背包灵石能否装下
+ * @param {string} _uid 玩家id
+ * @param {number} _count 增加的数量
+ * @return {Promise<bool>} 能否装下
+ */
+ export async function CheckSpiritStone(_uid, _count) {
+    const backpackInfo = await GetBackpackInfo(_uid);
+    if (backpackInfo == undefined) return;
+    return backpackInfo.lingshi + forceNumber(_count) <= backpackInfo.lingshimax;
+}
+
 /******* 
  * @description: 按物品obj添加进背包
  * @param {string} _uid 玩家id
