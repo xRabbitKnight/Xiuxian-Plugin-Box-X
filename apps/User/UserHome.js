@@ -4,6 +4,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
+import { clamp, forceNumber } from '../../model/mathCommon.js';
 
 export default class UserHome extends plugin {
     constructor() {
@@ -15,7 +16,7 @@ export default class UserHome extends plugin {
             rule: [
                 {
                     reg: '^#服用.*$',
-                    fnc: 'consumePellet'
+                    fnc: 'ConsumePellet'
                 },
                 {
                     reg: '^#学习.*$',
@@ -29,15 +30,17 @@ export default class UserHome extends plugin {
         })
     }
 
-    consumePellet = async (e) => {
+    ConsumePellet = async (e) => {
         if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
 
-        const name = e.msg.replace('#服用', '');
+        let [name, count] = e.msg.replace('#服用', '').split('*');
+        count = forceNumber(count);
+
         const pellet = await GetItemByName(e.user_id, name);
-        if (pellet == undefined) {
-            e.reply(`没有${name}`);
+        if (pellet == undefined || pellet.acount < count) {
+            e.reply(`没有${name} * ${count}`);
             return;
         }
 
@@ -47,19 +50,19 @@ export default class UserHome extends plugin {
         }
 
         if (pellet.id[2] == '1') {
-            AddPercentBlood(e.user_id, pellet.blood);
-            e.reply(`血量恢复${pellet.blood}%`);
+            AddPercentBlood(e.user_id, pellet.blood * count);
+            e.reply(`血量恢复${clamp(pellet.blood * count, 1, 100)}%`);
         }
         else if (pellet.id[2] == '2') {
-            AddExp(e.user_id, pellet.experience);
-            e.reply(`修为增加${pellet.experience}`);
+            AddExp(e.user_id, pellet.experience * count);
+            e.reply(`修为增加${pellet.experience * count}`);
         }
         else if (pellet.id[2] == '3') {
-            AddExpMax(e.user_id, pellet.experiencemax)
-            e.reply(`气血增加${pellet.experiencemax}`);
+            AddExpMax(e.user_id, pellet.experiencemax * count)
+            e.reply(`气血增加${pellet.experiencemax * count}`);
         }
 
-        AddItemByObj(e.user_id, pellet, -1);
+        AddItemByObj(e.user_id, pellet, -count);
     }
 
     LearnManual = async (e) => {
