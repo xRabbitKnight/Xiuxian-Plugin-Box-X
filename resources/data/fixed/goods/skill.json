@@ -9,7 +9,7 @@
         "power": 130,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-2",
@@ -21,7 +21,7 @@
         "power": 130,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-3",
@@ -30,10 +30,10 @@
         "spiritualRoot": [
             7
         ],
-        "power": 130,
+        "power": 140,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-4",
@@ -43,10 +43,10 @@
             3,
             7
         ],
-        "power": 130,
+        "power": 140,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-5",
@@ -55,10 +55,10 @@
         "spiritualRoot": [
             4
         ],
-        "power": 130,
+        "power": 150,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-6",
@@ -68,10 +68,10 @@
             7,
             8
         ],
-        "power": 130,
+        "power": 200,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-7",
@@ -80,10 +80,10 @@
         "spiritualRoot": [
             6
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-8",
@@ -92,10 +92,10 @@
         "spiritualRoot": [
             2
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-9",
@@ -105,10 +105,10 @@
             6,
             10
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-10",
@@ -117,10 +117,10 @@
         "spiritualRoot": [
             1
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-11",
@@ -129,10 +129,10 @@
         "spiritualRoot": [
             2
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-12",
@@ -141,10 +141,10 @@
         "spiritualRoot": [
             4
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-13",
@@ -153,10 +153,10 @@
         "spiritualRoot": [
             5
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-14",
@@ -165,10 +165,10 @@
         "spiritualRoot": [
             10
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-15",
@@ -177,10 +177,10 @@
         "spiritualRoot": [
             1
         ],
-        "power": 130,
+        "power": 170,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     },
     {
         "id": "7-1-16",
@@ -193,9 +193,9 @@
             4,
             5
         ],
-        "power": 130,
+        "power": 200,
         "acount": 1,
         "price": 9999,
-        "level": 1
+        "dropLevel": 1
     }
 ]

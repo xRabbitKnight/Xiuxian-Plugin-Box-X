@@ -1,7 +1,7 @@
 import { ReadSync, WriteAsync } from '../../File/File.js';
 
 /** ***** 
- * @description: 从cache里获取玩家的信息, 若没有则读文件, 读文件失败返回undefine
+ * @description: 从cache里获取玩家的信息, 若没有则读文件, 读文件失败返回undefined
  * @param {string} _uid 玩家id, plugin参数e.user_id
  * @param {string} _redisKey cache 中 key
  * @param {string} _filePath 读文件时路径

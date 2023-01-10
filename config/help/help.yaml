@@ -54,7 +54,16 @@
     - icon: help-icon_46
       title: "#卸下+装备名"
       desc: "卸下装备"
-      
+
+- group: 
+  list:
+    - icon: help-icon_44
+      title: "#学习技能+技能名"
+      desc: "学习技能"
+    - icon: help-icon_44
+      title: "#忘掉技能+技能名"
+      desc: "忘掉功法"
+
 - group: 
   list:
     - icon: help-icon_54

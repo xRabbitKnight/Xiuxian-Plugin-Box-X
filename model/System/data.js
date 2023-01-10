@@ -30,7 +30,8 @@ const __gameDataPath = {
     backpack: path.join(__gameDataPrePath, 'player', 'backpack'),
     life: path.join(__gameDataPrePath, 'player', 'life'),
     warehouse: path.join(__gameDataPrePath, 'player', 'warehouse'),
-};
+    skill: path.join(__gameDataPrePath, 'player', 'skill'),
+}
 
 class Data {
     constructor() {
@@ -98,7 +99,7 @@ const __fixDataPath = {
     goods: path.join(__fixDataPrePath, 'goods'),
     level: path.join(__fixDataPrePath, 'Level'),
     talent: path.join(__fixDataPrePath, 'talent'),
-};
+}
 
 /** 预设组合生成数据地址与组合目录 */
 const __def = {
@@ -120,7 +121,7 @@ const __def = {
 }
 
 //临时处理，有时间改掉
-function tmp(){
+function tmp() {
     const data = new Data();
     data.levelList = JSON.parse(fs.readFileSync(path.join(__fixDataPath.level, 'levelList.json')));
     data.bodyLevelList = JSON.parse(fs.readFileSync(path.join(__fixDataPath.level, 'bodyLevelList.json')));
@@ -168,7 +169,7 @@ function saveData(_type, _data) {
 
     //添加游戏数据路径
     __gameDataPath[__def[_type].name] = __def[_type].path;
-    
+
     //保存数据
     try {
         fs.writeFile(__def[_type].path, JSON.stringify(_data), error => { if (error) throw error; });

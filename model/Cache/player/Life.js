@@ -11,7 +11,7 @@ const PATH = data.__gameDataPath.life;
  * @return {Promise<JSON>} 返回的BattleInfo JSON对象
  */
 export async function GetLifeInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -39,7 +39,7 @@ export async function GetName(_uid) {
  * @param {string} _uid 玩家id
  * @return {Promise<string>} 玩家道宣， 获取失败返回undefined
  */
- export async function GetAutograph(_uid) {
+export async function GetAutograph(_uid) {
     const lifeInfo = await GetLifeInfo(_uid);
     return lifeInfo?.autograph;
 }
@@ -64,7 +64,7 @@ export async function SetName(_uid, _name) {
  * @param {string} _autograph 新道宣
  * @return 无返回值
  */
- export async function SetAutograph(_uid, _autograph) {
+export async function SetAutograph(_uid, _autograph) {
     const lifeInfo = await GetLifeInfo(_uid);
     if (lifeInfo == undefined) return;
 
@@ -95,7 +95,7 @@ export async function AddAge(_uid, _count) {
  * @param {number} _count 增加的量
  * @return 无返回值
  */
- export async function AddLife(_uid, _count) {
+export async function AddLife(_uid, _count) {
     const lifeInfo = await GetLifeInfo(_uid);
     if (lifeInfo == undefined) return;
 

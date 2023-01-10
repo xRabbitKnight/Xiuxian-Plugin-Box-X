@@ -10,7 +10,7 @@ const PATH = data.__gameDataPath.equipment;
  * @return {Promise<JSON>} 返回的equipmentInfo JSON对象
  */
 export async function GetEquipmentInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 

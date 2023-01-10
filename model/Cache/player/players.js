@@ -8,11 +8,11 @@ const redisKey = 'xiuxian:players';
  * @description: 从cache里所有玩家uid, 若没有则读文件, 读文件失败返回undefine
  * @return {Promise<JSON>} 返回的对应信息 JSON对象 玩家uid数组
  */
- export async function GetAllUid() {
+export async function GetAllUid() {
     let value = await redis.get(redisKey);
     if (value == null) {
         value = ReadSync(filePath);
-        if(value == undefined) return undefined;
+        if (value == undefined) return undefined;
 
         redis.set(redisKey, value);
     }
@@ -25,7 +25,7 @@ const redisKey = 'xiuxian:players';
  * @return 无返回值
  */
 export async function AddUid(_uid) {
-    const players = GetAllUid();
+    const players = await GetAllUid();
     players.push(_uid);
 
     const info = JSON.stringify(players);

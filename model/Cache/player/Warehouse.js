@@ -11,7 +11,7 @@ const PATH = data.__gameDataPath.warehouse;
  * @return {Promise<JSON>} 返回的BattleInfo JSON对象
  */
 export async function GetWarehouseInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -71,9 +71,9 @@ export async function AddItemByObj(_uid, _item, _count) {
  * @param {string} _uid 玩家id
  * @return 无返回值
  */
- export async function SortById(_uid){
+export async function SortById(_uid) {
     const warehouseInfo = await GetWarehouseInfo(_uid);
-    warehouseInfo.items.sort((a,b) => a.id.localeCompare(b.id));
+    warehouseInfo.items.sort((a, b) => a.id.localeCompare(b.id));
     SetWarehouseInfo(_uid, warehouseInfo);
 }
 

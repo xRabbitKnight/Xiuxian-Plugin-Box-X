@@ -11,7 +11,7 @@ const PATH = data.__gameDataPath.talent;
  * @return {Promise<JSON>} 返回的TalentInfo JSON对象
  */
 export async function GetTalentInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -27,11 +27,21 @@ export async function SetTalentInfo(_uid, _talentInfo) {
 /******* 
  * @description: 从cache里获取玩家的修炼天赋加成信息
  * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<number>} 返回的TalentInfo JSON对象
+ * @return {Promise<number>} 返回的修炼天赋加成信息 JSON对象
  */
-export async function GetTalentBuff(_uid){
+export async function GetTalentBuff(_uid) {
     const talentInfo = await GetTalentInfo(_uid);
     return talentInfo?.talentsize;
+}
+
+/******* 
+ * @description: 从cache里获取玩家的灵根信息
+ * @param {string} _uid 玩家id, plugin参数e.user_id
+ * @return {Promise<[]>} 返回的灵根信息 JSON对象
+ */
+export async function GetSpiritualRoot(_uid) {
+    const talentInfo = await GetTalentInfo(_uid);
+    return talentInfo?.talent;
 }
 
 /******* 
@@ -40,11 +50,11 @@ export async function GetTalentBuff(_uid){
  * @param {*} _manual 功法对象
  * @return {Promise<boolean>} 返回是否学习成功 true->学习成功
  */
-export async function AddManual(_uid, _manual){
+export async function AddManual(_uid, _manual) {
     const talentInfo = await GetTalentInfo(_uid);
     const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
 
-    if(talentInfo.AllSorcery.find(item => item.id == _manual.id) != undefined || talentInfo.AllSorcery.length >= maxLearnNum){
+    if (talentInfo.AllSorcery.find(item => item.id == _manual.id) != undefined || talentInfo.AllSorcery.length >= maxLearnNum) {
         return false;
     }
 
@@ -60,11 +70,11 @@ export async function AddManual(_uid, _manual){
  * @param {*} _manualName 功法名
  * @return {Promise<boolean>} 返回是否忘掉成功 true->忘掉成功
  */
- export async function DelManual(_uid, _manualName){
+export async function DelManual(_uid, _manualName) {
     const talentInfo = await GetTalentInfo(_uid);
 
     const targetManual = talentInfo.AllSorcery.find(item => item.name == _manualName);
-    if(targetManual == undefined){
+    if (targetManual == undefined) {
         return false;
     }
 

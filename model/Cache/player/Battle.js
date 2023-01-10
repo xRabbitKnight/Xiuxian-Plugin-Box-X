@@ -12,7 +12,7 @@ const PATH = data.__gameDataPath.battle;
  * @return {Promise<JSON>} 返回的BattleInfo JSON对象
  */
 export async function GetBattleInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 

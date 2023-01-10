@@ -11,7 +11,7 @@ const PATH = data.__gameDataPath.level;
  * @return {Promise<JSON>} 返回的LevelInfo JSON对象
  */
 export async function GetLevelInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 

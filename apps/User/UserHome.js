@@ -4,6 +4,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
+import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
 import { clamp, forceNumber } from '../../model/mathCommon.js';
 
 export default class UserHome extends plugin {
@@ -17,6 +18,14 @@ export default class UserHome extends plugin {
                 {
                     reg: '^#服用.*$',
                     fnc: 'ConsumePellet'
+                },
+                {
+                    reg: '^#学习技能.*$',
+                    fnc: 'LearnSkill'
+                },
+                {
+                    reg: '^#忘掉技能.*$',
+                    fnc: 'ForgetSkill'
                 },
                 {
                     reg: '^#学习.*$',
@@ -63,6 +72,46 @@ export default class UserHome extends plugin {
         }
 
         AddItemByObj(e.user_id, pellet, -count);
+    }
+
+    LearnSkill = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
+            return;
+        }
+
+        const name = e.msg.replace('#学习技能', '');
+        const skillBook = await GetItemByName(e.user_id, `技能书：${name}`);
+        if (skillBook == undefined) {
+            e.reply(`没有[技能书：${name}]`);
+            return;
+        }
+
+        if (skillBook.id[0] != '7') {
+            e.reply(`${name}不是技能书`);
+            return;
+        }
+
+        if (!await AddSkill(e.user_id, skillBook)) {
+            e.reply('学不会，怎么看都学不会！');
+            return;
+        }
+
+        AddItemByObj(e.user_id, skillBook, -1);
+        e.reply(`学习技能${name}`);
+    }
+
+    ForgetSkill = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
+            return;
+        }
+
+        const name = e.msg.replace('#忘掉技能', '');
+        if (!await DelSkill(e.user_id, name)) {
+            e.reply(`没学过${name}`);
+            return;
+        }
+
+        e.reply(`忘了${name}`);
     }
 
     LearnManual = async (e) => {

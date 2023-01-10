@@ -1,13 +1,14 @@
 import { rand } from "../mathCommon.js";
+import { AutoSkillInBattle } from "../Skill/base.js";
 
 /**
  * @description: 1v1战斗模型
  * @param {Object} _attacker 攻击者 需求 .name .battleInfo
  * @param {Object} _target 目标 需求同上
  * @param {[]} _msg 战斗信息
- * @return {boolean} 战斗结果， win->true 
+ * @return {Promise<bool>} 战斗结果， win->true 
  */
-export function _1v1(_attacker, _target, _msg) {
+export async function _1v1(_attacker, _target, _msg) {
     const C_MAXROUND = 30 + rand(-3, 3); //限制最大回合
     const C_PROCESS = {    //战斗流程
         raid_1v1: counterAttack_1v1,
@@ -19,7 +20,7 @@ export function _1v1(_attacker, _target, _msg) {
     let count = 1;          //记录战斗轮数
 
     //1. 按轮次发动战斗
-    while (count < C_MAXROUND && !round(_attacker, _target, _msg)) {
+    while (count < C_MAXROUND && !await round(_attacker, _target, _msg)) {
         count++;
         round = C_PROCESS[round.name];
     }
@@ -38,9 +39,9 @@ export function _1v1(_attacker, _target, _msg) {
  * @param {Object} _attacker 攻击者
  * @param {Object} _target 目标
  * @param {[]} _msg 战斗信息
- * @return {bool} 返回战斗是否结束 
+ * @return {Promise<bool>} 返回战斗是否结束 
  */
-function raid_1v1(_attacker, _target, _msg) {
+async function raid_1v1(_attacker, _target, _msg) {
     //偷袭失败
     if (!ifRaidSuc(_attacker, _target)) {
         _msg.push(`你个老六想偷袭,${_target.name}一个转身就躲过去了`);
@@ -79,24 +80,30 @@ function raid_1v1(_attacker, _target, _msg) {
  * @param {Object} _attacker 攻击者
  * @param {Object} _target 目标
  * @param {[]} _msg 战斗信息
- * @return {bool} 返回战斗是否结束 
+ * @return {Promise<bool>} 返回战斗是否结束 
  */
-function attack_1v1(_attacker, _target, _msg) {
+async function attack_1v1(_attacker, _target, _msg) {
     const BaseDamage = rand(0, _attacker.battleInfo.blood / 1000);    //设置一个基础伤害
-    let damage = Math.floor(Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)              //计算伤害
-        * (ifBurst(_attacker.battleInfo.burst) ? _attacker.battleInfo.burstmax / 100 : 1));
-    damage += BaseDamage;
+    let damage = Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)              //计算伤害
+        * (ifBurst(_attacker.battleInfo.burst) ? _attacker.battleInfo.burstmax / 100 : 1);
+    damage = Math.floor(damage + BaseDamage);
+
+    //玩家检测释放技能
+    const extra = (_attacker.uid == undefined) ? -1 : await AutoSkillInBattle(_attacker.uid, [_target], _msg);
+    if (extra != -1) {
+        damage = Math.floor(damage * (1 + extra / 100));
+        _msg.push(`对${_target.name}造成${damage}点伤害！！`);
+    }
 
     _target.battleInfo.nowblood = Math.max(0, _target.battleInfo.nowblood - damage);
-    //_msg.push(`${_attacker.name} 攻击 ${_target.name}, 造成${damage}伤害, ${_target.name} 剩${_target.battleInfo.nowblood}血.`);
     return _target.battleInfo.nowblood == 0;
 }
 
 /**
  * @description: 1v1战斗，target 攻击 attacker
  */
-function counterAttack_1v1(_attacker, _target, _msg) {
-    return attack_1v1(_target, _attacker, _msg);
+async function counterAttack_1v1(_attacker, _target, _msg) {
+    return await attack_1v1(_target, _attacker, _msg);
 }
 
 /**

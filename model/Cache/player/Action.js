@@ -10,7 +10,7 @@ const PATH = data.__gameDataPath.action;
  * @return {Promise<JSON>} 返回的ActionInfo JSON对象
  */
 export async function GetActionInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -28,7 +28,7 @@ export async function SetActionInfo(_uid, _actionInfo) {
  * @param {string} _uid 玩家id
  * @return {Promise<number>} 区域编号，获取失败返回undefined
  */
-export async function GetPlayerRegion(_uid){
+export async function GetPlayerRegion(_uid) {
     const actionInfo = await GetActionInfo(_uid);
     return actionInfo?.region;
 }

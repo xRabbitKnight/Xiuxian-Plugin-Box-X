@@ -12,7 +12,7 @@ const PATH = data.__gameDataPath.backpack;
  * @return {Promise<JSON>} 返回的backpackInfo JSON对象
  */
 export async function GetBackpackInfo(_uid) {
-    return GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -45,7 +45,7 @@ export async function AddSpiritStone(_uid, _count) {
  * @param {number} _count 增加的数量
  * @return {Promise<bool>} 能否装下
  */
- export async function CheckSpiritStone(_uid, _count) {
+export async function CheckSpiritStone(_uid, _count) {
     const backpackInfo = await GetBackpackInfo(_uid);
     if (backpackInfo == undefined) return;
     return backpackInfo.lingshi + forceNumber(_count) <= backpackInfo.lingshimax;
@@ -95,9 +95,9 @@ export async function AddItemById(_uid, _itemId, _count) {
  * @param {string} _uid 玩家id
  * @return 无返回值
  */
-export async function SortById(_uid){
+export async function SortById(_uid) {
     const backpackInfo = await GetBackpackInfo(_uid);
-    backpackInfo.thing.sort((a,b) => a.id.localeCompare(b.id));
+    backpackInfo.thing.sort((a, b) => a.id.localeCompare(b.id));
     SetBackpackInfo(_uid, backpackInfo);
 }
 
