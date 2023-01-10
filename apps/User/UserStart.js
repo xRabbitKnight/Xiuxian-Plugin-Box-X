@@ -1,10 +1,10 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 //import data from '../../model/XiuxianData.js';
 import fs from 'fs';
+import * as CD from '../../model/CD/Action.js';
 import { segment } from 'oicq';
 import { existplayer, __PATH, Write_player, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray } from '../Xiuxian/Xiuxian.js';
-import { CheckCD } from '../../model/CD/CheckCD.js';
-import { AddActionCD } from '../../model/CD/AddCD.js';
+
 export class UserStart extends plugin {
     constructor() {
         super({
@@ -161,8 +161,8 @@ export class UserStart extends plugin {
     
     reCreate_player = async (e) => {
         const usr_qq = e.user_id;
-        if(CheckCD(e, 'reBorn')){
-            return ;
+        if (await CD.IfActionInCD(e.user_id, 'reBorn', e.reply)) {
+            return;
         }
         await offaction(usr_qq);
         fs.rmSync(`${__PATH.player}/${usr_qq}.json`);
@@ -171,7 +171,6 @@ export class UserStart extends plugin {
         await Write_Life(life);
         e.reply([segment.at(usr_qq), '来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断']);
         await this.Create_player(e);
-        await AddActionCD(e, 'reBorn');
-        return;
-    };
-};
+        CD.AddActionCD(e.user_id, 'reBorn');
+    }
+}

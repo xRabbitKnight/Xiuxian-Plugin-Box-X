@@ -1,7 +1,6 @@
 import data from '../../model/System/data.js';
+import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { CheckCD } from '../../model/CD/CheckCD.js';
-import { AddActionCD } from '../../model/CD/AddCD.js';
 import { AddExp, AddExpMax, GetLevelInfo, SetLevelInfo } from '../../model/Cache/player/Level.js';
 import { AddPowerByLevelUp } from '../../model/Cache/player/Battle.js';
 import { AddLife } from '../../model/Cache/player/Life.js';
@@ -41,10 +40,9 @@ export default class Level extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'bodyLevelUp')) {
+        if (await CD.IfActionInCD(e.user_id, 'bodyLevelUp', e.reply)) {
             return;
         }
-        AddActionCD(e, 'bodyLevelUp');
 
         const player = await GetLevelInfo(e.user_id);
 
@@ -84,6 +82,7 @@ export default class Level extends plugin {
         if(player.bodyRank == 0){   
             AddPowerByLevelUp(e.user_id, list, player.bodyLevel);
         }
+        CD.AddActionCD(e.user_id, 'bodyLevelUp');
     }
 
     LevelUp = async (e) => {
@@ -91,10 +90,9 @@ export default class Level extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'levelUp')) {
+        if (await CD.IfActionInCD(e.user_id, 'levelUp', e.reply)) {
             return;
         }
-        AddActionCD(e, 'levelUp');
 
         const player = await GetLevelInfo(e.user_id);
 
@@ -137,5 +135,6 @@ export default class Level extends plugin {
             AddLife(e.user_id, list[player.level - 1].exp);
             e.reply(`寿命增加${list[player.level - 1].exp}`);
         }
+        CD.AddActionCD(e.user_id, 'levelUp');
     }
 }

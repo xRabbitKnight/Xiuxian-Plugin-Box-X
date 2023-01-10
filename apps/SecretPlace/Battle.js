@@ -1,6 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { AddActionCD } from '../../model/CD/AddCD.js';
-import { CheckCD } from '../../model/CD/CheckCD.js';
+import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { Read_action, point_map, existplayer, __PATH, At, battle, Read_equipment, Anyarray, Write_equipment, Read_najie, Add_najie_thing, Write_najie, Read_level, Write_level, Read_wealth, Write_wealth } from '../Xiuxian/Xiuxian.js';
 export class Battle extends plugin {
@@ -29,8 +28,8 @@ export class Battle extends plugin {
             return;
         }
 
-        if(await CheckCD(e, 'attack')){
-            return ;
+        if (await CD.IfActionInCD(e.user_id, 'attack', e.reply)) {
+            return;
         }
 
         const user = {
@@ -76,12 +75,11 @@ export class Battle extends plugin {
                 najie = await Add_najie_thing(najie, thing, 1);
                 await Write_najie(user.A, najie);
                 e.reply(`${user.A}夺走了${thing.name}`);
-            };
-        };
+            }
+        }
 
-        await AddActionCD(e, 'attack');
-        return;
-    };
+        CD.AddActionCD(e.user_id, 'attack');
+    }
 
 
     /**

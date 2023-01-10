@@ -1,7 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
+import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { CheckCD } from '../../model/CD/CheckCD.js';
-import { AddActionCD } from '../../model/CD/AddCD.js';
 import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 export default class UserModify extends plugin {
@@ -29,7 +28,7 @@ export default class UserModify extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'reName')) {
+        if (await CD.IfActionInCD(e.user_id, 'reName', e.reply)) {
             return;
         }
 
@@ -50,7 +49,7 @@ export default class UserModify extends plugin {
         }
 
         SetName(e.user_id, new_name);
-        AddActionCD(e, 'reName');
+        CD.AddActionCD(e.user_id, 'reName');
     }
 
     ChangeAutograph = async (e) => {
@@ -58,7 +57,7 @@ export default class UserModify extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'autograph')) {
+        if (await CD.IfActionInCD(e.user_id, 'autograph', e.reply)) {
             return;
         }
 
@@ -72,6 +71,6 @@ export default class UserModify extends plugin {
         }
 
         SetAutograph(e.user_id, new_msg);
-        AddActionCD(e, 'autograph');
+        CD.AddActionCD(e.user_id, 'autograph');
     }
 }

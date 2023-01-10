@@ -1,10 +1,9 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
+import * as CD from '../../model/CD/Action.js';
 import { PVE } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { CheckCD } from '../../model/CD/CheckCD.js';
-import { AddActionCD } from '../../model/CD/AddCD.js';
 import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 import { GetDrops } from '../../model/Battle/BattleDrop.js';
@@ -34,7 +33,7 @@ export default class BattleSite extends plugin {
             return;
         }
 
-        if (await CheckCD(e, 'kill')) {
+        if (await CD.IfActionInCD(e.user_id, 'kill', e.reply)) {
             return;
         }
 
@@ -52,7 +51,7 @@ export default class BattleSite extends plugin {
             BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
 
-        AddActionCD(e, 'kill');
+        CD.AddActionCD(e.user_id, 'kill');
         ForwardMsg(e, msg);
     }
 
