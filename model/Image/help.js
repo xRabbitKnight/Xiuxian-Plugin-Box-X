@@ -21,3 +21,17 @@ export async function HelpBase(_helpData){
 export async function GetHelpImage(){
     return await HelpBase(config.GetConfig('help/help.yaml'));
 }
+
+/******* 
+ * @description: 获取地图
+ * @return {Promise<ImageElem>} 生成的图片
+ */
+ export async function GetMap(){
+    return await puppeteer.screenshot('map', {
+        //puppeteer 所需参数
+        tplFile : base.html + 'map/map.html',
+        
+        //模板传入参数
+        cssPath : base.res + 'map/map.css',
+    });
+}

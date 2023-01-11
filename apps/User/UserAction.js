@@ -15,16 +15,8 @@ export default class UserAction extends plugin {
             priority: 600,
             rule: [
                 {
-                    reg: '^#储物袋$',
-                    fnc: 'ShowBackpack'
-                },
-                {
                     reg: '^#升级储物袋$',
                     fnc: 'UpgradeBackpack'
-                },
-                {
-                    reg: '^#仓库$',
-                    fnc: 'ShowWarehouse'
                 },
                 {
                     reg: '^#(存|取)灵石(.*)$',
@@ -36,13 +28,6 @@ export default class UserAction extends plugin {
                 }
             ]
         });
-    }
-
-    ShowBackpack = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
-            return;
-        }
-        e.reply(await GetBackpackImage(e.user_id));
     }
 
     UpgradeBackpack = async (e) => {
@@ -72,18 +57,6 @@ export default class UserAction extends plugin {
         backpack.grade += 1;
         SetBackpackInfo(e.user_id, backpack);
         e.reply('储物袋升级完毕！');
-    }
-
-    ShowWarehouse = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.isMoving)) {
-            return;
-        }
-
-        if (!await IfAtSpot(e.user_id, '万宝楼')) {
-            e.reply(`需回万宝楼`);
-            return;
-        }
-        e.reply(await GetWarehouseImage(e.user_id));
     }
 
     AccessSpiritStone = async (e) => {
