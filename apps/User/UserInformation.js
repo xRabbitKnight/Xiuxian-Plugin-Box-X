@@ -1,5 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { GetEquipmentImage, GetPlayerInfoImage } from '../../model/Image/player.js';
+import { GetEquipmentImage, GetManualImage, GetPlayerInfoImage } from '../../model/Image/player.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export default class UserInformation extends plugin {
     constructor() {
@@ -14,12 +14,12 @@ export default class UserInformation extends plugin {
                     fnc: 'PlayerInfo'
                 },
                 {
-                    reg: '^#面板信息$',
-                    fnc: 'PropertyPanel',
+                    reg: '^#装备信息$',
+                    fnc: 'EquipmentInfo',
                 },
                 {
                     reg: '^#功法信息$',
-                    fnc: 'show_gongfa',
+                    fnc: 'ManualInfo',
                 }
             ]
         });
@@ -32,10 +32,17 @@ export default class UserInformation extends plugin {
         e.reply(await GetPlayerInfoImage(e.user_id));
     }
 
-    PropertyPanel = async (e) => {
+    EquipmentInfo = async (e) => {
         if (!await CheckStatu(e, StatuLevel.exist)) {
             return;
         }
         e.reply(await GetEquipmentImage(e.user_id));
     }
-};
+
+    ManualInfo = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
+            return;
+        }
+        e.reply(await GetManualImage(e.user_id));
+    }
+}

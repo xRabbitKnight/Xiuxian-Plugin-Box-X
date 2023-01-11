@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="{{cssPath}}" />
+</head>
+
+<body>
+  <div style="height: 1px;"></div>
+
+  <div class="user_top">
+    <div class="user_top_left">
+      {{if talent.show}}
+      <div class="user_top_right_font0">灵根：{{talent.spiritualRootName}}</div>
+      <div class="user_top_right_font2">天赋：+{{talent.buff}}%</div>
+      {{else}}
+      <div class="user_top_right_font0">灵根：未知</div>
+      <div class="user_top_right_font2">天赋：未知</div>
+      {{/if}}
+    </div>
+    <div class="user_top_right">
+      <div class="user_top_img_bottom">
+        <img class="user_top_img" src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{uid}}" onerror="whenError(this)" />
+      </div>
+    </div>
+  </div>
+
+  <div class="user_bottom1">
+    <div class="user_data">
+      {{each talent.manualList item}}
+      <div class="manual">
+        <div class="manual_top"></div>
+        <div class="manual_mid">   
+          <div>{{item.name}}</div>
+          <div>+{{item.buff}}%</div>
+        </div>
+        <div class="manual_bottom"></div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</body>
+
+</html>

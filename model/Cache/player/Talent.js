@@ -31,7 +31,7 @@ export async function SetTalentInfo(_uid, _talentInfo) {
  */
 export async function GetTalentBuff(_uid) {
     const talentInfo = await GetTalentInfo(_uid);
-    return talentInfo?.talentsize;
+    return talentInfo?.buff;
 }
 
 /******* 
@@ -41,7 +41,7 @@ export async function GetTalentBuff(_uid) {
  */
 export async function GetSpiritualRoot(_uid) {
     const talentInfo = await GetTalentInfo(_uid);
-    return talentInfo?.talent;
+    return talentInfo?.spiritualRoot;
 }
 
 /******* 
@@ -54,12 +54,16 @@ export async function AddManual(_uid, _manual) {
     const talentInfo = await GetTalentInfo(_uid);
     const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
 
-    if (talentInfo.AllSorcery.find(item => item.id == _manual.id) != undefined || talentInfo.AllSorcery.length >= maxLearnNum) {
+    if (talentInfo.manualList.find(item => item.name == _manual.name) != undefined || talentInfo.manualList.length >= maxLearnNum) {
         return false;
     }
 
-    talentInfo.AllSorcery.push(_manual);
-    talentInfo.talentsize += _manual.size;
+    talentInfo.manualList.push({
+        name : _manual.name,
+        buff : _manual.size
+    });
+
+    talentInfo.buff += _manual.size;
     SetTalentInfo(_uid, talentInfo);
     return true;
 }
@@ -73,13 +77,13 @@ export async function AddManual(_uid, _manual) {
 export async function DelManual(_uid, _manualName) {
     const talentInfo = await GetTalentInfo(_uid);
 
-    const targetManual = talentInfo.AllSorcery.find(item => item.name == _manualName);
+    const targetManual = talentInfo.manualList.find(item => item.name == _manualName);
     if (targetManual == undefined) {
         return false;
     }
 
-    talentInfo.AllSorcery = talentInfo.AllSorcery.filter(item => item != targetManual);
-    talentInfo.talentsize -= targetManual.size;
+    talentInfo.manualList.splice(talentInfo.manualList.indexOf(targetManual), 1);
+    talentInfo.buff -= targetManual.buff;
     SetTalentInfo(_uid, talentInfo);
     return true;
 }

@@ -6,9 +6,24 @@
     - icon: help-icon_3
       title: "#改名张三 #设置道宣"
       desc: "修改道号,个性签名"
+    - icon: help-icon_38
+      title: "#基础信息"
+      desc: "(可私聊)"
+
+- group: 
+  list:
     - icon: help-icon_56
       title: "#储物袋 #升级储物袋"
       desc: "物品查询,容量提升"
+    - icon: help-icon_42
+      title: "#消耗+道具名"
+      desc: "消耗道具"
+    - icon: help-icon_6
+      title: "#服用+丹药名"
+      desc: "服用丹药"
+
+- group: 
+  list:
     - icon: help-icon_5
       title: "#仓库"
       desc: "查看仓库"
@@ -18,67 +33,82 @@
     - icon: help-icon_16
       title: "#存(取)物品名*1"
       desc: "仓库存取物品,数量不填默认为1"
-    
-- group: 
-  list:
-    - icon: help-icon_55
-      title: "#练气境界"
-      desc: "(可私聊)"
-    - icon: help-icon_55
-      title: "#炼体境界"
-      desc: "(可私聊)"
-    - icon: help-icon_44
-      title: "#闭关 #出关"
-      desc: "进行闭关,增加修为"
-    - icon: help-icon_51
-      title: "#降妖 #归来"
-      desc: "进行降妖,锻炼气血"
 
 - group: 
   list:
-    - icon: help-icon_44
-      title: "#学习+功法名"
-      desc: "学习功法"
-    - icon: help-icon_44
-      title: "#忘掉+功法名"
-      desc: "忘掉功法"
-    - icon: help-icon_42
-      title: "#消耗+道具名"
-      desc: "消耗道具"
-    - icon: help-icon_6
-      title: "#服用+丹药名"
-      desc: "服用丹药"
     - icon: help-icon_46
       title: "#装备+装备名"
       desc: "装备物品"
     - icon: help-icon_46
       title: "#卸下+装备名"
       desc: "卸下装备"
-
-- group: 
-  list:
+    - icon: help-icon_38
+      title: "#装备信息"
+      desc: "(可私聊)"
+    - icon: help-icon_44
+      title: "#学习+功法名"
+      desc: "学习功法"
+    - icon: help-icon_44
+      title: "#忘掉+功法名"
+      desc: "忘掉功法"
+    - icon: help-icon_38
+      title: "#功法信息"
+      desc: "(可私聊)"
     - icon: help-icon_44
       title: "#学习技能+技能名"
       desc: "学习技能"
     - icon: help-icon_44
       title: "#忘掉技能+技能名"
-      desc: "忘掉功法"
+      desc: "忘掉技能"
+    - icon: help-icon_38
+      title: "#技能信息"
+      desc: "(可私聊)"
 
 - group: 
   list:
-    - icon: help-icon_54
-      title: "#攻击 @群友"
-      desc: "掀起血雨腥风吧"
-    - icon: help-icon_107
-      title: "#洗手"
-      desc: "清魔力值"
-    - icon: help-icon_63
-      title: "#击杀+怪物名"
-      desc: "随机掉落物品"
+    - icon: help-icon_55
+      title: "#练气境界"
+      desc: "(可私聊)"
+    - icon: help-icon_44
+      title: "#闭关 #出关"
+      desc: "进行闭关,增加修为"
+    - icon: help-icon_38
+      title: "#突破"
+      desc: "打破浩劫"
+
+- group: 
+  list:
+    - icon: help-icon_55
+      title: "#炼体境界"
+      desc: "(可私聊)"
+    - icon: help-icon_51
+      title: "#降妖 #归来"
+      desc: "进行降妖,锻炼气血"
+    - icon: help-icon_38
+      title: "#破体"
+      desc: "提高体境"
+    
+- group: 
+  list:
     - icon: help-icon_98
       title: "#探索怪物"
       desc: "查看所在地的怪物"
+    - icon: help-icon_63
+      title: "#击杀+怪物名"
+      desc: "随机掉落物品"
+    - icon: help-icon_54
+      title: "#攻击 @群友"
+      desc: "掀起血雨腥风吧"    
 
+- group: 
+  list:
+    - icon: help-icon_10
+      title: "#赠送灵石1000 @群友"
+      desc: "赠送灵石"
+    - icon: help-icon_9
+      title: "#赠送物品名*1 @群友"
+      desc: "赠送物品,数量不填默认为1"
+      
 - group: 
   list:
     - icon: help-icon_98
@@ -99,33 +129,6 @@
     - icon: help-icon_98
       title: "#回到原地"
       desc: "取消当前移动"
-
-- group: 
-  list:
-    - icon: help-icon_38
-      title: "#面板信息"
-      desc: "(可私聊)"
-    - icon: help-icon_38
-      title: "#基础信息"
-      desc: "(可私聊)"
-    - icon: help-icon_38
-      title: "#突破"
-      desc: "打破浩劫"
-    - icon: help-icon_38
-      title: "#破体"
-      desc: "提高体境"
-    - icon: help-icon_36
-      title: "#渡劫"
-      desc: "渡劫期经历的劫难"
-
-- group: 
-  list:
-    - icon: help-icon_10
-      title: "#赠送灵石1000 @群友"
-      desc: "赠送灵石"
-    - icon: help-icon_9
-      title: "#赠送物品名*1 @群友"
-      desc: "赠送物品,数量不填默认为1"
       
 - group: 
   list:

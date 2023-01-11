@@ -43,9 +43,9 @@
         <div>修为：{{level.exp}}</div>
         <div>体境：{{level.bodyLevelName}}</div>
         <div>气血：{{level.bodyExp}}</div>
-        {{if talent.talentshow == 0}}
-        <div>灵根：{{talent.talentname}}</div>
-        <div>天赋：+{{talent.talentsize}}%</div>
+        {{if talent.show == 0}}
+        <div>灵根：{{talent.spiritualRootName}}</div>
+        <div>天赋：+{{talent.buff}}%</div>
         {{/if}}
         <div class="user_top_right_font equipment">
           {{each equipment item}}
@@ -62,7 +62,7 @@
     <div class="use_data">
       <div class="user_top_right_font0">[已学功法]</div>
       <div class="user_top_right_font2" style="display:grid;grid-template-columns:auto auto auto auto;">
-        {{each talent.AllSorcery item}}
+        {{each talent.manualList item}}
         <div>
           《{{item.name}}》
         </div>

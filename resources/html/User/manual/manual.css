@@ -1,0 +1,129 @@
+@font-face {
+  font-family: "xiuxian";
+  src: url('../../../font/_GBK.TTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  width: 100%;
+  text-align: center;
+  background-image: url('./manual.jpg');
+  background-size: 100% auto;
+  font-family: xiuxian;
+}
+
+.user_top {
+  display: grid;
+  padding: 20px;
+  grid-template-columns: auto auto;
+  background-color: rgba(19, 21, 22, 0.486);
+  margin: 40px;
+  border-radius: 100px;
+}
+
+.user_top_img_bottom {
+  background-image: url("../../..//img/player/user_state.png");
+  background-size: 100% 100%;
+  width: 320px;
+  height: 320px;
+  margin: auto;
+}
+
+
+.user_top_img {
+  width: 186px;
+  height: 186px;
+  border-radius: 100px;
+  margin: auto;
+  margin-top: 62px;
+}
+
+.user_top_left {
+  text-align: left;
+  margin: auto;
+}
+
+.user_top_right {
+  height: 100%;
+  width: 100%;
+}
+
+.user_top_right_font0 {
+  font-size: 25px;
+  color: #daf9ff;
+  padding: 10px;
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.842);
+}
+
+.user_top_right_font1 {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.563);
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.user_top_right_font {
+  font-size: 25px;
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  background-color: rgba(19, 21, 22, 0.448);
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.user_top_right_font2 {
+  font-size: 25px;
+  color: #daf9ff;
+  padding: 10px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.666);
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin-bottom: 10px;
+}
+
+.user_data {
+  margin:5px 20px 5px 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.manual {
+  margin:5px 20px 5px 20px;
+}
+
+.manual_top {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.852);
+  height: 10px;
+}
+
+.manual_mid {
+  font-size: 25px;
+  color: #daf9ff;
+  background-color: rgba(19, 21, 22, 0.225);
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.manual_bottom {
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  background-color: rgba(19, 21, 22, 0.748);
+  height: 10px;
+}
+
+.user_bottom1 {
+  margin: 40px;
+  border-radius: 100px;
+  background-color: rgba(19, 21, 22, 0.486);
+}

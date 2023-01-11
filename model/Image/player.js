@@ -27,6 +27,23 @@ export async function GetEquipmentImage(_uid) {
 }
 
 /******* 
+ * @description: 获取玩家功法天赋信息
+ * @param {string} _uid 玩家id, plugins参数e.user_id
+ * @return {Promise<ImageElem>} 生成的图片
+ */
+export async function GetManualImage(_uid) {
+    return await puppeteer.screenshot('manual', {
+        //puppeteer 所需参数
+        tplFile: base.html + 'User/manual/manual.html',
+
+        //模板传入参数
+        cssPath: base.res + 'User/manual/manual.css',
+        uid: _uid,
+        talent: await GetTalentInfo(_uid),
+    });
+}
+
+/******* 
  * @description: 获取玩家基础信息
  * @param {string} _uid 玩家id, plugins参数e.user_id
  * @return {Promise<ImageElem>} 生成的图片
