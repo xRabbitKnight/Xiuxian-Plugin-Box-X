@@ -7,6 +7,7 @@ import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLifeInfo } from '../Cache/player/Life.js';
 import { GetBackpackInfo, SortById as SortBackpack } from '../Cache/player/Backpack.js';
 import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
+import { GetSkillInfo } from '../Cache/player/Skill.js';
 
 /******* 
  * @description: 获取玩家装备以及面板信息
@@ -40,6 +41,23 @@ export async function GetManualImage(_uid) {
         cssPath: base.res + 'User/manual/manual.css',
         uid: _uid,
         talent: await GetTalentInfo(_uid),
+    });
+}
+
+/******* 
+ * @description: 获取玩家技能信息
+ * @param {string} _uid 玩家id, plugins参数e.user_id
+ * @return {Promise<ImageElem>} 生成的图片
+ */
+export async function GetSkillImage(_uid) {
+    return await puppeteer.screenshot('skill', {
+        //puppeteer 所需参数
+        tplFile: base.html + 'User/skill/skill.html',
+
+        //模板传入参数
+        cssPath: base.res + 'User/skill/skill.css',
+        uid: _uid,
+        skill: await GetSkillInfo(_uid),
     });
 }
 

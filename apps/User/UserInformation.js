@@ -1,5 +1,5 @@
 import plugin from '../../../../lib/plugins/plugin.js';
-import { GetEquipmentImage, GetManualImage, GetPlayerInfoImage } from '../../model/Image/player.js';
+import { GetEquipmentImage, GetManualImage, GetPlayerInfoImage, GetSkillImage } from '../../model/Image/player.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 export default class UserInformation extends plugin {
     constructor() {
@@ -20,6 +20,10 @@ export default class UserInformation extends plugin {
                 {
                     reg: '^#功法信息$',
                     fnc: 'ManualInfo',
+                },
+                {
+                    reg: '^#技能信息$',
+                    fnc: 'SkillInfo',
                 }
             ]
         });
@@ -44,5 +48,12 @@ export default class UserInformation extends plugin {
             return;
         }
         e.reply(await GetManualImage(e.user_id));
+    }
+
+    SkillInfo = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.exist)) {
+            return;
+        }
+        e.reply(await GetSkillImage(e.user_id));
     }
 }
