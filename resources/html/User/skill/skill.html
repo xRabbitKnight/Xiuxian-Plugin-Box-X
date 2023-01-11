@@ -1,39 +1,28 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <link rel="stylesheet" type="text/css" href="{{cssPath}}" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="{{cssPath}}" />
 </head>
-
 <body>
-  <div style="height: 1px;"></div>
-
-  <div class="user_top">
-    <div class="user_top_left">
-      <div class="user_top_right_font0">掌握技能数：{{skill.skillList.length}}</div>
-    </div>
-    <div class="user_top_right">
-      <div class="user_top_img_bottom">
-        <img class="user_top_img" src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{uid}}" onerror="whenError(this)" />
-      </div>
-    </div>
-  </div>
-
-  <div class="user_bottom1">
-    <div class="user_data">
-      {{each skill.skillList item}}
-      <div class="skill">
-        <div class="skill_top"></div>
-        <div class="skill_mid">
-          <div>{{item.name}}</div>
-          <div>+{{item.power}}%</div>
+    <div class="info-panel">
+        <div class="avatar">
+            <img src="https://q1.qlogo.cn/g?b=qq&s=0&nk={{uid}}" onerror="whenError(this)" />
+            <div>名称</div>
+            <div>掌握技能数：{{skill.skillList.length}}</div>
         </div>
-        <div class="skill_bottom"></div>
-      </div>
-      {{/each}}
+        <div class="info-list">
+            <div class="info-item">
+                <div>技能名</div>
+                <div>伤害</div>
+            </div>
+            {{each skill.skillList item}}
+            <div class="info-item">
+                <div>{{item.name}}</div>
+                <div>+{{item.power}}%</div>
+            </div>
+            {{/each}}
+        </div>
     </div>
-  </div>
 </body>
-
 </html>
