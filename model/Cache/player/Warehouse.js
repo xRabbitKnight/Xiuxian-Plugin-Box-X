@@ -45,7 +45,7 @@ export async function GetItemByName(_uid, _itemName) {
 export async function AddSpiritStone(_uid, _count) {
     const warehouseInfo = await GetWarehouseInfo(_uid);
     if (warehouseInfo == undefined) return;
-    warehouseInfo.lingshi += forceNumber(_count);
+    warehouseInfo.spiritStone += forceNumber(_count);
     SetWarehouseInfo(_uid, warehouseInfo);
 }
 

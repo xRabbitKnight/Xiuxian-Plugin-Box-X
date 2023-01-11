@@ -16,7 +16,7 @@
       <div class="user_top_right_font1">道号:{{life.name}}</div>
       <div class="user_top_right_font"> 储物袋等级:{{backpack.grade}}</div>
       <div class="user_top_right_font2">
-        灵石:{{backpack.lingshi}}/{{backpack.lingshimax}}
+        灵石:{{backpack.spiritStone}}/{{backpack.capacity}}
       </div>
     </div>
     <div class="user_top_right">
@@ -28,7 +28,7 @@
 
   <div class="user_bottom1">
     <div class="user_data">
-      {{each backpack.thing item}}
+      {{each backpack.items item}}
       <div class="item_name">{{item.name}}</div>
       
       {{if item.id[0] == '1' || item.id[0] == '2' || item.id[0] == '3'}}

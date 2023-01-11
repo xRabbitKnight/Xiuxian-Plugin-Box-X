@@ -92,10 +92,10 @@ export async function GetBackpackImage(_uid) {
     await SortBackpack(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
-        tplFile: base.html + 'User/najie/najie.html',
+        tplFile: base.html + 'User/backpack/backpack.html',
 
         //模板传入参数
-        cssPath: base.res + 'User/najie/najie.css',
+        cssPath: base.res + 'User/backpack/backpack.css',
         uid: _uid,
         life: await GetLifeInfo(_uid),
         backpack: await GetBackpackInfo(_uid)

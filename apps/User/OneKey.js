@@ -30,18 +30,18 @@ export default class OneKey extends plugin {
 
         const backpack = await GetBackpackInfo(e.user_id);
 
-        if (backpack.lingshi >= backpack.lingshimax) {
+        if (backpack.spiritStone >= backpack.capacity) {
             e.reply('储物袋灵石已经满了！');
             return;
         }
 
         let money = 0;
-        for (let item of backpack.thing) {
+        for (let item of backpack.items) {
             money += item.acount * item.price;
         }
 
-        backpack.thing = [];
-        backpack.lingshi += money;
+        backpack.items = [];
+        backpack.spiritStone += money;
 
         SetBackpackInfo(e.user_id, backpack);
         e.reply(`[蜀山派]叶铭\n这是${money}灵石,道友慢走`);

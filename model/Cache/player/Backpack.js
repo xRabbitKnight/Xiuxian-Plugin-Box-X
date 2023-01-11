@@ -35,7 +35,7 @@ export async function SetBackpackInfo(_uid, _backpackInfo) {
 export async function AddSpiritStone(_uid, _count) {
     const backpackInfo = await GetBackpackInfo(_uid);
     if (backpackInfo == undefined) return;
-    backpackInfo.lingshi += forceNumber(_count);
+    backpackInfo.spiritStone += forceNumber(_count);
     SetBackpackInfo(_uid, backpackInfo);
 }
 
@@ -48,7 +48,7 @@ export async function AddSpiritStone(_uid, _count) {
 export async function CheckSpiritStone(_uid, _count) {
     const backpackInfo = await GetBackpackInfo(_uid);
     if (backpackInfo == undefined) return;
-    return backpackInfo.lingshi + forceNumber(_count) <= backpackInfo.lingshimax;
+    return backpackInfo.spiritStone + forceNumber(_count) <= backpackInfo.capacity;
 }
 
 /******* 
@@ -97,7 +97,7 @@ export async function AddItemById(_uid, _itemId, _count) {
  */
 export async function SortById(_uid) {
     const backpackInfo = await GetBackpackInfo(_uid);
-    backpackInfo.thing.sort((a, b) => a.id.localeCompare(b.id));
+    backpackInfo.items.sort((a, b) => a.id.localeCompare(b.id));
     SetBackpackInfo(_uid, backpackInfo);
 }
 
@@ -109,7 +109,7 @@ export async function SortById(_uid) {
  */
 export async function GetSpiritStoneCount(_uid) {
     const backpackInfo = await GetBackpackInfo(_uid);
-    return backpackInfo?.lingshi;
+    return backpackInfo?.spiritStone;
 }
 
 /******* 
@@ -120,7 +120,7 @@ export async function GetSpiritStoneCount(_uid) {
  */
 export async function GetItemByName(_uid, _itemName) {
     const backpackInfo = await GetBackpackInfo(_uid);
-    return backpackInfo?.thing.find(item => item.name == _itemName);
+    return backpackInfo?.items.find(item => item.name == _itemName);
 }
 
 /*******--------------------------------------------------------------内部函数
@@ -128,9 +128,9 @@ export async function GetItemByName(_uid, _itemName) {
  * @return 无返回值
  */
 function addVaild(_backpackInfo, _item) {
-    const targetItem = _backpackInfo.thing.find(item => item.id == _item.id || item.name == _item.name);
+    const targetItem = _backpackInfo.items.find(item => item.id == _item.id || item.name == _item.name);
     if (targetItem == undefined && _item.acount > 0) {    //当物品不存在且添加的物品数量>0时，直接push进去
-        _backpackInfo.thing.push(_item);
+        _backpackInfo.items.push(_item);
         return;
     }
 
@@ -141,6 +141,6 @@ function addVaild(_backpackInfo, _item) {
 
     targetItem.acount += _item.acount;
     if (targetItem.acount == 0) {     //物品存在，相加和=0，从列表中移除
-        _backpackInfo.thing.splice(_backpackInfo.thing.indexOf(targetItem), 1);
+        _backpackInfo.items.splice(_backpackInfo.items.indexOf(targetItem), 1);
     }
 }

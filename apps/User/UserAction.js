@@ -4,7 +4,6 @@ import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetBackpackInfo, SetBackpackInfo, AddItemByObj as bpAddItem, GetItemByName as bpGetItem } from '../../model/Cache/player/Backpack.js';
 import { GetWarehouseInfo, SetWarehouseInfo, AddItemByObj as whAddItem, GetItemByName as whGetItem } from '../../model/Cache/player/Warehouse.js';
-import { GetBackpackImage, GetWarehouseImage } from '../../model/Image/player.js';
 
 export default class UserAction extends plugin {
     constructor() {
@@ -47,13 +46,13 @@ export default class UserAction extends plugin {
             e.reply('已经是最高级的了');
             return;
         }
-        if (backpack.lingshi < cfg.upgradeCost[backpack.grade]) {
-            e.reply(`灵石不足,还需要准备${cfg.upgradeCost[backpack.grade] - backpack.lingshi}灵石`);
+        if (backpack.spiritStone < cfg.upgradeCost[backpack.grade]) {
+            e.reply(`灵石不足,还需要准备${cfg.upgradeCost[backpack.grade] - backpack.spiritStone}灵石`);
             return;
         }
 
-        backpack.lingshi -= cfg.upgradeCost[backpack.grade];
-        backpack.lingshimax = cfg.capacity[backpack.grade];
+        backpack.spiritStone -= cfg.upgradeCost[backpack.grade];
+        backpack.capacity = cfg.capacity[backpack.grade];
         backpack.grade += 1;
         SetBackpackInfo(e.user_id, backpack);
         e.reply('储物袋升级完毕！');
@@ -75,22 +74,22 @@ export default class UserAction extends plugin {
 
         const op = e.msg[1];
 
-        if (op == '存' ? backpack.lingshi < count : warehouse.lingshi < count) {
+        if (op == '存' ? backpack.spiritStone < count : warehouse.spiritStone < count) {
             e.reply('灵石不足!');
             return;
         }
 
         count *= (op == '取' ? 1 : -1);
-        if (backpack.lingshi + count > backpack.lingshimax) {
-            e.reply(`储物袋最多只能存下${backpack.lingshimax - backpack.lingshi}灵石！`);
+        if (backpack.spiritStone + count > backpack.capacity) {
+            e.reply(`储物袋最多只能存下${backpack.capacity - backpack.spiritStone}灵石！`);
             return;
         }
 
-        backpack.lingshi += count;
-        warehouse.lingshi -= count;
+        backpack.spiritStone += count;
+        warehouse.spiritStone -= count;
         SetBackpackInfo(e.user_id, backpack);
         SetWarehouseInfo(e.user_id, warehouse);
-        e.reply(`操作完成！储物袋灵石:${backpack.lingshi}, 仓库灵石:${warehouse.lingshi}`);
+        e.reply(`操作完成！储物袋灵石:${backpack.spiritStone}, 仓库灵石:${warehouse.spiritStone}`);
     }
 
     AccessItem = async (e) => {
