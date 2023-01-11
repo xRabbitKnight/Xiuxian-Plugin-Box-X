@@ -1,7 +1,7 @@
 import MonsterMgr from "../../model/Region/MonsterMgr.js"
 import { Monster } from "../../model/Monster/Monster.js";
 import { rand } from '../mathCommon.js';
-import { GetAllArea } from '../Cache/place/Area.js';
+import { GetAllArea, GetAreaName } from '../Cache/place/Area.js';
 import { Boss } from "../Monster/Boss.js";
 
 /******* 
@@ -26,6 +26,6 @@ export async function RefreshBoss() {
     MonsterMgr.BossCount += 1;
     const regions = await GetAllArea();
     const targetRegionId = regions[rand(0, regions.length)].id.split("-")[1];
-    logger.info(targetRegionId);
+    logger.info(await GetAreaName(targetRegionId));
     MonsterMgr.AddMonster(targetRegionId, new Boss());
 }

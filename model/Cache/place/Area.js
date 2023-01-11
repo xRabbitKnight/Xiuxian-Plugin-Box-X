@@ -18,5 +18,10 @@ export async function GetAllArea() {
     return JSON.parse(value);
 }
 
+export async function GetAreaName(_areaId){
+    const areas = await GetAllArea();
+    if(areas == undefined) return undefined;
 
+    return areas.find(item => item.id.split('-')[1] == _areaId)?.name;
+}
 
