@@ -54,10 +54,6 @@ body {
   width: 75%;
   display: grid;
   row-gap: 10px;
-}
-.info-item {
-  display: flex;
-  text-align: center;
-  line-height: 40px;
-  justify-content: space-evenly;
+  grid-template-columns: auto auto;
+  justify-content: space-around;
 }

@@ -17,15 +17,11 @@
             {{/if}}
         </div>
         <div class="info-list">
-            <div class="info-item">
-                <div>功法名</div>
-                <div>天赋</div>
-            </div>
+            <div style="font-weight:bold;">功法名</div>
+            <div style="font-weight:bold;">天赋</div>
             {{each talent.manualList item}}
-            <div class="info-item">
-                <div>{{item.name}}</div>
-                <div>+{{item.buff}}%</div>
-            </div>
+            <div>{{item.name}}</div>
+            <div>+{{item.buff}}%</div>
             {{/each}}
         </div>
     </div>

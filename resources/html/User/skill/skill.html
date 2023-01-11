@@ -12,16 +12,12 @@
             <div>掌握技能数：{{skill.skillList.length}}</div>
         </div>
         <div class="info-list">
-            <div class="info-item">
-                <div>技能名</div>
-                <div>伤害</div>
-            </div>
-            {{each skill.skillList item}}
-            <div class="info-item">
-                <div>{{item.name}}</div>
-                <div>+{{item.power}}%</div>
-            </div>
-            {{/each}}
+            <div style="font-weight:bold;">技能名</div>
+            <div style="font-weight:bold;">伤害</div>
+            <!-- {{each skill.skillList item}}
+            <div>{{item.name}}</div>
+            <div>+{{item.power}}%</div>
+            {{/each}} -->
         </div>
     </div>
 </body>
