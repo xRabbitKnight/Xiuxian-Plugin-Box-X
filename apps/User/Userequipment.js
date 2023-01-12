@@ -25,7 +25,7 @@ export default class Userequipment extends plugin {
     }
 
     Equip = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inGroup)) {
+        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
             return;
         }
 
@@ -53,7 +53,7 @@ export default class Userequipment extends plugin {
     }
 
     UnEquip = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inGroup)) {
+        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
             return;
         }
 

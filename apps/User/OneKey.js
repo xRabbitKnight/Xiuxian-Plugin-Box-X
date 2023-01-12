@@ -19,7 +19,7 @@ export default class OneKey extends plugin {
     }
 
     SellAll = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.inGroup)) {
+        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
             return;
         }
 
