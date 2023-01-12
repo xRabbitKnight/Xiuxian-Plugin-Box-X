@@ -186,7 +186,7 @@ class BattleVictory {
             eventList.sort((a, b) => { return a.odds - b.odds; });
         }
         return BattleVictory.instance;
-    };
+    }
 
     /******* 
      * @description: 战斗胜利后，随机触发一次事件
@@ -198,7 +198,7 @@ class BattleVictory {
         for (let i = 0, done = false; i < eventList.length && !done; ++i) {
             const event = eventList[i];
             done = Math.random() < event.odds;
-            if (done) event.fnc(_e, _monster, _msg);
+            if (done) await event.fnc(_e, _monster, _msg);
         }
     }
 }
