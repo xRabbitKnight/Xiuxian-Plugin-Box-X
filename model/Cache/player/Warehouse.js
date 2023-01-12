@@ -1,5 +1,6 @@
 import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
+import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:warehouseInfo";
@@ -73,8 +74,8 @@ export async function AddItemByObj(_uid, _item, _count) {
  */
 export async function SortById(_uid) {
     const warehouseInfo = await GetWarehouseInfo(_uid);
-    warehouseInfo.items.sort((a, b) => a.id.localeCompare(b.id));
-    SetWarehouseInfo(_uid, warehouseInfo);
+    warehouseInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
+    await SetWarehouseInfo(_uid, warehouseInfo);
 }
 
 /*******--------------------------------------------------------------内部函数

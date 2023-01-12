@@ -1,5 +1,6 @@
 import data from '../../System/data.js';
 import { forceNumber } from '../../mathCommon.js';
+import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:backpackInfo";
@@ -97,8 +98,8 @@ export async function AddItemById(_uid, _itemId, _count) {
  */
 export async function SortById(_uid) {
     const backpackInfo = await GetBackpackInfo(_uid);
-    backpackInfo.items.sort((a, b) => a.id.localeCompare(b.id));
-    SetBackpackInfo(_uid, backpackInfo);
+    backpackInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
+    await SetBackpackInfo(_uid, backpackInfo);
 }
 
 //--------------------------------------------------------------背包中各信息：获取数量方法

@@ -78,29 +78,29 @@ const checkList = [
 ];
 
 /******* 
- * @description: 状态等级
+ * @description: 状态标签
  */
 export const StatuLevel = {
-    "exist": 0,
-    "inGroup": 1,
-    "inAction": 2,
-    "isMoving" : 3,
-    "canBattle": 4,
-    "canMove": 4,
-    "canGive": 4,
-    "canLevelUp": 4,
+    "exist": [existPlayer],
+    "inGroup": [isGroup],
+    "inAction": [existPlayer, isGroup, action],
+    "isMoving": [existPlayer, isGroup, action],
+    "canBattle": [existPlayer, isGroup, action, blood],
+    "canMove": [existPlayer, isGroup, action, blood],
+    "canGive": [existPlayer, isGroup, action, blood],
+    "canLevelUp": [existPlayer, isGroup, action, blood],
 }
 
 /******* 
- * @description: 根据状态等级，逐级检查是否可继续进行，内部回复状态封锁原因
+ * @description: 根据状态标签，逐级检查是否可继续进行，内部回复状态封锁原因
  * @param {*} _e plugin参数e
- * @param {number} _statuLevel 状态等级，见上方StatuLevel
+ * @param {number} _statuLevel 状态标签，见上方StatuLevel
  * @return {Promise<boolean>} 返回状态 false->不可进行 
  */
 export async function CheckStatu(_e, _statuLevel) {
     let res = true;
-    for (let i = 0; i <= _statuLevel && res; ++i) {
-        res &= (await checkList[i](_e));
+    for (let i = 0; i <= _statuLevel.length && res; ++i) {
+        res &= (await _statuLevel[i](_e));
     }
     return res;
 }
