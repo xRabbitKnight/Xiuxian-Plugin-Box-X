@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = "xiuxian:player:equipmentInfo";
@@ -20,7 +21,7 @@ export async function GetEquipmentInfo(_uid) {
  * @return 无返回值
  */
 export async function SetEquipmentInfo(_uid, _equipmentInfo) {
-    SetInfo(_uid, _equipmentInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _equipmentInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -34,18 +35,6 @@ export async function GetEquipmentCount(_uid) {
 }
 
 /******* 
- * @description: 装备新装备
- * @param {string} _uid 玩家id
- * @param {*} _equipment 装备对象
- * @return 无返回值
- */
-export async function AddEquipment(_uid, _equipment) {
-    const equipmentInfo = await GetEquipmentInfo(_uid);
-    equipmentInfo.push(_equipment);
-    SetEquipmentInfo(_uid, equipmentInfo);
-}
-
-/******* 
  * @description: 卸下装备
  * @param {string} _uid 玩家id
  * @param {*} _equipmentName 装备名
@@ -53,10 +42,26 @@ export async function AddEquipment(_uid, _equipment) {
  */
 export async function DelEquipment(_uid, _equipmentName) {
     const equipmentInfo = await GetEquipmentInfo(_uid);
-    let equipment = equipmentInfo.find(item => item.name == _equipmentName);
+    let equipment = equipmentInfo?.find(item => item.name == _equipmentName);
     if (equipment == undefined) return undefined;
 
     equipment = equipmentInfo.splice(equipmentInfo.indexOf(equipment), 1);
-    SetEquipmentInfo(_uid, equipmentInfo);
+    await SetEquipmentInfo(_uid, equipmentInfo);
     return equipment[0];
+}
+
+/******* 
+ * @description: 装备新装备
+ * @param {string} _uid 玩家id
+ * @param {*} _equipment 装备对象
+ * @return 无返回值
+ */
+export async function AddEquipment(_uid, _equipment) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const equipmentInfo = await GetEquipmentInfo(_uid);
+        if (equipmentInfo == undefined) return;
+
+        equipmentInfo.push(_equipment);
+        await SetEquipmentInfo(_uid, equipmentInfo);
+    });
 }

@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { forceNumber } from '../../mathCommon.js';
 
@@ -21,7 +22,7 @@ export async function GetLifeInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLifeInfo(_uid, _lifeInfo) {
-    SetInfo(_uid, _lifeInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _lifeInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -45,31 +46,35 @@ export async function GetAutograph(_uid) {
 }
 
 /******* 
- * @description: 修改玩家道号
+ * @description: 设置玩家道号
  * @param {string} _uid 玩家id
  * @param {string} _name 新道号
  * @return 无返回值
  */
 export async function SetName(_uid, _name) {
-    const lifeInfo = await GetLifeInfo(_uid);
-    if (lifeInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const lifeInfo = await GetLifeInfo(_uid);
+        if (lifeInfo == undefined) return;
 
-    lifeInfo.name = _name;
-    SetLifeInfo(_uid, lifeInfo);
+        lifeInfo.name = _name;
+        await SetLifeInfo(_uid, lifeInfo);
+    });
 }
 
 /******* 
- * @description: 获取玩家道宣
+ * @description: 设置玩家道宣
  * @param {string} _uid 玩家id
  * @param {string} _autograph 新道宣
  * @return 无返回值
  */
 export async function SetAutograph(_uid, _autograph) {
-    const lifeInfo = await GetLifeInfo(_uid);
-    if (lifeInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const lifeInfo = await GetLifeInfo(_uid);
+        if (lifeInfo == undefined) return;
 
-    lifeInfo.autograph = _autograph;
-    SetLifeInfo(_uid, lifeInfo);
+        lifeInfo.autograph = _autograph;
+        await SetLifeInfo(_uid, lifeInfo);
+    });
 }
 
 
@@ -80,13 +85,15 @@ export async function SetAutograph(_uid, _autograph) {
  * @return 无返回值
  */
 export async function AddAge(_uid, _count) {
-    const lifeInfo = await GetLifeInfo(_uid);
-    if (lifeInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const lifeInfo = await GetLifeInfo(_uid);
+        if (lifeInfo == undefined) return;
 
-    lifeInfo.age += forceNumber(_count);
-    if (lifeInfo.age >= lifeInfo.life)
-        lifeInfo.status = 0;
-    SetLifeInfo(_uid, lifeInfo);
+        lifeInfo.age += forceNumber(_count);
+        if (lifeInfo.age >= lifeInfo.life)
+            lifeInfo.status = 0;
+        await SetLifeInfo(_uid, lifeInfo);
+    });
 }
 
 /******* 
@@ -96,9 +103,11 @@ export async function AddAge(_uid, _count) {
  * @return 无返回值
  */
 export async function AddLife(_uid, _count) {
-    const lifeInfo = await GetLifeInfo(_uid);
-    if (lifeInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const lifeInfo = await GetLifeInfo(_uid);
+        if (lifeInfo == undefined) return;
 
-    lifeInfo.life += forceNumber(_count);
-    SetLifeInfo(_uid, lifeInfo);
+        lifeInfo.life += forceNumber(_count);
+        await SetLifeInfo(_uid, lifeInfo);
+    });
 }

@@ -80,7 +80,7 @@ export default class Shop extends plugin {
         SetCommodities(commodities);
 
         e.reply(`[凡仙堂]小二\n你花[${cost}]灵石购买了[${name}]*${count}`);
-        await AddSpiritStone(e.user_id, -cost);
+        AddSpiritStone(e.user_id, -cost);
         AddItemByObj(e.user_id, commodity, count);
     }
 
@@ -109,7 +109,7 @@ export default class Shop extends plugin {
             return;
         }
 
-        await AddSpiritStone(e.user_id, money);
+        AddSpiritStone(e.user_id, money);
         AddItemByObj(e.user_id, commodity, -count);
 
         e.reply(`[凡仙堂]小二\n出售${name}*${count},得到${money}灵石 `);

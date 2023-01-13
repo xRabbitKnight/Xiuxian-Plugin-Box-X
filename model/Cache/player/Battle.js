@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetEquipmentInfo } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
@@ -22,7 +23,7 @@ export async function GetBattleInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBattleInfo(_uid, _battleInfo) {
-    SetInfo(_uid, _battleInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _battleInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /*******
@@ -42,10 +43,13 @@ export async function GetSpeed(_uid) {
  * @return 无返回
  */
 export async function AddBloodToPercent(_uid, _percent) {
-    const battleInfo = await GetBattleInfo(_uid);
-    if (battleInfo == undefined) return;
-    battleInfo.nowblood = Math.max(battleInfo.nowblood, Math.floor(battleInfo.blood * _percent * 0.01));
-    SetBattleInfo(_uid, battleInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
+
+        battleInfo.nowblood = Math.max(battleInfo.nowblood, Math.floor(battleInfo.blood * _percent * 0.01));
+        await SetBattleInfo(_uid, battleInfo);
+    });
 }
 
 /**
@@ -55,10 +59,13 @@ export async function AddBloodToPercent(_uid, _percent) {
  * @return 无返回
  */
 export async function AddPercentBlood(_uid, _percent) {
-    const battleInfo = await GetBattleInfo(_uid);
-    if (battleInfo == undefined) return;
-    battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * _percent * 0.01));
-    SetBattleInfo(_uid, battleInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
+
+        battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * _percent * 0.01));
+        await SetBattleInfo(_uid, battleInfo);
+    });
 }
 
 /******* 
@@ -69,14 +76,16 @@ export async function AddPercentBlood(_uid, _percent) {
  * @return 无返回
  */
 export async function AddPowerByLevelUp(_uid, _levelList, _level) {
-    const battleInfo = await GetBattleInfo(_uid);
-    if (battleInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
 
-    Object.keys(battleInfo.base).forEach(attr => {
-        battleInfo.base[attr] += forceNumber(_levelList[_level - 1][attr]) - forceNumber(_levelList[_level - 2][attr]);
+        Object.keys(battleInfo.base).forEach(attr => {
+            battleInfo.base[attr] += forceNumber(_levelList[_level - 1][attr]) - forceNumber(_levelList[_level - 2][attr]);
+        });
+        refresh(battleInfo, await GetEquipmentInfo(_uid));
+        await SetBattleInfo(_uid, battleInfo);
     });
-    await SetBattleInfo(_uid, battleInfo);
-    RefreshBattleInfo(_uid);
 }
 
 /******* 
@@ -85,12 +94,27 @@ export async function AddPowerByLevelUp(_uid, _levelList, _level) {
  * @return 无返回值
  */
 export async function RefreshBattleInfo(_uid) {
-    const battleInfo = await GetBattleInfo(_uid);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
 
+        refresh(battleInfo, await GetEquipmentInfo(_uid))
+        await SetBattleInfo(_uid, battleInfo);
+    });
+}
+
+
+/******* 
+ * @description: 刷新面板
+ * @param {*} battleInfo 需要刷新的对象战斗信息
+ * @param {*} equipmentInfo 需要刷新的对象装备信息
+ * @return 无返回值
+ */
+function refresh(battleInfo, equipmentInfo) {
     const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
     const enhancement = {};
-    const equipmentInfo = await GetEquipmentInfo(_uid);
     allAttrs.forEach(attr => enhancement[attr] = 0);
+
     for (let equipment of equipmentInfo) {          //获取装备，计算增益
         allAttrs.forEach(attr => enhancement[attr] += forceNumber(equipment[attr]));
     }
@@ -102,6 +126,4 @@ export async function RefreshBattleInfo(_uid) {
 
     battleInfo.power = 0;
     allAttrs.forEach(attr => battleInfo.power += battleInfo[attr]);
-
-    SetBattleInfo(_uid, battleInfo);
 }

@@ -21,7 +21,7 @@ export async function GetTalentInfo(_uid) {
  * @return 无返回值
  */
 export async function SetTalentInfo(_uid, _talentInfo) {
-    SetInfo(_uid, _talentInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _talentInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -64,7 +64,7 @@ export async function AddManual(_uid, _manual) {
     });
 
     talentInfo.buff += _manual.size;
-    SetTalentInfo(_uid, talentInfo);
+    await SetTalentInfo(_uid, talentInfo);
     return true;
 }
 
@@ -84,6 +84,6 @@ export async function DelManual(_uid, _manualName) {
 
     talentInfo.manualList.splice(talentInfo.manualList.indexOf(targetManual), 1);
     talentInfo.buff -= targetManual.buff;
-    SetTalentInfo(_uid, talentInfo);
+    await SetTalentInfo(_uid, talentInfo);
     return true;
 }

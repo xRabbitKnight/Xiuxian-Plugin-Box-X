@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
@@ -23,7 +24,7 @@ export async function GetBackpackInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBackpackInfo(_uid, _backpackInfo) {
-    SetInfo(_uid, _backpackInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _backpackInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 //--------------------------------------------------------------背包中各信息：修改数量方法
@@ -34,22 +35,13 @@ export async function SetBackpackInfo(_uid, _backpackInfo) {
  * @return 无返回值
  */
 export async function AddSpiritStone(_uid, _count) {
-    const backpackInfo = await GetBackpackInfo(_uid);
-    if (backpackInfo == undefined) return;
-    backpackInfo.spiritStone += forceNumber(_count);
-    SetBackpackInfo(_uid, backpackInfo);
-}
+    lock(`${redisKey}:${_uid}`, async () => {
+        const backpackInfo = await GetBackpackInfo(_uid);
+        if (backpackInfo == undefined) return;
 
-/*******
- * @description: 检查背包灵石能否装下
- * @param {string} _uid 玩家id
- * @param {number} _count 增加的数量
- * @return {Promise<bool>} 能否装下
- */
-export async function CheckSpiritStone(_uid, _count) {
-    const backpackInfo = await GetBackpackInfo(_uid);
-    if (backpackInfo == undefined) return;
-    return backpackInfo.spiritStone + forceNumber(_count) <= backpackInfo.capacity;
+        backpackInfo.spiritStone += forceNumber(_count);
+        await SetBackpackInfo(_uid, backpackInfo);
+    });
 }
 
 /******* 
@@ -60,13 +52,14 @@ export async function CheckSpiritStone(_uid, _count) {
  * @return 无返回值
  */
 export async function AddItemByObj(_uid, _item, _count) {
-    const backpackInfo = await GetBackpackInfo(_uid);
-    if (backpackInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const backpackInfo = await GetBackpackInfo(_uid);
+        if (backpackInfo == undefined) return;
 
-    _item.acount = forceNumber(_count);
-    addVaild(backpackInfo, _item);
-
-    SetBackpackInfo(_uid, backpackInfo);
+        _item.acount = forceNumber(_count);
+        addVaild(backpackInfo, _item);
+        await SetBackpackInfo(_uid, backpackInfo);
+    });
 }
 
 /******* 
@@ -76,11 +69,13 @@ export async function AddItemByObj(_uid, _item, _count) {
  * @return 无返回值
  */
 export async function AddItemsByObj(_uid, _items) {
-    const backpackInfo = await GetBackpackInfo(_uid);
-    if (backpackInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const backpackInfo = await GetBackpackInfo(_uid);
+        if (backpackInfo == undefined) return;
 
-    _items.forEach(item => addVaild(backpackInfo, item));
-    SetBackpackInfo(_uid, backpackInfo);
+        _items.forEach(item => addVaild(backpackInfo, item));
+        await SetBackpackInfo(_uid, backpackInfo);
+    });
 }
 
 export async function AddItemByName(_uid, _itemName, _count) {
@@ -97,9 +92,11 @@ export async function AddItemById(_uid, _itemId, _count) {
  * @return 无返回值
  */
 export async function SortById(_uid) {
-    const backpackInfo = await GetBackpackInfo(_uid);
-    backpackInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
-    await SetBackpackInfo(_uid, backpackInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const backpackInfo = await GetBackpackInfo(_uid);
+        backpackInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
+        await SetBackpackInfo(_uid, backpackInfo);
+    });
 }
 
 //--------------------------------------------------------------背包中各信息：获取数量方法
@@ -111,6 +108,18 @@ export async function SortById(_uid) {
 export async function GetSpiritStoneCount(_uid) {
     const backpackInfo = await GetBackpackInfo(_uid);
     return backpackInfo?.spiritStone;
+}
+
+/*******
+ * @description: 检查背包灵石能否装下
+ * @param {string} _uid 玩家id
+ * @param {number} _count 增加的数量
+ * @return {Promise<bool>} 能否装下
+ */
+export async function CheckSpiritStone(_uid, _count) {
+    const backpackInfo = await GetBackpackInfo(_uid);
+    if (backpackInfo == undefined) return;
+    return backpackInfo.spiritStone + forceNumber(_count) <= backpackInfo.capacity;
 }
 
 /******* 

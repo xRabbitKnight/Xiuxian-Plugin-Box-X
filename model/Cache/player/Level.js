@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
@@ -21,7 +22,7 @@ export async function GetLevelInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLevelInfo(_uid, _levelInfo) {
-    SetInfo(_uid, _levelInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _levelInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 
@@ -31,10 +32,13 @@ export async function SetLevelInfo(_uid, _levelInfo) {
  * @return 无返回值
  */
 export async function AddExp(_uid, _count) {
-    const levelInfo = await GetLevelInfo(_uid);
-    if (levelInfo == undefined) return;
-    levelInfo.exp += forceNumber(_count);
-    SetLevelInfo(_uid, levelInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const levelInfo = await GetLevelInfo(_uid);
+        if (levelInfo == undefined) return;
+
+        levelInfo.exp += forceNumber(_count);
+        await SetLevelInfo(_uid, levelInfo);
+    });
 }
 
 /******* 
@@ -43,9 +47,12 @@ export async function AddExp(_uid, _count) {
  * @param {number} _count 增加的修为的量
  * @return 无返回值
  */
-export async function AddExpMax(_uid, _count) {
-    const levelInfo = await GetLevelInfo(_uid);
-    if (levelInfo == undefined) return;
-    levelInfo.bodyExp += forceNumber(_count);
-    SetLevelInfo(_uid, levelInfo);
+export async function AddBodyExp(_uid, _count) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const levelInfo = await GetLevelInfo(_uid);
+        if (levelInfo == undefined) return;
+
+        levelInfo.bodyExp += forceNumber(_count);
+        await SetLevelInfo(_uid, levelInfo);
+    });
 }

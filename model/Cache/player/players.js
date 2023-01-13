@@ -1,5 +1,6 @@
 import data from '../../System/data.js';
-import { ReadSync, WriteAsync } from '../../File/File.js';
+import { lock } from '../base.js';
+import { ReadSync } from '../../File/File.js';
 
 const filePath = data.__gameDataPath.players;
 const redisKey = 'xiuxian:players';
@@ -25,10 +26,10 @@ export async function GetAllUid() {
  * @return 无返回值
  */
 export async function AddUid(_uid) {
-    const players = await GetAllUid();
-    players.push(_uid);
+    lock(`${redisKey}`, async () => {
+        const players = await GetAllUid();
+        players.push(_uid);
 
-    const info = JSON.stringify(players);
-    redis.set(redisKey, info);
-    WriteAsync(filePath, info);
+        await redis.set(redisKey, JSON.stringify(players));
+    });
 }

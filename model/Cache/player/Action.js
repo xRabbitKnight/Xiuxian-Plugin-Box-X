@@ -20,7 +20,7 @@ export async function GetActionInfo(_uid) {
  * @return 无返回值
  */
 export async function SetActionInfo(_uid, _actionInfo) {
-    SetInfo(_uid, _actionInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _actionInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 /******* 

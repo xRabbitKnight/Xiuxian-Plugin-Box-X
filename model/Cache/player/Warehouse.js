@@ -1,4 +1,5 @@
 import data from '../../System/data.js';
+import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
@@ -22,7 +23,7 @@ export async function GetWarehouseInfo(_uid) {
  * @return 无返回值
  */
 export async function SetWarehouseInfo(_uid, _warehouseInfo) {
-    SetInfo(_uid, _warehouseInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _warehouseInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 
@@ -44,10 +45,13 @@ export async function GetItemByName(_uid, _itemName) {
  * @return 无返回值
  */
 export async function AddSpiritStone(_uid, _count) {
-    const warehouseInfo = await GetWarehouseInfo(_uid);
-    if (warehouseInfo == undefined) return;
-    warehouseInfo.spiritStone += forceNumber(_count);
-    SetWarehouseInfo(_uid, warehouseInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await GetWarehouseInfo(_uid);
+        if (warehouseInfo == undefined) return;
+
+        warehouseInfo.spiritStone += forceNumber(_count);
+        await SetWarehouseInfo(_uid, warehouseInfo);
+    });
 }
 
 /******* 
@@ -58,13 +62,14 @@ export async function AddSpiritStone(_uid, _count) {
  * @return 无返回值
  */
 export async function AddItemByObj(_uid, _item, _count) {
-    const warehouseInfo = await GetWarehouseInfo(_uid);
-    if (warehouseInfo == undefined) return;
+    lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await GetWarehouseInfo(_uid);
+        if (warehouseInfo == undefined) return;
 
-    _item.acount = forceNumber(_count);
-    addVaild(warehouseInfo, _item);
-
-    SetWarehouseInfo(_uid, warehouseInfo);
+        _item.acount = forceNumber(_count);
+        addVaild(warehouseInfo, _item);
+        await SetWarehouseInfo(_uid, warehouseInfo);
+    });
 }
 
 /******* 
@@ -73,9 +78,13 @@ export async function AddItemByObj(_uid, _item, _count) {
  * @return 无返回值
  */
 export async function SortById(_uid) {
-    const warehouseInfo = await GetWarehouseInfo(_uid);
-    warehouseInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
-    await SetWarehouseInfo(_uid, warehouseInfo);
+    lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await GetWarehouseInfo(_uid);
+        if (warehouseInfo == undefined) return;
+
+        warehouseInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
+        await SetWarehouseInfo(_uid, warehouseInfo);
+    });
 }
 
 /*******--------------------------------------------------------------内部函数

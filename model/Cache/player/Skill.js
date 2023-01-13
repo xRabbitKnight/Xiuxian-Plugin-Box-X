@@ -21,7 +21,7 @@ export async function GetSkillInfo(_uid) {
  * @return 无返回值
  */
 export async function SetSkillInfo(_uid, _skillInfo) {
-    SetInfo(_uid, _skillInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _skillInfo, redisKey, `${PATH}/${_uid}.json`);
 }
 
 
@@ -44,7 +44,7 @@ export async function AddSkill(_uid, _skill) {
     const skillInfo = await GetSkillInfo(_uid);
 
     const name = _skill.name.replace("技能书：", "");
-    if (skillInfo.skillList.find(skill => skill.name == name) != undefined) {
+    if (skillInfo == undefined || skillInfo.skillList.find(skill => skill.name == name) != undefined) {
         return false;
     }
 
@@ -52,7 +52,7 @@ export async function AddSkill(_uid, _skill) {
         name: name,
         power: await getSkillPower(_uid, _skill)
     });
-    SetSkillInfo(_uid, skillInfo);
+    await SetSkillInfo(_uid, skillInfo);
     return true;
 }
 
@@ -71,7 +71,7 @@ export async function DelSkill(_uid, _skillName) {
     }
 
     skillInfo.skillList.splice(skillInfo.skillList.indexOf(targetSkill), 1);
-    SetSkillInfo(_uid, skillInfo);
+    await SetSkillInfo(_uid, skillInfo);
     return true;
 }
 
