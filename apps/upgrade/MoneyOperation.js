@@ -1,8 +1,7 @@
-import plugin from '../../../../lib/plugins/plugin.js';
 import { segment } from 'oicq';
-import { At } from '../Xiuxian/Xiuxian.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { forceNumber } from '../../model/mathCommon.js';
+import { getAtUid } from '../../model/utility.js';
 import { AddItemByObj as bpAddItem, AddSpiritStone as bpAddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 import { AddItemByObj as whAddItem, AddSpiritStone as whAddSpiritStone } from '../../model/Cache/player/Warehouse.js';
 
@@ -32,9 +31,9 @@ export default class MoneyOperation extends plugin {
         }
 
         const giverId = e.user_id;
-        const doneeId = await At(e);
+        const doneeId = getAtUid(e);
 
-        if (doneeId == 0) {
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.exist, false)) {
             e.reply("获赠者不存在！");
             return;
         }
@@ -61,9 +60,9 @@ export default class MoneyOperation extends plugin {
         }
 
         const giverId = e.user_id;
-        const doneeId = await At(e);
+        const doneeId = await getAtUid(e);
 
-        if (doneeId == 0) {
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.exist, false)) {
             e.reply("获赠者不存在！");
             return;
         }

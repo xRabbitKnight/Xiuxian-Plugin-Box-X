@@ -36,3 +36,18 @@ export function compareByIdAsc(_id1, _id2){
     }
     return 0;
 }
+
+/******* 
+ * @description: 解析消息并返回被at的uid（qq）, at多人只返回第一个at的uid
+ * @param {*} _e plugin参数e
+ * @return {number} uid号，解析失败返回undefined
+ */
+export function getAtUid(_e){
+    const elem = _e.message.filter(msg => msg.type === 'at');
+    if(elem.length <= 0) return undefined;
+    return elem[0].qq;
+}
+
+export async function replyForwardMsg(_e, _msg){
+    
+}
