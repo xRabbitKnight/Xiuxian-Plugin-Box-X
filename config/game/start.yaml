@@ -1,0 +1,58 @@
+#玩家初始化固定配置，还有部分配置待生成
+
+#行为相关
+action:
+  new: true     #新人
+  x: 101        #坐标
+  y: 701
+  plane: '0'    #位面编号
+  region: '1'   #区域编号
+  address: '1'  #...
+
+#背包相关
+backpack:
+  grade: 1        #储物袋等级
+  capacity: 50000 #灵石容量
+  spiritStone: 0  #当前灵石数
+  items: []       #持有物品列表
+
+#攻防属性相关，待生成
+battle:
+
+#装备相关
+equipment: []
+
+#等级相关
+level:
+  level: 1              #练气大境界
+  levelRank: 0          #练气小境界
+  levelName: '凡人'     #练气等级名
+  exp: 0                #练气经验
+  bodyLevel: 1          #炼体大境界
+  bodyLevelRank: 0      #炼体小境界
+  bodyLevelName: '莽夫' #炼体等级名
+  bodyExp: 0            #炼体经验
+
+#基础信息相关
+life:
+  name: '陆仁贾'      #玩家名
+  autograph: '无'     #签名
+  age: 1              #年龄
+  status: true        #存活状态
+
+#技能相关
+skill:
+  skillList: []     #掌握技能列表
+
+#天赋相关
+talent:
+  spiritualRoot: []     #灵根列表
+  spiritualRootName: '' #灵根名
+  show: false           #天赋是否可见
+  buff: 0               #修炼效率
+  manualList: []        #掌握功法列表
+
+#仓库相关
+warehouse:
+  spiritStone: 0     #仓库灵石数量
+  items: []          #仓库物品列表
