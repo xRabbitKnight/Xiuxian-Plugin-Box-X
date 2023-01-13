@@ -1,7 +1,7 @@
 import RandomEvent from "./RandomEvent.js";
 import { rand, clamp } from '../mathCommon.js'
 import { GetBattleInfo, SetBattleInfo } from '../Cache/player/Battle.js';
-import { AddExp, AddExpMax } from '../Cache/player/Level.js';
+import { AddExp, AddBodyExp } from '../Cache/player/Level.js';
 import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';
 import { GetAllItem } from '../Cache/item/Item.js';
 
@@ -35,7 +35,7 @@ const addLargeExpHP = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const expHP = rand(700, 1000) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你提炼出一瓶高品质精血，服下后你的气血提升了${expHP}！！`);
-        AddExpMax(_e.user_id, expHP);
+        AddBodyExp(_e.user_id, expHP);
     }
 });
 
@@ -45,7 +45,7 @@ const addMediumExpHP = new RandomEvent({
     fnc: async (_e, _monster, _msg) => {
         const expHP = rand(200, 500) * _monster.level;
         _msg.push(`击杀${_monster.name}后，你提炼出一瓶带有瑕疵的精血，服下后你的气血提升了${expHP}！`);
-        AddExpMax(_e.user_id, expHP);
+        AddBodyExp(_e.user_id, expHP);
     }
 });
 

@@ -2,7 +2,7 @@ import config from '../../model/System/config.js';
 import { segment } from 'oicq';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetTalentBuff } from '../../model/Cache/player/Talent.js';
-import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
+import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
 import { AddBloodToPercent } from '../../model/Cache/player/Battle.js';
 
 export default class PlayerControl extends plugin {
@@ -100,7 +100,7 @@ export default class PlayerControl extends plugin {
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
         const exp = Math.floor(cfg.exercise.efficiency * buff * time);
 
-        AddExpMax(e.user_id, exp);
+        AddBodyExp(e.user_id, exp);
         AddBloodToPercent(e.user_id, 90);
         e.reply([segment.at(e.user_id), `降妖归来,气血上升了${exp}\n血量恢复至90%`]);
     }

@@ -1,7 +1,7 @@
 import data from '../../model/System/data.js';
 import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { AddExp, AddExpMax, GetLevelInfo, SetLevelInfo } from '../../model/Cache/player/Level.js';
+import { AddExp, AddBodyExp, GetLevelInfo, SetLevelInfo } from '../../model/Cache/player/Level.js';
 import { AddPowerByLevelUp } from '../../model/Cache/player/Battle.js';
 import { AddLife } from '../../model/Cache/player/Life.js';
 
@@ -60,7 +60,7 @@ export default class Level extends plugin {
         const failureProb = -0.4 + player.bodyLevel * 0.1; //突破失败概率
         if (Math.random() < failureProb) {
             const loss = Math.floor(list[player.bodyLevel - 1].exp * Math.random());
-            AddExpMax(e.user_id, -loss);
+            AddBodyExp(e.user_id, -loss);
             e.reply(`突破失败，你损失了${loss}气血！`);
             return;
         }

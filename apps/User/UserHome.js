@@ -2,7 +2,7 @@ import plugin from '../../../../lib/plugins/plugin.js';
 import { AddPercentBlood } from '../../model/Cache/player/Battle.js'
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
-import { AddExp, AddExpMax } from '../../model/Cache/player/Level.js';
+import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
 import { clamp, forceNumber } from '../../model/mathCommon.js';
@@ -67,7 +67,7 @@ export default class UserHome extends plugin {
             e.reply(`修为增加${pellet.experience * count}`);
         }
         else if (pellet.id[2] == '3') {
-            AddExpMax(e.user_id, pellet.experiencemax * count)
+            AddBodyExp(e.user_id, pellet.experiencemax * count)
             e.reply(`气血增加${pellet.experiencemax * count}`);
         }
 
