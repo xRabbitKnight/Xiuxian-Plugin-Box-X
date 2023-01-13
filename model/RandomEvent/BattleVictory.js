@@ -1,6 +1,6 @@
 import RandomEvent from "./RandomEvent.js";
 import { rand, clamp } from '../mathCommon.js'
-import { GetBattleInfo, SetBattleInfo } from '../Cache/player/Battle.js';
+import { AddPowerByEvent } from '../Cache/player/Battle.js';
 import { AddExp, AddBodyExp } from '../Cache/player/Level.js';
 import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';
 import { GetAllItem } from '../Cache/item/Item.js';
@@ -74,7 +74,7 @@ const getAheadEquipment = new RandomEvent({
     odds: 0.10,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level + 5, MinLevel, MaxLevel);
-        const equipmentList = (await GetAllItem(['1','2','3'])).filter(item => item.dropLevel >= targetLevel);
+        const equipmentList = (await GetAllItem(['1', '2', '3'])).filter(item => item.dropLevel >= targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`跟随濒死的${_monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`);
         AddItemByObj(_e.user_id, equipment, 1);
@@ -86,7 +86,7 @@ const getRelateEquipment = new RandomEvent({
     odds: 0.30,
     fnc: async (_e, _monster, _msg) => {
         const targetLevel = clamp(_monster.level, MinLevel, MaxLevel);
-        const equipmentList = (await GetAllItem(['1','2','3'])).filter(item => item.dropLevel == targetLevel);
+        const equipmentList = (await GetAllItem(['1', '2', '3'])).filter(item => item.dropLevel == targetLevel);
         const equipment = equipmentList[rand(0, equipmentList.length)];
         _msg.push(`在${_monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`);
         AddItemByObj(_e.user_id, equipment, 1);
@@ -121,11 +121,9 @@ const getRelateGongfa = new RandomEvent({
 const addMaxAttack = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
-        battleInfo.base.attack += amount;
-        _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你攻击力提升了${amount}！！`);
-        SetBattleInfo(_e.user_id, battleInfo);
+        _msg.push(`在和${_monster.name}战斗后，你灵光一闪，攻击力提升了${amount}！！`);
+        AddPowerByEvent(_e.user_id, { attack: amount });
     }
 });
 
@@ -133,11 +131,9 @@ const addMaxAttack = new RandomEvent({
 const addMaxBlood = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(50, 500) * _monster.level;
-        battleInfo.base.blood += amount;
         _msg.push(`在和${_monster.name}战斗后，你浑身气血涌动，你生命值提升了${amount}！！`);
-        SetBattleInfo(_e.user_id, battleInfo);
+        AddPowerByEvent(_e.user_id, { blood: amount });
     }
 });
 
@@ -145,11 +141,9 @@ const addMaxBlood = new RandomEvent({
 const addMaxDefense = new RandomEvent({
     odds: 0.15,
     fnc: async (_e, _monster, _msg) => {
-        const battleInfo = await GetBattleInfo(_e.user_id);
         const amount = rand(10, 100) * _monster.level;
-        battleInfo.base.defense += amount;
-        _msg.push(`在和${_monster.name}战斗后，你心头灵光一闪，你防御力提升了${amount}！！`);
-        SetBattleInfo(_e.user_id, battleInfo);
+        _msg.push(`在和${_monster.name}战斗后，你灵光一闪，防御力提升了${amount}！！`);
+        AddPowerByEvent(_e.user_id, { defense: amount });
     }
 });
 

@@ -48,7 +48,7 @@ export default class BattleSite extends plugin {
         const battleResult = await PVE(e, targetMonster, msg);
         if (battleResult) {
             await GetDrops(e.user_id, targetMonster, msg);
-            BattleVictory.TriggerEvent(e, targetMonster, msg);
+            await BattleVictory.TriggerEvent(e, targetMonster, msg);
         }
 
         CD.AddActionCD(e.user_id, 'kill');

@@ -7,6 +7,8 @@ import { GetInfo, SetInfo } from './InfoCache.js';
 const redisKey = "xiuxian:player:battleInfo";
 const PATH = data.__gameDataPath.battle;
 
+const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
+
 /******* 
  * @description: 从cache里获取玩家的战斗面板信息
  * @param {string} _uid 玩家id, plugin参数e.user_id
@@ -68,6 +70,27 @@ export async function AddPercentBlood(_uid, _percent) {
     });
 }
 
+
+/******* 
+ * @description: 奇遇，增加基础属性
+ * @param {number} _uid 玩家id
+ * @param {*} _amount 属性对象 eg. { attack : 10 , defence : 10} 加10攻击10防御
+ * @return 无返回
+ */
+export async function AddPowerByEvent(_uid, _amount){
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
+
+        for(let attr of Object.keys(_amount)){
+            if(!allAttrs.includes(attr)) continue;
+            battleInfo.base[attr] += forceNumber(_amount[attr]);
+        }
+        refresh(battleInfo, await GetEquipmentInfo(_uid));
+        await SetBattleInfo(_uid, battleInfo);
+    });
+}
+
 /******* 
  * @description: 突破升级，增加基础属性
  * @param {string} _uid 玩家id
@@ -80,7 +103,7 @@ export async function AddPowerByLevelUp(_uid, _levelList, _level) {
         const battleInfo = await GetBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
-        Object.keys(battleInfo.base).forEach(attr => {
+        allAttrs.forEach(attr => {
             battleInfo.base[attr] += forceNumber(_levelList[_level - 1][attr]) - forceNumber(_levelList[_level - 2][attr]);
         });
         refresh(battleInfo, await GetEquipmentInfo(_uid));
@@ -111,7 +134,6 @@ export async function RefreshBattleInfo(_uid) {
  * @return 无返回值
  */
 function refresh(battleInfo, equipmentInfo) {
-    const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
     const enhancement = {};
     allAttrs.forEach(attr => enhancement[attr] = 0);
 
