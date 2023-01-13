@@ -52,8 +52,8 @@ export async function 绚烂缤纷花怒放(_uid, _targets, _msg) {
     _msg.push('四周因感受到你体内浓郁的木属性真气而长出花草，花草的生命能量又聚集在你的手中，你将能量轰出...');
 }
 
-export async function 风雷鼓舞三千郎(_uid, _targets, _msg) {
-    _msg.push('你使出一招风雷鼓舞三千郎...');
+export async function 风雷鼓舞三千浪(_uid, _targets, _msg) {
+    _msg.push('你使出一招风雷鼓舞三千浪...');
     _msg.push('周身产生一股能量旋涡，牵引风雷像海浪一般朝对手攻去...');
 }
 
