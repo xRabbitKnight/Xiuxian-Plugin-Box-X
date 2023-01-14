@@ -1,19 +1,20 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:warehouseInfo";
+const redisKey = data.__gameDataKey.warehouse;
 const PATH = data.__gameDataPath.warehouse;
 
 /******* 
  * @description: 从cache里获取玩家的仓库信息
  * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<JSON>} 返回的BattleInfo JSON对象
+ * @return {Promise<JSON>} 返回的warehouseInfo JSON对象
  */
 export async function GetWarehouseInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}`));
 }
 
 /******* 
@@ -23,7 +24,7 @@ export async function GetWarehouseInfo(_uid) {
  * @return 无返回值
  */
 export async function SetWarehouseInfo(_uid, _warehouseInfo) {
-    await SetInfo(_uid, _warehouseInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _warehouseInfo, redisKey);
 }
 
 

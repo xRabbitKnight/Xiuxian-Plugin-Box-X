@@ -3,7 +3,7 @@ import { lock } from '../base.js';
 import { ReadSync } from '../../File/File.js';
 
 const filePath = data.__gameDataPath.players;
-const redisKey = 'xiuxian:players';
+const redisKey = data.__gameDataKey.players;
 
 /** ***** 
  * @description: 从cache里所有玩家uid, 若没有则读文件, 读文件失败返回undefine
@@ -15,7 +15,7 @@ export async function GetAllUid() {
         value = ReadSync(filePath);
         if (value == undefined) return undefined;
 
-        redis.set(redisKey, value);
+        await redis.set(redisKey, value);
     }
     return JSON.parse(value);
 }

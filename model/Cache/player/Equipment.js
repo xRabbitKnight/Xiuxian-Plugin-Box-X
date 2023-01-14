@@ -1,8 +1,9 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:equipmentInfo";
+const redisKey = data.__gameDataKey.equipment;
 const PATH = data.__gameDataPath.equipment;
 
 /******* 
@@ -11,7 +12,7 @@ const PATH = data.__gameDataPath.equipment;
  * @return {Promise<JSON>} 返回的equipmentInfo JSON对象
  */
 export async function GetEquipmentInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -21,7 +22,7 @@ export async function GetEquipmentInfo(_uid) {
  * @return 无返回值
  */
 export async function SetEquipmentInfo(_uid, _equipmentInfo) {
-    await SetInfo(_uid, _equipmentInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _equipmentInfo, redisKey);
 }
 
 /******* 

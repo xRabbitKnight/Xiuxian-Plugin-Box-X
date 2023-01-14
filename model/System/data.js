@@ -33,6 +33,20 @@ const __gameDataPath = {
     skill: path.join(__gameDataPrePath, 'player', 'skill'),
 }
 
+/** 不同模块游戏数据redis key */
+const __gameDataKey = {
+    players: 'xiuxian:players',
+    action: 'xiuxian:player:actionInfo',
+    battle: 'xiuxian:player:battleInfo',
+    equipment: 'xiuxian:player:equipmentInfo',
+    level: 'xiuxian:player:levelInfo',
+    talent: 'xiuxian:player:talentInfo',
+    backpack: 'xiuxian:player:backpackInfo',
+    life: 'xiuxian:player:lifeInfo',
+    warehouse: 'xiuxian:player:warehouseInfo',
+    skill: 'xiuxian:player:skillInfo',
+}
+
 class Data {
     constructor() {
         if (!Data.instance) Data.instance = this;
@@ -43,7 +57,9 @@ class Data {
     get __prePath() { return __prePath; }
     /** 不同模块游戏数据地址 */
     get __gameDataPath() { return __gameDataPath; }
-
+    /** 不同模块游戏数据redis key */
+    get __gameDataKey() { return __gameDataKey; }
+    
     /** 几种预设数据组合类型 */
     fixType = ['items', 'areas', 'spots'];
 
@@ -51,38 +67,42 @@ class Data {
      * @description: 读入所有预设组合数据
      * @return 无返回值
      */
-    Init = () => {
+    InitFixData = () => {
         this.fixType.forEach(type => {
             if (this[type] == undefined) this[type] = [];
-            this[type].push(...getData(type));
+            this[type].push(...getFixData(type));
         });
         //TODO：记得改！！！
         tmp();
     }
 
     /******* 
-     * @description: 将所有预设数据写入文件保存
+     * @description: 将所有预设组合数据写入文件保存
      * @return 无返回值
      */
-    Save = () => {
+    SaveFixData = () => {
         this.fixType.forEach(type => {
-            saveData(type, this[type]);
+            saveFixData(type, this[type]);
         });
     }
 
     /******* 
-     * @description: 插件在Init中调用该函数将新数据加入常规设置
+     * @description: 插件在Init中调用该函数将插件数据加入常规设置
      * @param {string} _type 需添加的数据类型 见 fixType
      * @param {[]} _data 待添加的数据
      * @return 无返回值
      */
-    AddData = (_type, _data) => {
+    AddFixData = (_type, _data) => {
         if (!this.fixType.includes(_type)) {
             logger.info(`无该预设类型:${_type}`);
             return;
         }
         if (this[_type] == undefined) this[_type] = [];
         this[_type].push(..._data);
+    }
+
+    SaveGameData = async (_path, _data) => {
+        saveData(_path, _data);
     }
 }
 export default new Data();
@@ -134,7 +154,7 @@ function tmp() {
  * @param {string} _type : 预定义组合
  * @return {[]} 返回目标组合所有数据，读取失败返回空[] 
  */
-function getData(_type) {
+function getFixData(_type) {
     if (__def[_type] == undefined) {
         logger.error(`未定义${_type}!`);
         return [];
@@ -161,7 +181,7 @@ function getData(_type) {
  * @param {[]} _data : 数据
  * @return 无返回值
  */
-function saveData(_type, _data) {
+function saveFixData(_type, _data) {
     if (__def[_type] == undefined) {
         logger.error(`未定义${_type}!`);
         return;
@@ -171,11 +191,21 @@ function saveData(_type, _data) {
     __gameDataPath[__def[_type].name] = __def[_type].path;
 
     //保存数据
-    try {
-        fs.writeFile(__def[_type].path, JSON.stringify(_data), error => { if (error) throw error; });
-    } catch (error) {
-        logger.error(['保存预生成数据错误！', error]);
-        return;
-    }
+    saveData(__def[_type].path, JSON.stringify(_data));
+}
+
+/******* 
+ * @description: 保存数据，发生错误时报错
+ * @param {string} _path 存储文件路径
+ * @param {string} _data 文件数据
+ * @return 无返回值
+ */
+function saveData(_path, _data) {
+    fs.writeFile(__def[_type].path, JSON.stringify(_data), (err) => {
+        if (err) {
+            logger.error(['保存数据错误！', _path, err]);
+            return;
+        }
+    });
 }
 

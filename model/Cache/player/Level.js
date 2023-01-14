@@ -1,9 +1,10 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:levelInfo";
+const redisKey = data.__gameDataKey.level;
 const PATH = data.__gameDataPath.level;
 
 /******* 
@@ -12,7 +13,7 @@ const PATH = data.__gameDataPath.level;
  * @return {Promise<JSON>} 返回的LevelInfo JSON对象
  */
 export async function GetLevelInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -22,7 +23,7 @@ export async function GetLevelInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLevelInfo(_uid, _levelInfo) {
-    await SetInfo(_uid, _levelInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _levelInfo, redisKey);
 }
 
 /******* 

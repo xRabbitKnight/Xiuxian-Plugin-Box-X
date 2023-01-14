@@ -1,10 +1,11 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { GetEquipmentInfo } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:battleInfo";
+const redisKey = data.__gameDataKey.battle;
 const PATH = data.__gameDataPath.battle;
 
 const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
@@ -15,7 +16,7 @@ const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
  * @return {Promise<JSON>} 返回的BattleInfo JSON对象
  */
 export async function GetBattleInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -25,7 +26,7 @@ export async function GetBattleInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBattleInfo(_uid, _battleInfo) {
-    await SetInfo(_uid, _battleInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _battleInfo, redisKey);
 }
 
 /*******
@@ -77,13 +78,13 @@ export async function AddPercentBlood(_uid, _percent) {
  * @param {*} _amount 属性对象 eg. { attack : 10 , defence : 10} 加10攻击10防御
  * @return 无返回
  */
-export async function AddPowerByEvent(_uid, _amount){
+export async function AddPowerByEvent(_uid, _amount) {
     lock(`${redisKey}:${_uid}`, async () => {
         const battleInfo = await GetBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
-        for(let attr of Object.keys(_amount)){
-            if(!allAttrs.includes(attr)) continue;
+        for (let attr of Object.keys(_amount)) {
+            if (!allAttrs.includes(attr)) continue;
             battleInfo.base[attr] += forceNumber(_amount[attr]);
         }
         refresh(battleInfo, await GetEquipmentInfo(_uid));

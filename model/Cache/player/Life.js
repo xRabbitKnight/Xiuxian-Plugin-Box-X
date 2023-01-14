@@ -1,18 +1,19 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { forceNumber } from '../../mathCommon.js';
 
-const redisKey = "xiuxian:player:lifeInfo";
+const redisKey = data.__gameDataKey.life;
 const PATH = data.__gameDataPath.life;
 
 /******* 
  * @description: 从cache里获取玩家的生涯信息
  * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<JSON>} 返回的BattleInfo JSON对象
+ * @return {Promise<JSON>} 返回的LifeInfo JSON对象
  */
 export async function GetLifeInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -22,7 +23,7 @@ export async function GetLifeInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLifeInfo(_uid, _lifeInfo) {
-    await SetInfo(_uid, _lifeInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _lifeInfo, redisKey);
 }
 
 /******* 

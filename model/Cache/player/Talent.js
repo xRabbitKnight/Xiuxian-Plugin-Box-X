@@ -1,8 +1,9 @@
 import config from '../../System/config.js';
 import data from '../../System/data.js';
+import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:talentInfo";
+const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;
 
 /******* 
@@ -11,7 +12,7 @@ const PATH = data.__gameDataPath.talent;
  * @return {Promise<JSON>} 返回的TalentInfo JSON对象
  */
 export async function GetTalentInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -21,7 +22,7 @@ export async function GetTalentInfo(_uid) {
  * @return 无返回值
  */
 export async function SetTalentInfo(_uid, _talentInfo) {
-    await SetInfo(_uid, _talentInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _talentInfo, redisKey);
 }
 
 /******* 
@@ -59,8 +60,8 @@ export async function AddManual(_uid, _manual) {
     }
 
     talentInfo.manualList.push({
-        name : _manual.name,
-        buff : _manual.size
+        name: _manual.name,
+        buff: _manual.size
     });
 
     talentInfo.buff += _manual.size;

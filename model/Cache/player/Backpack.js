@@ -1,10 +1,11 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { lock } from '../base.js';
 import { forceNumber } from '../../mathCommon.js';
 import { compareByIdAsc } from '../../utility.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
-const redisKey = "xiuxian:player:backpackInfo";
+const redisKey = data.__gameDataKey.backpack;
 const PATH = data.__gameDataPath.backpack;
 
 //--------------------------------------------------------------全部背包基础信息获取与更新方法
@@ -14,7 +15,7 @@ const PATH = data.__gameDataPath.backpack;
  * @return {Promise<JSON>} 返回的backpackInfo JSON对象
  */
 export async function GetBackpackInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -24,7 +25,7 @@ export async function GetBackpackInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBackpackInfo(_uid, _backpackInfo) {
-    await SetInfo(_uid, _backpackInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _backpackInfo, redisKey);
 }
 
 //--------------------------------------------------------------背包中各信息：修改数量方法

@@ -21,9 +21,9 @@ class GameMgr {
 
     async Init() {
         //游戏数据部分
-        data.Init();
+        data.InitFixData();
         await pluginDataInit();
-        data.Save();
+        data.SaveFixData();
 
         //游戏内容部分
         InitMonster();
@@ -62,7 +62,7 @@ async function pluginGameInit(){
 }
 
 /******* 
- * @description: 获取app下以及插件目录app下所有继承plugin的类
+ * @description: 获取app下以及插件目录app下所有继承plugin的且default导出的类
  * @return {Promise<[]>}  
  */
 async function getApps() {

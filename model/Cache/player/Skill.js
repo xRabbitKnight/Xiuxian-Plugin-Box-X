@@ -1,8 +1,9 @@
 import data from '../../System/data.js';
+import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { GetSpiritualRoot } from './Talent.js';
 
-const redisKey = "xiuxian:player:skillInfo";
+const redisKey = data.__gameDataKey.skill;
 const PATH = data.__gameDataPath.skill;
 
 /******* 
@@ -11,7 +12,7 @@ const PATH = data.__gameDataPath.skill;
  * @return {Promise<JSON>} 返回的skillInfo JSON对象
  */
 export async function GetSkillInfo(_uid) {
-    return await GetInfo(_uid, redisKey, `${PATH}/${_uid}.json`);
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -21,7 +22,7 @@ export async function GetSkillInfo(_uid) {
  * @return 无返回值
  */
 export async function SetSkillInfo(_uid, _skillInfo) {
-    await SetInfo(_uid, _skillInfo, redisKey, `${PATH}/${_uid}.json`);
+    await SetInfo(_uid, _skillInfo, redisKey);
 }
 
 
