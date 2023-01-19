@@ -18,7 +18,7 @@
       desc: "玩家交易中心"
     - icon: help-icon_53
       title: "#上架+物品名*数量*价格"
-      desc: "上架物品，数量不填默认为1"
+      desc: "上架物品，数量价格不填默认为1"
     - icon: help-icon_44
       title: "#选购+编号"
       desc: "购买选择物品"
