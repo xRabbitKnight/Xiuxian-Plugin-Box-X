@@ -22,7 +22,7 @@ export async function GetEquipmentInfo(_uid) {
  * @return 无返回值
  */
 export async function SetEquipmentInfo(_uid, _equipmentInfo) {
-    await SetInfo(_uid, _equipmentInfo, redisKey);
+    await SetInfo(_uid, _equipmentInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 

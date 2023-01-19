@@ -23,7 +23,7 @@ export async function GetLevelInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLevelInfo(_uid, _levelInfo) {
-    await SetInfo(_uid, _levelInfo, redisKey);
+    await SetInfo(_uid, _levelInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 

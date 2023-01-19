@@ -24,7 +24,7 @@ export async function GetWarehouseInfo(_uid) {
  * @return 无返回值
  */
 export async function SetWarehouseInfo(_uid, _warehouseInfo) {
-    await SetInfo(_uid, _warehouseInfo, redisKey);
+    await SetInfo(_uid, _warehouseInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 

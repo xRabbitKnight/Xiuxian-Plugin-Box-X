@@ -1,4 +1,10 @@
-import { ReadSync } from '../../File/File.js';
+import { ReadSync, WriteAsync } from '../../File/File.js';
+
+/** 数据保存任务， */
+const saveTask = {};
+
+/** 更新延迟保存时间 单位ms */
+const delayTime = 1000 * 60 * 30;
 
 /** ***** 
  * @description: 从cache里获取玩家的信息, 若没有则读文件, 读文件失败返回undefined
@@ -25,6 +31,17 @@ export async function GetInfo(_uid, _redisKey, _filePath) {
  * @param {string} _redisKey cache 中 key
  * @return 无返回值
  */
-export async function SetInfo(_uid, _info, _redisKey) {
-    await redis.hSet(_redisKey, `${_uid}`, JSON.stringify(_info));
+export async function SetInfo(_uid, _info, _redisKey, _filePath) {
+    const data = JSON.stringify(_info);
+    await redis.hSet(_redisKey, `${_uid}`, data);
+
+    const taskName = `${_redisKey}${_uid}`;
+    if (saveTask[taskName] != undefined) clearTimeout(saveTask[taskName]);
+    saveTask[taskName] = setTimeout(
+        //callback：一段延时后保存数据
+        () => WriteAsync(_filePath, data),
+        //time
+        delayTime
+    );
 }
+

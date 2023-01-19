@@ -26,7 +26,7 @@ export async function GetBattleInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBattleInfo(_uid, _battleInfo) {
-    await SetInfo(_uid, _battleInfo, redisKey);
+    await SetInfo(_uid, _battleInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /*******

@@ -22,7 +22,7 @@ export async function GetSkillInfo(_uid) {
  * @return 无返回值
  */
 export async function SetSkillInfo(_uid, _skillInfo) {
-    await SetInfo(_uid, _skillInfo, redisKey);
+    await SetInfo(_uid, _skillInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 

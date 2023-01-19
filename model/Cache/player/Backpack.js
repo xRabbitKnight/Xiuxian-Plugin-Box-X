@@ -25,7 +25,7 @@ export async function GetBackpackInfo(_uid) {
  * @return 无返回值
  */
 export async function SetBackpackInfo(_uid, _backpackInfo) {
-    await SetInfo(_uid, _backpackInfo, redisKey);
+    await SetInfo(_uid, _backpackInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 //--------------------------------------------------------------背包中各信息：修改数量方法

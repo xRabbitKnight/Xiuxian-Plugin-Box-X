@@ -23,7 +23,7 @@ export async function GetLifeInfo(_uid) {
  * @return 无返回值
  */
 export async function SetLifeInfo(_uid, _lifeInfo) {
-    await SetInfo(_uid, _lifeInfo, redisKey);
+    await SetInfo(_uid, _lifeInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
