@@ -59,7 +59,7 @@ class Data {
     get __gameDataPath() { return __gameDataPath; }
     /** 不同模块游戏数据redis key */
     get __gameDataKey() { return __gameDataKey; }
-    
+
     /** 几种预设数据组合类型 */
     fixType = ['items', 'areas', 'spots'];
 
@@ -99,10 +99,6 @@ class Data {
         }
         if (this[_type] == undefined) this[_type] = [];
         this[_type].push(..._data);
-    }
-
-    SaveGameData = async (_path, _data) => {
-        saveData(_path, _data);
     }
 }
 export default new Data();
@@ -201,7 +197,7 @@ function saveFixData(_type, _data) {
  * @return 无返回值
  */
 function saveData(_path, _data) {
-    fs.writeFile(__def[_type].path, JSON.stringify(_data), (err) => {
+    fs.writeFile(_path, JSON.stringify(_data), (err) => {
         if (err) {
             logger.error(['保存数据错误！', _path, err]);
             return;

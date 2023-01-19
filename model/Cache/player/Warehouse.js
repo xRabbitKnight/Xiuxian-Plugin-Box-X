@@ -14,7 +14,7 @@ const PATH = data.__gameDataPath.warehouse;
  * @return {Promise<JSON>} 返回的warehouseInfo JSON对象
  */
 export async function GetWarehouseInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}`));
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 
@@ -26,7 +26,6 @@ export async function GetWarehouseInfo(_uid) {
 export async function SetWarehouseInfo(_uid, _warehouseInfo) {
     await SetInfo(_uid, _warehouseInfo, redisKey);
 }
-
 
 /******* 
  * @description: 在仓库中按物品名字查找
