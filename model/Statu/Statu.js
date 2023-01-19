@@ -1,17 +1,19 @@
 import { GetBattleInfo } from "../Cache/player/Battle.js";
-import { GetLifeInfo } from "../Cache/player/Life.js";
+import { GetStatus } from "../Cache/player/Life.js";
+import { GetAllUid } from "../Cache/player/players.js";
 
 /******* 
  * @description: 检查有无此人存档
  */
 async function existPlayer(_e, _reply) {
-    const life = await GetLifeInfo(_e.user_id);
-    if (life == undefined) {
+    const isExist = (await GetAllUid()).find(uid => uid == _e.user_id);
+    
+    if (isExist == undefined) {
         if (_reply) _e.reply("生死簿上查无此人，请先#降临世界！");
         return false;
     }
 
-    if (life.status == 0) {
+    if (!await GetStatus(_e.user_id)) {
         if (_reply) _e.reply("你此生寿元已尽，请#再入仙途！");
         return false;
     }

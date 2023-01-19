@@ -1,11 +1,23 @@
-import plugin from '../../../../lib/plugins/plugin.js';
-//import data from '../../model/XiuxianData.js';
-import fs from 'fs';
+import config from '../../model/System/config.js';
 import * as CD from '../../model/CD/Action.js';
-import { segment } from 'oicq';
-import { existplayer, __PATH, Write_player, get_talent, Write_najie, Write_talent, Write_battle, Write_level, Write_wealth, player_efficiency, Write_action, Write_equipment, Write_Life, Read_Life, offaction, Anyarray } from '../Xiuxian/Xiuxian.js';
+import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
+import { IfAtSpot } from '../../model/Cache/place/Spot.js';
+import { IsNew, RegNew, SetActionInfo } from '../../model/Cache/player/Action.js';
+import { GetItemByName } from '../../model/Cache/item/Item.js';
+import { AddItemByObj, AddSpiritStone, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
+import { GetNewBattleInfo, SetBattleInfo } from '../../model/Cache/player/Battle.js';
+import { SetEquipmentInfo } from '../../model/Cache/player/Equipment.js';
+import { SetLevelInfo } from '../../model/Cache/player/Level.js';
+import { SetLifeInfo } from '../../model/Cache/player/Life.js';
+import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
+import { GetNewTalentInfo, SetTalentInfo } from '../../model/Cache/player/Talent.js';
+import { SetWarehouseInfo } from '../../model/Cache/player/Warehouse.js';
+import { AddUid } from '../../model/Cache/player/players.js';
+import { rand } from '../../model/mathCommon.js';
+import { delRedisKeys } from '../../model/utility.js';
 
-export class UserStart extends plugin {
+
+export default class UserStart extends plugin {
     constructor() {
         super({
             name: 'UserStart',
@@ -15,162 +27,95 @@ export class UserStart extends plugin {
             rule: [
                 {
                     reg: '^#降临世界$',
-                    fnc: 'Create_player'
+                    fnc: 'Create'
                 },
                 {
                     reg: '^#再入仙途$',
-                    fnc: 'reCreate_player'
+                    fnc: 'ReCreate'
                 },
                 {
                     reg: '^#联盟报到$',
-                    fnc: 'New_lingshi'
+                    fnc: 'NewSupport'
                 }
             ]
         });
     }
 
-    New_lingshi = async (e) => {
+    NewSupport = async (e) => {
         if (!await CheckStatu(e, StatuLevel.canGive)) {
             return;
-        };
+        }
 
         if (!await IfAtSpot(e.user_id, '联盟')) {
             e.reply(`需回联盟`);
             return;
         }
 
-        const usr_qq = e.user_id;
-        const level = await Read_level(usr_qq);
-        if (level.level_id != 1) {
+        if (!await IsNew(e.user_id)) {
+            e.reply('你已经报到过了！');
             return;
-        };
-        if (action.newnoe != 1) {
+        }
+
+        const weapon = await GetItemByName('烂铁匕首');
+        const wealth = 100;
+        e.reply(`[修仙联盟]方正\n看你骨骼惊奇，就送你一把[${weapon}]吧，还有这里有${wealth}灵石，可在必要的时候用到.`);
+        AddItemByObj(e.user_id, weapon, 1);
+        AddSpiritStone(e.user_id, wealth);
+        RegNew(e.user_id);
+    }
+
+    Create = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
-        };
-        action.newnoe = 0;
-        await Write_action(usr_qq, action);
-        const equipment_name = '烂铁匕首';
-        const money = Number(5);
-        const ifexist = JSON.parse(fs.readFileSync(`${data.__PATH.all}/all.json`)).find(item => item.name == equipment_name);
-        let najie = await Read_najie(usr_qq);
-        najie = await Add_najie_thing(najie, ifexist, Number(1));
-        await Write_najie(usr_qq, najie);
-        await Add_lingshi(usr_qq, money);
-        e.reply(`[修仙联盟]方正\n看你骨骼惊奇\n就送你一把[${equipment_name}]吧\n还有这${money}灵石\n可在必要的时候用到`);
-        e.reply(`你对此高兴万分\n把[${equipment_name}]放进了#储物袋`)
-        return;
-    };
-    
-    Create_player = async (e) => {
-        if (!e.isGroup || e.user_id == 80000000) {
+        }
+
+        if (await CheckStatu(e, StatuLevel.exist, false)) {
+            e.reply('重开请 #再入仙途');
             return;
-        };
-        const usr_qq = e.user_id;
-        const ifexistplay = await existplayer(usr_qq);
-        if (ifexistplay) {
-            this.Show_player(e);
-            return;
-        };
-        const new_player = {
-            'autograph': '无',//道宣
-            'days': 0//签到
-        };
-        const new_battle = {
-            'nowblood': data.Level_list.find(item => item.id == 1).blood + data.LevelMax_list.find(item => item.id == 1).blood,//血量
-        };
-        const new_level = {
-            'prestige': 0,//魔力
-            'level_id': 1,//练气境界
-            'levelname': '凡人',//练气名
-            'experience': 1,//练气经验
-            'levelmax_id': 1,//练体境界
-            'levelnamemax': '莽夫',//练体名
-            'experiencemax': 1,//练体经验
-            'rank_id': 0,//数组位置
-            'rank_name': [
-                '初期', '中期', '后期', '巅峰', '圆满'
-            ],
-            'rankmax_id': 0//数组位置
-        };
-        const new_wealth = {
-            'lingshi': 0,
-            'xianshi': 0
-        };
-        const position = JSON.parse(fs.readFileSync(`${data.__PATH.position}/position.json`)).find(item => item.name == '极西');
-        const positionID = position.id.split('-');
-        const the = {
-            mx: Math.floor((Math.random() * (position.x2 - position.x1))) + Number(position.x1),
-            my: Math.floor((Math.random() * (position.y2 - position.y1))) + Number(position.y1)
-        };
-        const new_action = {
-            'game': 1,//游戏状态
-            'Couple': 1, //双修
-            'newnoe': 1, //新人
-            'x': the.mx,
-            'y': the.my,
-            'z': positionID[0],//位面 
-            'region': positionID[1],//区域
-            'address': positionID[2],//属性
-            'Exchange': 0
-        };
-        const new_najie = {
-            'grade': 1,
-            'lingshimax': 50000,
-            'lingshi': 0,
-            'thing': []
-        };
-        const newWarehouse = {
-            'items': []
-        };
-        const newtalent = await get_talent();
-        const new_talent = {
-            'talent': newtalent,//灵根
-            'talentshow': 1,//显示0,隐藏1
-            'talentsize': 0,//天赋
-            'AllSorcery': []//功法
-        };
-        const thename = {
-            name1: ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'],
-            name2: ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
-        };
-        const name = await Anyarray(thename.name1) + await Anyarray(thename.name2);
-        const life = await Read_Life();
-        const time = new Date();
-        life.push({
-            'qq': usr_qq,
-            'name': `${name}`,
-            'Age': 1,//年龄
-            'life': Math.floor((Math.random() * (100 - 50) + 50)), //寿命
-            'createTime': time.getTime(),
-            'status': 1
-        });
-        await Write_player(usr_qq, new_player);
-        await Write_talent(usr_qq, new_talent);
-        await player_efficiency(usr_qq);
-        await Write_battle(usr_qq, new_battle);
-        await Write_level(usr_qq, new_level);
-        await Write_wealth(usr_qq, new_wealth);
-        await Write_action(usr_qq, new_action);
-        await Write_equipment(usr_qq, []);
-        await Write_najie(usr_qq, new_najie);
-        await writeWarehouse(usr_qq, newWarehouse);
-        await Write_Life(life);
+        }
+
+        const uid = e.user_id;
+        //获取基础配置
+        const newPlayer = config.GetConfig('game/start.yaml');
+        //行为相关
+        await SetActionInfo(uid, newPlayer.action);
+        //背包相关
+        await SetBackpackInfo(uid, newPlayer.backpack);
+        //攻防属性相关, 生成
+        await SetBattleInfo(uid, await GetNewBattleInfo());
+        //装备相关
+        await SetEquipmentInfo(uid, newPlayer.equipment);
+        //等级相关
+        await SetLevelInfo(uid, newPlayer.level);
+        //基础信息相关 部分信息生成
+        newPlayer.life.name = e.sender.nickname;
+        newPlayer.life.lifetime = rand(50, 100);
+        await SetLifeInfo(uid, newPlayer.life);
+        //技能相关
+        await SetSkillInfo(uid, newPlayer.skill);
+        //天赋相关 生成
+        await SetTalentInfo(uid, await GetNewTalentInfo());
+        //仓库相关
+        await SetWarehouseInfo(uid, newPlayer.warehouse);
+        //添加players
+        await AddUid(uid);
+
         e.reply(`你来到一个修仙世界\n你对修仙充满了好奇\n你可以#前往极西联盟\n进行#联盟报到\n会得到[修仙联盟]的帮助\n更快的成为练气修士\n也可以#基础信息\n查看自己的身世\n若想快速去往天山\n建议#前往极西传送阵\n进行#传送天山`);
-        return;
-    };
-    
-    reCreate_player = async (e) => {
-        const usr_qq = e.user_id;
+    }
+
+    ReCreate = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
+            return;
+        }
+
         if (await CD.IfActionInCD(e.user_id, 'reBorn', e.reply)) {
             return;
         }
-        await offaction(usr_qq);
-        fs.rmSync(`${__PATH.player}/${usr_qq}.json`);
-        let life = await Read_Life();
-        life = await life.filter(item => item.qq != usr_qq);
-        await Write_Life(life);
-        e.reply([segment.at(usr_qq), '来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断']);
-        await this.Create_player(e);
+        
+        delRedisKeys(e.user_id);
+        e.reply('来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断');
+        await this.Create(e);
+
         CD.AddActionCD(e.user_id, 'reBorn');
     }
 }

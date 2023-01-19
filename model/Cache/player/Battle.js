@@ -29,6 +29,21 @@ export async function SetBattleInfo(_uid, _battleInfo) {
     await SetInfo(_uid, _battleInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
+/**
+ * @description: 获取一份新玩家战斗面板
+ * @return {Promise<*>} battleInfo对象
+ */
+export async function GetNewBattleInfo(){
+    const battleInfo = { power : 0, base : {} };
+    for(let attr of allAttrs){
+        battleInfo.base[attr] = data.levelList[0][attr] + data.bodyLevelList[0][attr];
+        battleInfo[attr] = battleInfo.base[attr];
+        battleInfo.power += battleInfo[attr];
+    }
+    battleInfo[`nowblood`] = battleInfo.blood;
+    return battleInfo;
+}
+
 /*******
  * @description: 获取玩家移动速度
  * @param {string} _uid 玩家id

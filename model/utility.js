@@ -51,3 +51,14 @@ export function getAtUid(_e){
 export async function replyForwardMsg(_e, _msg){
     
 }
+
+
+/**
+ * @description: 删除玩家所有修仙cd以及状态
+ * @param {string} _uid 玩家id
+ * @return 无返回值
+ */
+export async function delRedisKeys(_uid){
+    const keys = await redis.keys(`xiuxian*${_uid}*`);
+    keys.forEach(key => redis.del(key));
+}

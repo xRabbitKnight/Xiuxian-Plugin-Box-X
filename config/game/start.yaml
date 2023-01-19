@@ -2,6 +2,7 @@
 
 #行为相关
 action:
+  prestige: 0   #魔力
   new: true     #新人
   x: 101        #坐标
   y: 701
@@ -16,8 +17,23 @@ backpack:
   spiritStone: 0  #当前灵石数
   items: []       #持有物品列表
 
-#攻防属性相关，待生成
+#攻防属性相关，初始化记得生成修改
 battle:
+  nowblood: 1
+  attack: 1
+  defense: 1
+  blood: 1
+  burst: 1
+  burstmax: 1
+  speed: 1
+  power: 1
+  base: 
+    attack: 1
+    defense: 1
+    blood: 1
+    burst: 1
+    burstmax: 1
+    speed: 1
 
 #装备相关
 equipment: []
@@ -35,17 +51,19 @@ level:
 
 #基础信息相关
 life:
-  name: '陆仁贾'      #玩家名
+  name: '陆仁贾'      #玩家名 初始化用e.sender.nickname改一下
   autograph: '无'     #签名
   age: 1              #年龄
   status: true        #存活状态
+  lifetime: 10       #寿命 初始化记得rand一个数改一下
+
 
 #技能相关
 skill:
   skillList: []     #掌握技能列表
 
 #天赋相关
-talent:
+talent: #初始化记得生成修改
   spiritualRoot: []     #灵根列表
   spiritualRootName: '' #灵根名
   show: false           #天赋是否可见

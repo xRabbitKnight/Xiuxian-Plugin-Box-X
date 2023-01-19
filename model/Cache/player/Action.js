@@ -1,6 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
+import { lock } from '../base.js';
 
 const redisKey = data.__gameDataKey.action;
 const PATH = data.__gameDataPath.action;
@@ -32,4 +33,27 @@ export async function SetActionInfo(_uid, _actionInfo) {
 export async function GetPlayerRegion(_uid) {
     const actionInfo = await GetActionInfo(_uid);
     return actionInfo?.region;
+}
+
+/**
+ * @description:  检查玩家是否领取萌新礼包
+ * @param {string} _uid 玩家id
+ * @return {Promise<bool>}  是->true
+ */
+export async function IsNew(_uid){
+    const actionInfo = await GetActionInfo(_uid);
+    return actionInfo?.new;
+}
+
+/**
+ * @description: 登记玩家领取萌新礼包
+ * @param {string} _uid 玩家id
+ * @return 无返回值
+ */
+export async function RegNew(_uid){
+    lock(`${redisKey}:${_uid}`, async () =>{
+        const actionInfo = await GetActionInfo(_uid);
+        actionInfo.new = false;
+        await SetActionInfo(_uid, actionInfo);
+    });
 }

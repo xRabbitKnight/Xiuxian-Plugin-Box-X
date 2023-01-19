@@ -2,6 +2,7 @@ import config from '../../System/config.js';
 import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
+import { rand } from '../../mathCommon.js';
 
 const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;
@@ -23,6 +24,20 @@ export async function GetTalentInfo(_uid) {
  */
 export async function SetTalentInfo(_uid, _talentInfo) {
     await SetInfo(_uid, _talentInfo, redisKey, path.join(PATH, `${_uid}.json`));
+}
+
+/**
+ * @description: 获取一份新玩家战斗面板
+ * @return {Promise<*>} talentInfo对象
+ */
+export async function GetNewTalentInfo() {
+    const talentInfo = {};
+    talentInfo.spiritualRoot = randSpiritualRoot();
+    talentInfo.spiritualRootName = getSpiritualRootName(talentInfo.spiritualRoot);
+    talentInfo.show = false;
+    talentInfo.manualList = [];
+    talentInfo.buff = getBuff(talentInfo.spiritualRoot, talentInfo.manualList);
+    return talentInfo;
 }
 
 /******* 
@@ -87,4 +102,45 @@ export async function DelManual(_uid, _manualName) {
     talentInfo.buff -= targetManual.buff;
     await SetTalentInfo(_uid, talentInfo);
     return true;
+}
+
+/**
+ * @description: 随机生成灵根
+ * @return {[]} 灵根数组
+ */
+function randSpiritualRoot() {
+    const spRoot = [];
+    const time = rand(1, 11); //尝试次数
+    for (let i = 0; i < time; i++) {
+        const sr  = rand(1, 11);
+        if(-1 != spRoot.indexOf(sr)) continue;
+        if(sr <= 5 && -1 != spRoot.indexOf(sr + 5)) continue;
+        if(sr > 5 && -1 != spRoot.indexOf(sr - 5)) continue;
+        spRoot.push(sr);
+    }
+    return spRoot;
+}
+
+/**
+ * @description:  根据灵根数组获取灵根名
+ * @param {[]} _spRoot 灵根数组
+ * @return {string} 返回灵根名
+ */
+function getSpiritualRootName(_spRoot){
+    let name = "";
+    _spRoot.forEach(root => name += data.talentList.find(item => item.id == root).name);
+    return name;
+}
+
+/**
+ * @description: 根据灵根和功法计算修炼效率
+ * @param {[]} _spRoot 灵根数组
+ * @param {[]} _manualList 功法数组
+ * @return {number} 修炼效率
+ */
+function getBuff(_spRoot, _manualList){
+    const buff = 250;
+    _spRoot.forEach(root => buff -= (root >= 5 ? 40 : 50));
+    _manualList.forEach(manual => buff += manual.buff);
+    return buff;
 }

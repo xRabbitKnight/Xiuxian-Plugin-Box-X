@@ -28,7 +28,7 @@ export async function GetAllUid() {
 export async function AddUid(_uid) {
     lock(`${redisKey}`, async () => {
         const players = await GetAllUid();
-        players.push(_uid);
+        if (players.indexOf(_uid) == -1) players.push(_uid);
 
         await redis.set(redisKey, JSON.stringify(players));
     });

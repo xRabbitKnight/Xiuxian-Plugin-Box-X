@@ -46,6 +46,16 @@ export async function GetAutograph(_uid) {
     return lifeInfo?.autograph;
 }
 
+/**
+ * @description: 获取玩家存活状态
+ * @param {string} _uid 玩家id
+ * @return {Promise<bool>} true -> 活
+ */
+export async function GetStatus(_uid){
+    const lifeInfo = await GetLifeInfo(_uid);
+    return lifeInfo?.status;
+}
+
 /******* 
  * @description: 设置玩家道号
  * @param {string} _uid 玩家id
