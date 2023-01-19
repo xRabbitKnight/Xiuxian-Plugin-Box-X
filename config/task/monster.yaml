@@ -1,0 +1,9 @@
+#怪物刷新
+
+#小怪
+monster: 
+  cron: 0 0 0/1 * * ?
+
+#BOSS
+boss: 
+  cron: 0 0 0/12 * * ?

@@ -3,13 +3,13 @@ import { GetBattleInfo, RefreshBattleInfo, SetBattleInfo } from "../../model/Cac
 import { GetLevelInfo } from "../../model/Cache/player/Level.js";
 import { forceNumber } from "../../model/mathCommon.js";
 import data from "../../model/System/data.js";
-import { RefreshBoss, RefreshMonster } from "../../model/Region/Region.js";
+import { RefreshBoss } from "../../model/Region/Region.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
-import { GetTalentInfo, SetTalentInfo } from "../../model/Cache/player/Talent.js";
+import { GetSpiritualRoot, GetTalentInfo, SetTalentInfo } from "../../model/Cache/player/Talent.js";
+import { GetAllSkill, SetSkillInfo } from "../../model/Cache/player/Skill.js";
+import { GetItemByName } from "../../model/Cache/item/Item.js";
+import { WriteAsync } from "../../model/File/File.js";
 
-//TODO: 这玩意应该扔到配置里
-const CRON_REFREASH_MONSTER = '0 0 0/1 * * ?';
-const CRON_REFREASH_BOSS = '0 0 0/12 * * ?';
 
 export default class MonsterRefresh extends plugin {
     constructor() {
@@ -34,25 +34,14 @@ export default class MonsterRefresh extends plugin {
                     fnc: 'refreshPlayerManual',
                     permission: 'master'
                 },
+                {
+                    reg: '^#刷新玩家技能列表$',
+                    fnc: 'refreshPlayerSkill',
+                    permission: 'master'
+                },
 
             ]
         });
-        this.task = [
-            {
-                name: "定时刷新怪物",
-                cron: CRON_REFREASH_MONSTER,
-                fnc: () => this.refreshMonster(),
-            },
-            {
-                name: "定时刷新BOSS",
-                cron: CRON_REFREASH_BOSS,
-                fnc: () => this.refreshBoss(),
-            }
-        ]
-    }
-
-    refreshMonster = async () => {
-        RefreshMonster();
     }
 
     refreshBoss = async () => {
@@ -90,6 +79,29 @@ export default class MonsterRefresh extends plugin {
             })
             talentInfo.manualList = newManual;
             SetTalentInfo(player, talentInfo);
+        });
+    }
+
+    refreshPlayerSkill = async () => {
+        const players = await GetAllUid();
+        players.forEach(async (player) => {
+            const spiritualRoots = await GetSpiritualRoot(player);
+            const skills = await GetAllSkill(player);
+
+            for(let sk of skills){
+                const skill = await GetItemByName(`技能书：${sk.name}`, 1);
+                let power = skill.power;
+                //每多一种符合属性的灵根 +20倍率， 多一种不合属性的 -10倍率
+                spiritualRoots.forEach(sr => {
+                    const result = skill.spiritualRoot.find(root => sr == root);
+                    power += (result == undefined ? -10 : 20);
+                });
+                sk.power = power;
+            }
+
+            const obj = {skillList : skills};
+            SetSkillInfo(player, obj);
+            WriteAsync(`${data.__gameDataPath.skill}/${player}.json`, JSON.stringify(obj));
         });
     }
 }
