@@ -29,7 +29,9 @@ export async function _1v1(_attacker, _target, _msg) {
     const battleResult = count < C_MAXROUND && _attacker.battleInfo.nowblood > 0;
     _msg.push(`经过${count}回合`);
     _msg.push(battleResult ? `你击败了${_target.name}!` : _attacker.battleInfo.nowblood > 0 ? `${_target.name}一个闪身躲开你的攻击逃跑了！` : `你被${_target.name}击败了！`);
-    _msg.push(`血量剩余: ${_attacker.battleInfo.nowblood}.`);
+    
+    const nowbloodPercent = Math.floor(_attacker.battleInfo.nowblood / _attacker.battleInfo.blood * 100)
+    _msg.push(`血量剩余: ${_attacker.battleInfo.nowblood} [${nowbloodPercent}%]`);
 
     return battleResult;
 }
