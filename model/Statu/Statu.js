@@ -119,13 +119,13 @@ export const StatuLevel = {
     /**  检查是否移动中*/
     isMoving: content.exist | content.isAlive | content.inGroup | content.action | content.moving,
     /**  检查是否可战斗*/
-    canBattle: content.exist | content.isAlive | content.inGroup | content.action | content.moving | content.blood,
+    canBattle: content.exist | content.isAlive |  content.action | content.moving | content.blood,
     /**  检查是否可移动*/
     canMove: content.exist | content.isAlive | content.inGroup | content.action | content.moving | content.blood,
     /**  检查是否可赠与*/
     canGive: content.exist | content.isAlive | content.inGroup | content.action | content.moving | content.blood,
     /**  检查是否可升级*/
-    canLevelUp: content.exist | content.isAlive | content.inGroup | content.action | content.moving | content.blood,
+    canLevelUp: content.exist | content.isAlive | content.action | content.moving | content.blood,
 }
 
 
@@ -140,7 +140,7 @@ export const StatuLevel = {
 export async function CheckStatu(_e, _level, _reply = true) {
     let res = true;
     for (let i = 1, pos = 1; i < _level && res; i <<= 1, pos++) {
-        if (_level & i == 0) continue;
+        if ((_level & i) == 0) continue;
         res &= (await fnc[pos](_e, _reply));
     }
     return res;

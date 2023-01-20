@@ -2,7 +2,7 @@ import { rand } from "../mathCommon.js";
 import { AutoSkillInBattle } from "../Skill/base.js";
 
 /**
- * @description: 1v1战斗模型
+ * @description: 1v1 PVE战斗模型
  * @param {Object} _attacker 攻击者 需求 .name .battleInfo
  * @param {Object} _target 目标 需求同上
  * @param {[]} _msg 战斗信息
@@ -14,10 +14,11 @@ export async function _1v1(_attacker, _target, _msg) {
         raid_1v1: counterAttack_1v1,
         attack_1v1: counterAttack_1v1,
         counterAttack_1v1: attack_1v1,
-    };
+    }
 
     let round = raid_1v1;
-    let count = 1;          //记录战斗轮数
+    //记录战斗轮数
+    let count = 1;
 
     //1. 按轮次发动战斗
     while (count < C_MAXROUND && !await round(_attacker, _target, _msg)) {
@@ -29,7 +30,7 @@ export async function _1v1(_attacker, _target, _msg) {
     const battleResult = count < C_MAXROUND && _attacker.battleInfo.nowblood > 0;
     _msg.push(`经过${count}回合`);
     _msg.push(battleResult ? `你击败了${_target.name}!` : _attacker.battleInfo.nowblood > 0 ? `${_target.name}一个闪身躲开你的攻击逃跑了！` : `你被${_target.name}击败了！`);
-    
+
     const nowbloodPercent = Math.floor(_attacker.battleInfo.nowblood / _attacker.battleInfo.blood * 100)
     _msg.push(`血量剩余: ${_attacker.battleInfo.nowblood} [${nowbloodPercent}%]`);
 
@@ -50,10 +51,12 @@ async function raid_1v1(_attacker, _target, _msg) {
         return false;
     }
 
-    //偷袭成功
-    const C_RAID_EXTRA_RATE = 1.1; //偷袭额外伤害倍率
-    const BaseDamage = rand(0, _attacker.battleInfo.blood / 1000);    //设置一个基础伤害
-    let damage = Math.floor(Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)              //计算伤害
+    //偷袭额外伤害倍率
+    const C_RAID_EXTRA_RATE = 1.1;
+    //基础伤害
+    const BaseDamage = rand(0, _attacker.battleInfo.blood / 1000);
+    //计算伤害
+    let damage = Math.floor(Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)
         * (ifBurst(_attacker.battleInfo.burst) ? _attacker.battleInfo.burstmax / 100 : 1)
         * C_RAID_EXTRA_RATE);
     damage += BaseDamage;
@@ -85,8 +88,10 @@ async function raid_1v1(_attacker, _target, _msg) {
  * @return {Promise<bool>} 返回战斗是否结束 
  */
 async function attack_1v1(_attacker, _target, _msg) {
-    const BaseDamage = rand(0, _attacker.battleInfo.blood / 1000);    //设置一个基础伤害
-    let damage = Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)              //计算伤害
+    //基础伤害
+    const BaseDamage = rand(0, _attacker.battleInfo.blood / 1000);
+    //计算伤害
+    let damage = Math.max(_attacker.battleInfo.attack - _target.battleInfo.defense, 0)
         * (ifBurst(_attacker.battleInfo.burst) ? _attacker.battleInfo.burstmax / 100 : 1);
     damage = Math.floor(damage + BaseDamage);
 

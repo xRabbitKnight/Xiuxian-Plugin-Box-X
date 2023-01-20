@@ -62,3 +62,12 @@ export async function delRedisKeys(_uid){
     const keys = await redis.keys(`xiuxian*${_uid}*`);
     keys.forEach(key => redis.del(key));
 }
+
+/**
+ * @description: 获取qq信息 有.nickname
+ * @param {number} _uid 玩家id
+ * @return {Promise<*>} 返回msg
+ */
+export async function getQQInfo(_uid){
+    return await Bot.getStrangerInfo(_uid);
+}

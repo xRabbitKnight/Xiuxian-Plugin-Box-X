@@ -1,7 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { forceNumber } from '../../mathCommon.js';
+import { clamp, forceNumber } from '../../mathCommon.js';
 import { GetEquipmentInfo } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
@@ -52,6 +52,22 @@ export async function GetNewBattleInfo(){
 export async function GetSpeed(_uid) {
     const battleInfo = await GetBattleInfo(_uid);
     return battleInfo?.speed;
+}
+
+/**
+ * @description: 设置玩家nowblood
+ * @param {string} _uid 玩家id
+ * @param {number} _num nowblood值
+ * @return 无返回
+ */
+ export async function SetNowblood(_uid, _num) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await GetBattleInfo(_uid);
+        if (battleInfo == undefined) return;
+
+        battleInfo.nowblood = clamp(forceNumber(_num), 0, battleInfo.blood);
+        await SetBattleInfo(_uid, battleInfo);
+    });
 }
 
 /**
