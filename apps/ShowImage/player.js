@@ -47,37 +47,37 @@ export default class playerImage extends plugin {
     }
 
     PlayerInfo = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetPlayerInfoImage(e.user_id));
     }
 
     EquipmentInfo = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetEquipmentImage(e.user_id));
     }
 
     ManualInfo = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetManualImage(e.user_id));
     }
 
     SkillInfo = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetSkillImage(e.user_id));
     }
 
     Level = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetLevelImage(e.user_id));
     }
 
     BodyLevel = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetBodyLevelImage(e.user_id));
     }
 
     ShowBackpack = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) return;
+        if (!await CheckStatu(e, StatuLevel.alive)) return;
         e.reply(await _.GetBackpackImage(e.user_id));
     }
 

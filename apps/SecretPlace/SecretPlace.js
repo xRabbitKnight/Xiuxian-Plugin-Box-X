@@ -43,7 +43,7 @@ export default class SecretPlace extends plugin {
     }
 
     ShowCity = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
+        if (!await CheckStatu(e, StatuLevel.aliveAndInGroup)) {
             return;
         }
 

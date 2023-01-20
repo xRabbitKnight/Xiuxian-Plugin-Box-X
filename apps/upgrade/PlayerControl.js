@@ -54,7 +54,7 @@ export default class PlayerControl extends plugin {
     };
 
     OutSeclusion = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
+        if (!await CheckStatu(e, StatuLevel.aliveAndInGroup)) {
             return;
         }
 
@@ -80,7 +80,7 @@ export default class PlayerControl extends plugin {
     }
 
     EndExercise = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
+        if (!await CheckStatu(e, StatuLevel.aliveAndInGroup)) {
             return;
         }
 

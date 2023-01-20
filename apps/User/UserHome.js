@@ -40,7 +40,7 @@ export default class UserHome extends plugin {
     }
 
     ConsumePellet = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
 
@@ -75,7 +75,7 @@ export default class UserHome extends plugin {
     }
 
     LearnSkill = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
 
@@ -101,7 +101,7 @@ export default class UserHome extends plugin {
     }
 
     ForgetSkill = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
 
@@ -115,7 +115,7 @@ export default class UserHome extends plugin {
     }
 
     LearnManual = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
 
@@ -141,7 +141,7 @@ export default class UserHome extends plugin {
     }
 
     ForgetManual = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.exist)) {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
 

@@ -33,7 +33,7 @@ export default class MoneyOperation extends plugin {
         const giverId = e.user_id;
         const doneeId = getAtUid(e);
 
-        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.exist, false)) {
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.alive, false)) {
             e.reply("获赠者不存在！");
             return;
         }
@@ -62,7 +62,7 @@ export default class MoneyOperation extends plugin {
         const giverId = e.user_id;
         const doneeId = await getAtUid(e);
 
-        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.exist, false)) {
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.alive, false)) {
             e.reply("获赠者不存在！");
             return;
         }

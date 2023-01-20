@@ -104,7 +104,7 @@ export default class UserStart extends plugin {
     }
 
     ReCreate = async (e) => {
-        if (!await CheckStatu(e, StatuLevel.existAndInGroup)) {
+        if (!await CheckStatu(e, StatuLevel.inGroup)) {
             return;
         }
 
