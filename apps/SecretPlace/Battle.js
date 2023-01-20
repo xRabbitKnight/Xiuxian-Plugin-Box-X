@@ -48,7 +48,7 @@ export default class Battle extends plugin {
             return;
         }
 
-        const msg = ['战斗记录'];
+        const msg = ['【战斗记录】'];
         const result = await PVP(e, targetId, msg);
         ForwardMsg(e, msg);
 
