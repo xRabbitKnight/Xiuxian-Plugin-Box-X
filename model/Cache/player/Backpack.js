@@ -41,6 +41,10 @@ export async function AddSpiritStone(_uid, _count) {
         if (backpackInfo == undefined) return;
 
         backpackInfo.spiritStone += forceNumber(_count);
+        if(backpackInfo.spiritStone > backpackInfo.capacity){
+            Bot.sendPrivateMsg(_uid, '你的背包已满，灵石已经放不下了！');
+            backpackInfo.spiritStone = backpackInfo.capacity;
+        }
         await SetBackpackInfo(_uid, backpackInfo);
     });
 }

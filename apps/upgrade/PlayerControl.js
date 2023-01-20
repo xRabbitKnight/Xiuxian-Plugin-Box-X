@@ -51,7 +51,7 @@ export default class PlayerControl extends plugin {
         const action = { 'actionName': '降妖', 'startTime': new Date().getTime() };
         redis.set(`xiuxian:player:${e.user_id}:action`, JSON.stringify(action));
         e.reply('开始外出...');
-    };
+    }
 
     OutSeclusion = async (e) => {
         if (!await CheckStatu(e, StatuLevel.aliveAndInGroup)) {
@@ -64,15 +64,15 @@ export default class PlayerControl extends plugin {
         }
         redis.del(`xiuxian:player:${e.user_id}:action`);
 
-        const cfg = config.GetConfig('game/player.yaml');
+        const cfg = config.GetConfig('game/player.yaml').seclusion;
         const time = Math.floor((new Date().getTime() - action.startTime) / 60000);
-        if (time < cfg.seclusion.minTime) {
+        if (time < cfg.minTime) {
             e.reply('只是呆了一会儿...');
             return;
         }
 
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
-        const exp = Math.floor(cfg.seclusion.efficiency * buff * time);
+        const exp = Math.floor(cfg.efficiency * buff * time);
 
         AddExp(e.user_id, exp);
         AddBloodToPercent(e.user_id, 100);
@@ -90,15 +90,15 @@ export default class PlayerControl extends plugin {
         }
         redis.del(`xiuxian:player:${e.user_id}:action`);
 
-        const cfg = config.GetConfig('game/player.yaml');
+        const cfg = config.GetConfig('game/player.yaml').exercise;
         const time = Math.floor((new Date().getTime() - action.startTime) / 60000);
-        if (time < cfg.exercise.minTime) {
+        if (time < cfg.minTime) {
             e.reply('才外出一会儿...');
             return;
         }
 
         const buff = (await GetTalentBuff(e.user_id)) / 100 + 1;
-        const exp = Math.floor(cfg.exercise.efficiency * buff * time);
+        const exp = Math.floor(cfg.efficiency * buff * time);
 
         AddBodyExp(e.user_id, exp);
         AddBloodToPercent(e.user_id, 90);
