@@ -46,10 +46,10 @@
       title: "#装备信息"
       desc: "(可私聊)"
     - icon: help-icon_44
-      title: "#学习+功法名"
+      title: "#学习功法+功法名"
       desc: "学习功法"
     - icon: help-icon_44
-      title: "#忘掉+功法名"
+      title: "#忘掉功法+功法名"
       desc: "忘掉功法"
     - icon: help-icon_38
       title: "#功法信息"

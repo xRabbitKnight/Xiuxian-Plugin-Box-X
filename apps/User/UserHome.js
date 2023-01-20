@@ -28,11 +28,11 @@ export default class UserHome extends plugin {
                     fnc: 'ForgetSkill'
                 },
                 {
-                    reg: '^#学习.*$',
+                    reg: '^#学习功法.*$',
                     fnc: 'LearnManual'
                 },
                 {
-                    reg: '^#忘掉.*$',
+                    reg: '^#忘掉功法.*$',
                     fnc: 'ForgetManual'
                 }
             ]
