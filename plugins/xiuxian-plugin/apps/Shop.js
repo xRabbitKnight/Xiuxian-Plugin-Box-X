@@ -105,7 +105,7 @@ export default class Shop extends plugin {
 
         const money = commodity.price * count;
         if(!await CheckSpiritStone(e.user_id, money)){
-            e.reply(`[凡仙堂]小二\n你的储物袋装不下这么${money}灵石！`);
+            e.reply(`[凡仙堂]小二\n你的储物袋装不下${money}灵石！`);
             return;
         }
 
