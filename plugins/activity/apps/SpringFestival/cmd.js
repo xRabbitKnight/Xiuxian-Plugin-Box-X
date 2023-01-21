@@ -1,6 +1,6 @@
 import { refreshNian } from "./SpringFestival.js";
 
-export default class SpringFestival extends plugin{
+export class SpringFestival extends plugin{
     constructor(){
         super({
             name: '春节活动',

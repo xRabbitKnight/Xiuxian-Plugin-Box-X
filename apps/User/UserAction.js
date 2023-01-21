@@ -52,7 +52,7 @@ export default class UserAction extends plugin {
         }
 
         backpack.spiritStone -= cfg.upgradeCost[backpack.grade];
-        backpack.capacity = cfg.capacity[backpack.grade];
+        backpack.capacity = cfg.capacity[backpack.grade + 1];
         backpack.grade += 1;
         SetBackpackInfo(e.user_id, backpack);
         e.reply('储物袋升级完毕！');

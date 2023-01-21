@@ -5,5 +5,5 @@ export function dataInit(){
 }
 
 export function gameInit(){
-    SpringFestival();
+    
 }
