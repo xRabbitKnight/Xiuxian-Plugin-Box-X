@@ -58,7 +58,7 @@ export default class UserStart extends plugin {
 
         const weapon = await GetItemByName('烂铁匕首');
         const wealth = 100;
-        e.reply(`[修仙联盟]方正\n看你骨骼惊奇，就送你一把[${weapon}]吧，还有这里有${wealth}灵石，可在必要的时候用到.`);
+        e.reply(`[修仙联盟]方正\n看你骨骼惊奇，就送你一把[${weapon.name}]吧，还有这里有${wealth}灵石，已经放到你的储物袋里了，可以#储物袋查看.`);
         AddItemByObj(e.user_id, weapon, 1);
         AddSpiritStone(e.user_id, wealth);
         RegNew(e.user_id);

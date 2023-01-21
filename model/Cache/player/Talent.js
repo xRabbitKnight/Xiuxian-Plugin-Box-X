@@ -139,7 +139,7 @@ function getSpiritualRootName(_spRoot){
  * @return {number} 修炼效率
  */
 function getBuff(_spRoot, _manualList){
-    const buff = 250;
+    let buff = 250;
     _spRoot.forEach(root => buff -= (root >= 5 ? 40 : 50));
     _manualList.forEach(manual => buff += manual.buff);
     return buff;
