@@ -90,5 +90,5 @@ function ifBurst(_burstRate) {
  * @return {bool} 是否闪避
  */
 function ifDodge(_dodgeRate){
-    return rand(0, 10) <= Math.log(_dodgeRate + 1);
+    return rand(0, 11) <= Math.log(_dodgeRate + 1);
 }
