@@ -1,16 +1,16 @@
 import data from "../System/data.js";
 
-const MonsterName = ['蜥', '狮', '鹏', '雕', '雀', '豹', '虎', '龟', '猫', '龙','鲲','鸡','蛇','狼','鼠','鹿','貂','猴','狗','熊','羊','牛','象','兔','猪'];
-const MonsterLevelName = ['小兵','兵', '将', '兽', '魔', '妖', '大妖', '王', '皇', '帝', '神'];
+const MonsterName = ['蜥', '狮', '鹏', '雕', '雀', '豹', '虎', '龟', '猫', '龙', '鲲', '鸡', '蛇', '狼', '鼠', '鹿', '貂', '猴', '狗', '熊', '羊', '牛', '象', '兔', '猪'];
+const MonsterLevelName = ['小兵', '兵', '将', '兽', '魔', '妖', '大妖', '王', '皇', '帝', '神'];
 
 
 //怪物的基类，储存怪物name, level, battleInfo信息
-export class Monster{
+export class Monster {
     /**
      * @description: 根据等级生成一个怪物
      * @param {Number} _level 怪物等级
-     */    
-    constructor(_level){
+     */
+    constructor(_level) {
         //TODO:本来多少要报个warning， log没搞好，先这么搞着吧
         _level = clamp(_level, 1, MonsterLevelName.length);
 
@@ -31,10 +31,12 @@ export class Monster{
             "burstmax": Math.floor(tmpInfo0.burstmax * percent0 + tmpInfo1.burstmax * percent1),
             "speed": Math.floor(tmpInfo0.speed * percent0 + tmpInfo1.speed * percent1),
         }
+        //怪物掉落方法标签
+        this.dropTip = "normal";
     }
 }
 
 
-function clamp(value, min, max){
+function clamp(value, min, max) {
     return Math.min(max, Math.max(value, min));
 }

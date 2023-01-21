@@ -4,8 +4,8 @@ import { Monster } from "./Monster.js";
 const MaxLevel = 11, MinLevel = 1;
 const BloodBase = rand(1000000, 5000000);
 
-export class Boss extends Monster{
-    constructor(){
+export class Boss extends Monster {
+    constructor() {
         //先随便构造一个monster
         super(rand(MinLevel, MaxLevel));
 
@@ -15,5 +15,6 @@ export class Boss extends Monster{
         this.battleInfo.nowblood = this.battleInfo.blood;
         this.battleInfo.defense = 0;
         this.battleInfo.speed = 0;
+        this.dropTip = 'boss';
     }
 }
