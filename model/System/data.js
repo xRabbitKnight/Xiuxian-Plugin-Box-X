@@ -197,7 +197,7 @@ function saveFixData(_type, _data) {
  * @return 无返回值
  */
 function saveData(_path, _data) {
-    fs.writeFile(_path, JSON.stringify(_data), (err) => {
+    fs.writeFile(_path, _data, (err) => {
         if (err) {
             logger.error(['保存数据错误！', _path, err]);
             return;
