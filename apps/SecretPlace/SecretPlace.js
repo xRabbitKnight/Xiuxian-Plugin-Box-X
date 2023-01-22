@@ -1,6 +1,6 @@
 import plugin from '../../../../lib/plugins/plugin.js';
 import { segment } from 'oicq';
-import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
+import { replyForwardMsg } from '../../model/utility.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { inRange, rand } from '../../model/mathCommon.js';
 import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
@@ -57,7 +57,7 @@ export default class SecretPlace extends plugin {
         const points = (await GetAllSpot()).filter(spot => spot.id.includes(addressId));
         const msg = [];
         points.forEach(point => msg.push(`地点名:${point.name}\n坐标:(${point.x},${point.y})`));
-        ForwardMsg(e, msg);
+        replyForwardMsg(e, msg);
     }
 
     GoBack = async (e) => {
@@ -85,7 +85,7 @@ export default class SecretPlace extends plugin {
         if (point) {
             msg.push(`所在地点: ${point.name}`);
         }
-        ForwardMsg(e, msg);
+        replyForwardMsg(e, msg);
     }
 
     GoTo = async (e) => {

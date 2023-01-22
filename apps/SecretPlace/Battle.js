@@ -3,7 +3,7 @@ import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 import { PVP } from '../../model/Battle/Battle.js';
-import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
+import { replyForwardMsg } from '../../model/utility.js';
 
 export default class Battle extends plugin {
     constructor() {
@@ -50,7 +50,7 @@ export default class Battle extends plugin {
 
         const msg = ['【战斗记录】'];
         const result = await PVP(e, targetId, msg);
-        ForwardMsg(e, msg);
+        replyForwardMsg(e, msg);
 
         CD.AddActionCD(e.user_id, 'attack');
     }

@@ -4,9 +4,9 @@ import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
 import * as CD from '../../model/CD/Action.js';
 import { PVE } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { ForwardMsg } from '../Xiuxian/Xiuxian.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 import { GetDrops } from '../../model/Battle/BattleDrop.js';
+import { replyForwardMsg } from '../../model/utility.js';
 
 export default class BattleSite extends plugin {
     constructor() {
@@ -52,7 +52,7 @@ export default class BattleSite extends plugin {
         }
 
         CD.AddActionCD(e.user_id, 'kill');
-        ForwardMsg(e, msg);
+        replyForwardMsg(e, msg);
     }
 
     ExploreMonsters = async (e) => {
@@ -63,6 +63,6 @@ export default class BattleSite extends plugin {
         const monsters = MonsterMgr.GetMonsters(await GetPlayerRegion(e.user_id));
         const msg = [];
         monsters.forEach(monster => msg.push(`怪名:${monster.name}\n等级:${monster.level}`));
-        ForwardMsg(e, msg);
+        replyForwardMsg(e, msg);
     }
 }

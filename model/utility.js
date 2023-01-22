@@ -5,7 +5,6 @@
 
 import { forceNumber } from "./mathCommon.js";
 
-
 /******* 
  * @description: 将秒转化成1h1m1s的形态
  * @param {number} _second
@@ -48,8 +47,38 @@ export function getAtUid(_e){
     return elem[0].qq;
 }
 
+/**
+ * @description: 发送转发消息合集
+ * @param {*} _e plugin参数e
+ * @param {[]} _msg 消息数组
+ * @return 无返回值
+ */
 export async function replyForwardMsg(_e, _msg){
-    
+    const msg = [];
+    _msg.forEach(m => msg.push({
+            user_id : Bot.uin,
+            nickname : Bot.nickname,
+            message : m,
+    }));
+
+    let count = 0, done = false, rpl = undefined;
+    while(count < 10 && !done){
+        try {
+            count++;
+            rpl = await Bot.makeForwardMsg(msg);
+            done = true;
+        } catch (error) {
+            if(error.code == 192){
+                logger.warn(`获取转发消息失败, 准备第${count+1}次尝试.`);
+                continue;
+            }
+            
+            logger.error(error);
+            break;
+        }
+    }
+
+    _e.reply(rpl == undefined ? '获取转发消息失败！' : rpl);
 }
 
 
