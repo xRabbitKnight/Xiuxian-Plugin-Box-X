@@ -4,21 +4,21 @@ import { GetItemByName } from '../../../model/Cache/item/Item.js'
  * @description: 通过名字过滤物品
  * @param {string} name 物品名称，可能是物品类别名称
  * @param {[]} gallery 所有物品
- * @return {{included:[], excluded:[]}} 符合名称的物品列表，被滤除的物品列表
+ * @return {Promise<{included:[], excluded:[]}>} 符合名称的物品列表，被滤除的物品列表
  */
-export function filterItemsByName(name, gallery) {
+export async function filterItemsByName(name, gallery) {
 	var included = [], excluded = [];
 	if (gallery) {
-		let idReg = getIdReg(name)
+		let idReg = await getIdReg(name);
 		gallery.forEach(item => {
-			if (item.id.test(idReg)) {
-				included.append(item);
+			if (idReg.test(item.id)) {
+				included.push(item);
 			} else {
-				excluded.append(item);
+				excluded.push(item);
 			}
 		})
 	}
-	return {included, excluded}
+	return {included, excluded};
 }
 
 /**
@@ -32,7 +32,7 @@ export function mergeItems(...itemLists) {
 		itemList.forEach(item => {
 			let slot = result.find(_item => _item.id == item.id);
 			if (slot == undefined) {
-				result.append(item)
+				result.push(item);
 			} else {
 				slot.acount += item.acount;
 			}
@@ -41,12 +41,26 @@ export function mergeItems(...itemLists) {
 	return result;
 }
 
-function getIdReg(name) {
-	switch(itemName) {
+/**
+ * @description: 生成物品列表消息
+ * @param {string} preMsg 消息列表第一个消息
+ * @param {[]} items 物品列表数组
+ * @return {[]} 物品列表消息
+ */
+export function listItems(preMsg, items) {
+    let msgList = [preMsg];
+    items.forEach(item => {
+        msgList.push(`${item.name} * ${item.acount}`)
+    });
+    return msgList;
+}
+
+async function getIdReg(name) {
+	switch(name) {
 		case '武器':
-			return /^1-/
+			return /^1-/;
 		case '护具':
-			return /^2-/
+			return /^2-/;
 		case '法宝':
 			return /^3-/;
 		case '装备':
@@ -66,7 +80,7 @@ function getIdReg(name) {
 		case '全部物品':
 			return /.+/;
 		default:
-			const ITEM = GetItemByName(name, 1);
-			return new RegExp(`^${ITEM.id}$`);
+			const ITEM = await GetItemByName(name, 1);
+			return new RegExp(`^${ITEM ? ITEM.id : ''}$`);
 	}
 }

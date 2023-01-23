@@ -1,7 +1,9 @@
 import path from 'path'
 
 export const CONFIG = {
-	pluginPath: path.resulve()
+	yunzaiPath: path.resolve(),
+	xiuxianPath: path.join(path.resolve(), 'plugins', 'Xiuxian-Plugin-Box'),
+	xiuxianPluginPath: path.join(path.resolve(), 'plugins', 'Xiuxian-Plugin-Box', 'plugins', 'easy-command')
 }
 
 export function dataInit(){
