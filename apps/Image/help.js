@@ -14,7 +14,11 @@ export default class helpImage extends plugin {
                 },
                 {
                     reg: '^#修仙地图$',
-                    fnc: 'Map',
+                    fnc: 'Map'
+                },
+                {
+                    reg: '^#修仙扩展$',
+                    fnc: 'Plugin'
                 }
             ]
         });
@@ -26,5 +30,9 @@ export default class helpImage extends plugin {
 
     Map = async (e) => {
         e.reply(await _.GetMap());
+    }
+
+    Plugin = async (e) => {
+        e.reply(await _.GetPluginHelpImage());
     }
 }

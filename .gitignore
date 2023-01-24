@@ -1,4 +1,5 @@
 plugins/xiuxian-association-pluging/resources/Association
+config/help/plugin.yaml
 resources/help/help.jpg
 resources/data/birth/**/*.json
 resources/data/birth/*.json

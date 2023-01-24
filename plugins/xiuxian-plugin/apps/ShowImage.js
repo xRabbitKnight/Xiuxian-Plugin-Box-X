@@ -9,7 +9,7 @@ export default class PluginShowImage extends plugin {
             priority: 600,
             rule: [
                 {
-                    reg: '^#修仙扩展$',
+                    reg: '^#修仙插件帮助$',
                     fnc: 'ShowPluginHelp'
                 }
             ]

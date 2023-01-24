@@ -11,6 +11,7 @@
 
 import fs from 'node:fs';
 import path from 'path';
+import config from './config.js';
 
 
 /** 插件根目录地址前缀 */
@@ -83,6 +84,7 @@ class Data {
     SaveFixData = () => {
         this.fixType.forEach(type => {
             saveFixData(type, this[type]);
+            this[type] = [];
         });
     }
 
@@ -99,6 +101,26 @@ class Data {
         }
         if (this[_type] == undefined) this[_type] = [];
         this[_type].push(..._data);
+    }
+
+    /** 插件指令注册帮助 */
+    pluginCfg = [];
+
+    /**
+     * @description: 将插件插入的帮助指令写入cfg
+     * @return 无返回值
+     */    
+    SaveCmdCfg = () => {
+        config.SetConfig(path.join('help', 'plugin.yaml'), this.pluginCfg);
+    }
+
+    /**
+     * @description: 插件在Init中调用该函数将插件帮助指令加入常规
+     * @param {object} _cfg 以对象的形式提供 {group: xxx(插件名), list: [{icon: xxx(图标), title: xxx(指令内容), desc: xxx(指令描述)}]} 可参考config/help.yaml
+     * @return 无返回值
+     */
+    AddCmdCfg = (_cfg) => {
+        this.pluginCfg.push(_cfg);
     }
 }
 export default new Data();

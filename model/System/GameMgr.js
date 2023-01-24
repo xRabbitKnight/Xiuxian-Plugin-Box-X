@@ -24,7 +24,8 @@ class GameMgr {
         data.InitFixData();
         await pluginDataInit();
         data.SaveFixData();
-
+        data.SaveCmdCfg();
+        
         //游戏内容部分
         InitMonster();
         await pluginGameInit();
