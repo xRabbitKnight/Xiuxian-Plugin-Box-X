@@ -90,7 +90,7 @@ export async function GetItemByName(_name, _count) {
         logger.warn(`${_name} 未定义正则表达式！`);
         return undefined;
     }
-    return regs[_name];
+    return new RegExp(regs[_name]);
 }
 
 /**
