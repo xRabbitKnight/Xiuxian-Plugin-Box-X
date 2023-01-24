@@ -1,10 +1,12 @@
-import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
-import { CheckSpiritStone, GetBackpackInfo, SetBackpackInfo, SortById } from '../../../model/Cache/player/Backpack.js';
+import { AddItemByObj, AddItemsByObj, GetBackpackInfo, SetBackpackInfo } from '../../../model/Cache/player/Backpack.js';
+import { AddPercentBlood } from '../../../model/Cache/player/Battle.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
-import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
-import { filterItemsByName, listItems, mergeItems } from '../model/utils.js';
+import { clamp, forceNumber } from '../../../model/util/math.js';
+import { filterItemsByName, listItems } from '../model/utils.js';
+import { AddManual, DelManual } from '../../../model/Cache/player/Talent.js';
+import { AddSkill, DelSkill } from '../../../model/Cache/player/Skill.js';
 
 export default class EasyHome extends plugin {
     constructor() {
@@ -34,7 +36,31 @@ export default class EasyHome extends plugin {
         if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
-        e.reply('开发中...');
+
+        let backpack = await GetBackpackInfo(e.user_id);
+        let {included, excluded} = await filterItemsByName('恢复药', backpack.items);
+
+        if (included.length < 1) {
+            e.reply('背包里没有恢复药！');
+            return;
+        }
+
+        let expectedBlood = clamp(forceNumber(e.msg.slice(5, -1)), 0, 200);
+        let {recoverPlan, recoverBlood} = getRecoverPlan(included, expectedBlood, true);
+
+        if (recoverBlood < 1) {
+            e.reply('没有合适的恢复药搭配方案！');
+            return;
+        }
+
+        AddItemsByObj(e.user_id, recoverPlan);
+        AddPercentBlood(e.user_id, recoverBlood);
+
+        let replyStr = `血量恢复${recoverBlood}%`;
+        recoverPlan.forEach(item => {
+            replyStr += `\n${item.name} (${item.blood}%) ${item.acount}`
+        });
+        e.reply(replyStr);
     }
 
     easyAddExp = async (e) => {
@@ -75,6 +101,65 @@ export default class EasyHome extends plugin {
         if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
-        e.reply('开发中...');
+        
+        let type = e.msg.substr(5)=='功法' ? '功法' : '技能书';
+        logger.info(type);
+        let backpack = await GetBackpackInfo(e.user_id);
+        let {included, excluded} = await filterItemsByName(type, backpack.items);
+
+        if (included.length < 1) {
+            e.reply(`背包里没有可以学习的${type}！`);
+            return;
+        }
+
+        let replyStr = '', learnNum = 0;
+        for (let item of included) {
+            if (type == '功法') {
+                if (await AddManual(e.user_id, item)) {
+                    AddItemByObj(e.user_id, item, -1);
+                    replyStr += `\n学习功法『${item.name}』`;
+                    learnNum++;
+                }
+            } else if (type == '技能书') {
+                if (await AddSkill(e.user_id, item)) {
+                    AddItemByObj(e.user_id, item, -1);
+                    replyStr += `\n学习技能『${item.name.substr(4)}』`;
+                    learnNum++;
+                }
+            }
+        }
+        
+        replyStr = `共使用${learnNum}本${type}` + replyStr;
+        e.reply(replyStr);
     }
+}
+
+function getRecoverPlan(recoverItems, V, minus=false) {
+    let dp = new Array(V+5).fill(0);
+    let plan = new Array(V+5).fill(new Array(recoverItems.length).fill(0));
+    
+    recoverItems.forEach((item, index, self) => {
+        let v = item.blood;
+        let w = item.blood;
+        let s = item.acount;
+        for (let j=V; j>=v; j--) {
+            for (let k=1; k<=s && k*v<=j; k++) {
+                if (dp[j] <= dp[j-k*v] + k*w) {
+                    dp[j] = dp[j-k*v] + k*w;
+                    plan[j] = Object.assign([], plan[j-k*v]);
+                    plan[j][index] = k;
+                }
+            }
+        }
+    })
+
+    let recoverPlan = [];
+    plan[V].forEach((num, index, self) => {
+        if (num > 0) {
+            let item = Object.assign({}, recoverItems[index]);
+            item.acount = minus ? -num : num;
+            recoverPlan.push(item);
+        }
+    })
+    return {recoverPlan, recoverBlood:dp[V]};
 }
