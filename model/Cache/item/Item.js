@@ -1,6 +1,8 @@
 import data from '../../System/data.js';
+import path from 'path';
+import config from "../System/config.js";
 import { ReadSync } from '../../File/File.js';
-import { rand, forceNumber } from '../../mathCommon.js';
+import { rand, forceNumber } from '../../util/math.js';
 
 const redisKey = 'xiuxian:items';
 
@@ -74,4 +76,34 @@ export async function GetItemByName(_name, _count) {
 
     item.acount = forceNumber(_count);
     return item;
+}
+
+/**
+ * @description: 获取物品某属性某类别正则表达式，配置在config/game/items.yaml
+ * @param {string} _type 物品属性正则名
+ * @param {string} _name 类别名
+ * @return {RegExp} 成功获取返回正则表达式，未找到返回undefined
+ */
+ export function GetItemReg(_type, _name) {
+    const regs = config.GetConfig(path.join('game', 'items.yaml'))[_type];
+    if (regs == undefined || regs[_name] == undefined) {
+        logger.warn(`${_name} 未定义正则表达式！`);
+        return undefined;
+    }
+    return regs[_name];
+}
+
+/**
+ * @description: 通过正则过滤物品
+ * @param {string} _attr 正则匹配的物品属性
+ * @param {RegExp} _reg 过滤物品的正则
+ * @param {[]} _items 待过滤所有物品
+ * @return {{included:[], excluded:[]}} 符合要求的物品列表，被滤除的物品列表
+ */
+export function FilterItemByIdReg(_attr, _reg, _items) {
+    const included = [], excluded = [];
+    _items.forEach(item =>
+        _reg.test(item[_attr]) ? included.push(item) : excluded.push(item)
+    );
+    return { included, excluded };
 }
