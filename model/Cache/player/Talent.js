@@ -2,7 +2,7 @@ import config from '../../System/config.js';
 import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
-import { rand } from '../../mathCommon.js';
+import { rand } from '../../util/math.js';
 
 const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;

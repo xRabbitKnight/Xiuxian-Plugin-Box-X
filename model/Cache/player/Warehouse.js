@@ -1,8 +1,8 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { forceNumber } from '../../mathCommon.js';
-import { compareByIdAsc } from '../../utility.js';
+import { forceNumber } from '../../util/math.js';
+import { compareByIdAsc } from '../../util/gameUtil.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.warehouse;

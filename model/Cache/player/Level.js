@@ -1,7 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { forceNumber } from '../../mathCommon.js';
+import { forceNumber } from '../../util/math.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.level;

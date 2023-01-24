@@ -1,7 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { clamp, forceNumber } from '../../mathCommon.js';
+import { clamp, forceNumber } from '../../util/math.js';
 import { GetEquipmentInfo } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
