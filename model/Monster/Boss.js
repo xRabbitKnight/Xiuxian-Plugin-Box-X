@@ -1,4 +1,4 @@
-import { rand } from "../mathCommon.js";
+import { rand } from "../util/math.js";
 import { Monster } from "./Monster.js";
 
 const MaxLevel = 11, MinLevel = 1;

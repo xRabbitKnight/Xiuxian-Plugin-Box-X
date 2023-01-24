@@ -1,8 +1,11 @@
-import plugin from '../../../../lib/plugins/plugin.js';
+/*
+ * @described : 玩家坐标与移动 
+ */
+
 import { segment } from 'oicq';
-import { replyForwardMsg } from '../../model/utility.js';
+import { replyForwardMsg } from '../../model/util/gameUtil.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { inRange, rand } from '../../model/mathCommon.js';
+import { inRange, rand } from '../../model/util/math.js';
 import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 import { GetSpeed } from '../../model/Cache/player/Battle.js';
 import { GetActionInfo, SetActionInfo } from '../../model/Cache/player/Action.js';
@@ -10,11 +13,12 @@ import { GetAllSpot, IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { GetAllArea } from '../../model/Cache/place/Area.js';
 
 const isMoving = [];
-export default class SecretPlace extends plugin {
+
+export default class move extends plugin {
     constructor() {
         super({
-            name: 'SecretPlace',
-            dsc: 'SecretPlace',
+            name: 'move',
+            dsc: '玩家坐标与移动相关指令',
             event: 'message',
             priority: 600,
             rule: [

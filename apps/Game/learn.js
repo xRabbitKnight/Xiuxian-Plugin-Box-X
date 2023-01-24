@@ -1,17 +1,20 @@
-import plugin from '../../../../lib/plugins/plugin.js';
+/*
+ * @described : 玩家学习功法、技能
+ */
+
 import { AddPercentBlood } from '../../model/Cache/player/Battle.js'
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
-import { clamp, forceNumber } from '../../model/mathCommon.js';
+import { clamp, forceNumber } from '../../model/util/math.js';
 
-export default class UserHome extends plugin {
+export default class learn extends plugin {
     constructor() {
         super({
-            name: 'UserHome',
-            dsc: 'UserHome',
+            name: 'learn',
+            dsc: '学习相关指令',
             event: 'message',
             priority: 600,
             rule: [
@@ -119,7 +122,7 @@ export default class UserHome extends plugin {
             return;
         }
 
-        const name = e.msg.replace('#学习', '');
+        const name = e.msg.replace('#学习功法', '');
         const manual = await GetItemByName(e.user_id, name);
         if (manual == undefined) {
             e.reply(`没有[${name}]`);
@@ -145,7 +148,7 @@ export default class UserHome extends plugin {
             return;
         }
 
-        const name = e.msg.replace('#忘掉', '');
+        const name = e.msg.replace('#忘掉功法', '');
         if (!await DelManual(e.user_id, name)) {
             e.reply(`没学过${name}`);
             return;

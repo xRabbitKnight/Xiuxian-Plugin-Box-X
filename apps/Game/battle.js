@@ -1,21 +1,28 @@
-import plugin from '../../../../lib/plugins/plugin.js';
+/*
+ * @described : 玩家战斗
+ */
+
 import MonsterMgr from '../../model/Region/MonsterMgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
 import * as CD from '../../model/CD/Action.js';
-import { PVE } from '../../model/Battle/Battle.js';
+import { PVE, PVP } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
 import { GetDrops } from '../../model/Battle/BattleDrop.js';
-import { replyForwardMsg } from '../../model/utility.js';
+import { replyForwardMsg, getAtUid } from '../../model/util/gameUtil.js';
 
-export default class BattleSite extends plugin {
+export default class battle extends plugin {
     constructor() {
         super({
-            name: 'BattleSite',
-            dsc: 'BattleSite',
+            name: 'battle',
+            dsc: '玩家战斗相关指令',
             event: 'message',
             priority: 600,
             rule: [
+                {
+                    reg: '^#攻击.*$',
+                    fnc: 'Attack'
+                },
                 {
                     reg: '^#击杀.*$',
                     fnc: 'Kill'
@@ -26,6 +33,41 @@ export default class BattleSite extends plugin {
                 }
             ]
         });
+    }
+
+    Attack = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.canBattle)) {
+            return;
+        }
+
+        if (await CD.IfActionInCD(e.user_id, 'attack', e.reply)) {
+            return;
+        }
+
+        const attackId = e.user_id;
+        const targetId = getAtUid(e);
+
+        if (targetId == undefined || !await CheckStatu(e, StatuLevel.exist, false)) {
+            e.reply(`请不要攻击未进仙道之人！`);
+            return;
+        }
+
+        if (await GetPlayerRegion(attackId) != await GetPlayerRegion(targetId)) {
+            e.reply(`本区域找不到此人！`);
+            return;
+        }
+
+        if (!await CheckStatu({ user_id: targetId }, StatuLevel.canBattle, false)) {
+            e.reply(`玩家(uid : ${targetId}) 当前状态不可进行战斗！`);
+            return;
+        }
+
+        const msg = ['【战斗记录】'];
+        //暂时未做pvp惩罚，乱打一通欢乐多
+        const result = await PVP(e, targetId, msg);
+        replyForwardMsg(e, msg);
+
+        CD.AddActionCD(e.user_id, 'attack');
     }
 
     Kill = async (e) => {

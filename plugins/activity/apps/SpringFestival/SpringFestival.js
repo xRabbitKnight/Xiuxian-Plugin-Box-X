@@ -7,7 +7,7 @@
  */
 
 import { MonsterTip } from "../../../../model/Battle/BattleDrop.js";
-import { rand } from "../../../../model/mathCommon.js";
+import { rand } from "../../../../model/util/math.js";
 import { Nian } from "./Nian.js";
 import { GetRandItem } from "../../../../model/Cache/item/Item.js";
 import { GetAllArea } from "../../../../model/Cache/place/Area.js";

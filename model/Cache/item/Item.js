@@ -1,6 +1,6 @@
 import data from '../../System/data.js';
 import path from 'path';
-import config from "../System/config.js";
+import config from "../../System/config.js";
 import { ReadSync } from '../../File/File.js';
 import { rand, forceNumber } from '../../util/math.js';
 

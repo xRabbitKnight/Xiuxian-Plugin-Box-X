@@ -1,5 +1,5 @@
 import RandomEvent from "./RandomEvent.js";
-import { rand, clamp } from '../mathCommon.js'
+import { rand, clamp } from '../util/math.js'
 import { AddPowerByEvent } from '../Cache/player/Battle.js';
 import { AddExp, AddBodyExp } from '../Cache/player/Level.js';
 import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';

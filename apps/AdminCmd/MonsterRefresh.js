@@ -1,7 +1,7 @@
 import plugin from "../../../../lib/plugins/plugin.js";
 import { GetBattleInfo, RefreshBattleInfo, SetBattleInfo } from "../../model/Cache/player/Battle.js";
 import { GetLevelInfo } from "../../model/Cache/player/Level.js";
-import { forceNumber } from "../../model/mathCommon.js";
+import { forceNumber } from "../../model/util/math.js";
 import data from "../../model/System/data.js";
 import { RefreshBoss } from "../../model/Region/Region.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";

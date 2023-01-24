@@ -2,7 +2,7 @@ import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
 import { CheckSpiritStone, GetBackpackInfo, SetBackpackInfo, SortById } from '../../../model/Cache/player/Backpack.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
-import { replyForwardMsg } from '../../../model/utility.js';
+import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
 import { filterItemsByName, listItems, mergeItems } from '../model/utils.js';
 

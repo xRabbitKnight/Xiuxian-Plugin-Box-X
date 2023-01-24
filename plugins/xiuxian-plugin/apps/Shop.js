@@ -6,7 +6,7 @@ import { CheckStatu, StatuLevel } from "../../../model/Statu/Statu.js";
 import { GetCommodities, SetCommodities } from "../model/Cache/shop.js";
 import { GetShopImage } from "../model/Image/pluginImage.js";
 import { GetItemByName, GetRandItem } from "../../../model/Cache/item/Item.js";
-import { clamp, forceNumber } from "../../../model/mathCommon.js";
+import { clamp, forceNumber } from "../../../model/util/math.js";
 
 export default class Shop extends plugin {
     constructor() {

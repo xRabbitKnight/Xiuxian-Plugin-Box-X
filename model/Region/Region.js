@@ -1,6 +1,6 @@
 import MonsterMgr from "../../model/Region/MonsterMgr.js"
 import { Monster } from "../../model/Monster/Monster.js";
-import { rand } from '../mathCommon.js';
+import { rand } from '../util/math.js';
 import { GetAllArea, GetAreaName } from '../Cache/place/Area.js';
 import { Boss } from "../Monster/Boss.js";
 

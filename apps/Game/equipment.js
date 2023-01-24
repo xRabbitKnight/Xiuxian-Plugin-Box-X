@@ -1,14 +1,18 @@
+/*
+ * @described : 玩家装备
+ */
+
 import config from '../../model/System/config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddEquipment, DelEquipment, GetEquipmentCount } from '../../model/Cache/player/Equipment.js';
 import { RefreshBattleInfo } from '../../model/Cache/player/Battle.js';
 
-export default class Userequipment extends plugin {
+export default class equipment extends plugin {
     constructor() {
         super({
-            name: 'Userequipment',
-            dsc: 'Userequipment',
+            name: 'equipment',
+            dsc: '玩家装备相关指令',
             event: 'message',
             priority: 600,
             rule: [

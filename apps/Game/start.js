@@ -1,3 +1,7 @@
+/*
+ * @described : 玩家新建存档
+ */
+
 import config from '../../model/System/config.js';
 import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
@@ -13,15 +17,14 @@ import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
 import { GetNewTalentInfo, SetTalentInfo } from '../../model/Cache/player/Talent.js';
 import { SetWarehouseInfo } from '../../model/Cache/player/Warehouse.js';
 import { AddUid } from '../../model/Cache/player/players.js';
-import { rand } from '../../model/mathCommon.js';
-import { delRedisKeys } from '../../model/utility.js';
+import { rand } from '../../model/util/math.js';
+import { delRedisKeys } from '../../model/util/gameUtil.js';
 
-
-export default class UserStart extends plugin {
+export default class start extends plugin {
     constructor() {
         super({
-            name: 'UserStart',
-            dsc: 'UserStart',
+            name: 'start',
+            dsc: '玩家新加游戏相关指令',
             event: 'message',
             priority: 600,
             rule: [

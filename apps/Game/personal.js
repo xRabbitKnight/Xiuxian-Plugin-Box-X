@@ -1,13 +1,17 @@
-import plugin from '../../../../lib/plugins/plugin.js';
+/*
+ * @described : 玩家个人信息
+ */
+
 import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
-export default class UserModify extends plugin {
+
+export default class personal extends plugin {
     constructor() {
         super({
-            name: 'UserModify',
-            dsc: 'UserModify',
+            name: 'personal',
+            dsc: '玩家个人信息设置相关指令',
             event: 'message',
             priority: 600,
             rule: [

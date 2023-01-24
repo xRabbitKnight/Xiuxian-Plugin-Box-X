@@ -39,6 +39,17 @@ export async function GetItemByName(_uid, _itemName) {
 }
 
 /*******
+ * @description: 获取玩家仓库灵石数量
+ * @param {string} _uid 玩家id
+ * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
+ */
+ export async function GetSpiritStoneCount(_uid) {
+    const warehouseInfo = await GetWarehouseInfo(_uid);
+    return warehouseInfo?.spiritStone;
+}
+
+
+/*******
  * @description: 增加仓库灵石
  * @param {string} _uid 玩家id
  * @param {number} _count 增加的数量

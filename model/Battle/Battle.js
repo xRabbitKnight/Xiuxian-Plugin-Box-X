@@ -1,5 +1,5 @@
 import MonsterMgr from "../Region/MonsterMgr.js";
-import * as util from '../utility.js';
+import * as util from '../util/gameUtil.js';
 import { _1v1 as pve } from "./PVE.js";
 import { _1v1 as pvp } from './PVP.js';
 import { GetBattleInfo, SetNowblood } from "../Cache/player/Battle.js";
