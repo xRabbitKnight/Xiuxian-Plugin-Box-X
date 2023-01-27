@@ -118,7 +118,7 @@ export async function AddLife(_uid, _count) {
         const lifeInfo = await GetLifeInfo(_uid);
         if (lifeInfo == undefined) return;
 
-        lifeInfo.life += forceNumber(_count);
+        lifeInfo.lifetime += forceNumber(_count);
         await SetLifeInfo(_uid, lifeInfo);
     });
 }
