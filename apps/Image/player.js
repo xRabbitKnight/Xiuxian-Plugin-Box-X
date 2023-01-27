@@ -8,7 +8,7 @@ export default class playerImage extends plugin {
             name: 'playerImage',
             dsc: '玩家相关信息展示',
             event: 'message',
-            priority: 600,
+            priority: 400,
             rule: [
                 {
                     reg: '^#基础信息$',

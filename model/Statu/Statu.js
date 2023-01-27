@@ -139,7 +139,7 @@ export const StatuLevel = {
  */
 export async function CheckStatu(_e, _level, _reply = true) {
     let res = true;
-    for (let i = 1, pos = 1; i < _level && res; i <<= 1, pos++) {
+    for (let i = 1, pos = 1; i <= _level && res; i <<= 1, pos++) {
         if ((_level & i) == 0) continue;
         res &= (await fnc[pos](_e, _reply));
     }

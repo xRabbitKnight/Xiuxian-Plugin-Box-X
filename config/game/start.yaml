@@ -41,11 +41,11 @@ equipment: []
 #等级相关
 level:
   level: 1              #练气大境界
-  levelRank: 0          #练气小境界
+  rank: 0               #练气小境界
   levelName: '凡人'     #练气等级名
   exp: 0                #练气经验
   bodyLevel: 1          #炼体大境界
-  bodyLevelRank: 0      #炼体小境界
+  bodyRank: 0           #炼体小境界
   bodyLevelName: '莽夫' #炼体等级名
   bodyExp: 0            #炼体经验
 
