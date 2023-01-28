@@ -8,7 +8,7 @@ import { GetInfo, SetInfo } from './InfoCache.js';
 const redisKey = data.__gameDataKey.backpack;
 const PATH = data.__gameDataPath.backpack;
 
-//#region  Get方法
+//#region Get方法
 
 /*******
  * @description: 获取玩家的背包信息
