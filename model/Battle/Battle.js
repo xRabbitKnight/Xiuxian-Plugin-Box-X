@@ -1,4 +1,4 @@
-import MonsterMgr from "../Region/MonsterMgr.js";
+import MonsterMgr from "../Monster/mgr.js";
 import * as util from '../util/gameUtil.js';
 import { _1v1 as pve } from "./PVE.js";
 import { _1v1 as pvp } from './PVP.js';

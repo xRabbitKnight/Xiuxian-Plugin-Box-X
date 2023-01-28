@@ -1,5 +1,5 @@
 import config from "../../../model/System/config.js";
-import { RefreshBoss, RefreshMonster } from "../../../model/Region/Region.js";
+import { RefreshBoss, RefreshMonster } from "../../../model/Monster/refresh.js";
 
 export default class RefreshTask extends plugin {
     constructor() {

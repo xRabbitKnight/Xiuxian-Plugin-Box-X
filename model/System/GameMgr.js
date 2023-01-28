@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import path from 'path';
 import data from './data.js';
 import PropMgr from '../Prop/mgr.js';
-import { RefreshMonster as InitMonster } from "../Region/Region.js";
+import MonsterMgr from '../Monster/mgr.js';
 
 export default class GameMgr {
     constructor() {
@@ -28,7 +28,7 @@ export default class GameMgr {
         data.SaveCmdCfg();
         
         //游戏内容部分
-        InitMonster();
+        MonsterMgr.Init()
         PropMgr.Init();
         await pluginGameInit();
     }

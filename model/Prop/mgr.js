@@ -4,11 +4,6 @@
  *  插件中道具方法请在插件GameInit中调用AddProp()加入
  */
 export default class PropMgr {
-    constructor() {
-        if (!PropMgr.instance) PropMgr.instance = this;
-        return PropMgr.instance;
-    }
-
     static props = {};
 
     /******* 

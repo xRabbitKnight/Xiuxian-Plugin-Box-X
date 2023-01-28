@@ -11,7 +11,7 @@ import { rand } from "../../../../model/util/math.js";
 import { Nian } from "./Nian.js";
 import { GetRandItem } from "../../../../model/Cache/item/Item.js";
 import { GetAllArea } from "../../../../model/Cache/place/Area.js";
-import MonsterMgr from "../../../../model/Region/MonsterMgr.js";
+import MonsterMgr from "../../../../model/Monster/mgr.js";
 import { AddItemsByObj, AddSpiritStone } from "../../../../model/Cache/player/Backpack.js";
 
 
@@ -58,7 +58,7 @@ export async function refreshNian() {
       targetRegion = regions[rand(0, regions.length)];
       MonsterMgr.AddMonster(targetRegion.id.split('-')[1], nian);
       targetRegions.push(targetRegion.name);
-   };
+   }
 
    return targetRegions;
 }
