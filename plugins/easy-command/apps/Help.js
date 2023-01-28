@@ -1,15 +1,15 @@
-import { getHelpImage } from "../model/Image/HelpImg";
+import { getHelpImage } from "../model/Image/Help.js";
 
 export default class Help extends plugin {
     constructor() {
         super({
-            name: 'PluginShowImage',
-            dsc: '插件展示图片',
+            name: 'EasyCommandHelpImage',
+            dsc: '快捷指令帮助图片',
             event: 'message',
             priority: 600,
             rule: [
                 {
-                    reg: '^#修仙插件帮助$',
+                    reg: '^#快捷帮助$',
                     fnc: 'showHelpImage'
                 }
             ]

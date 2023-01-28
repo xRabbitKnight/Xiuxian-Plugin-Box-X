@@ -37,9 +37,9 @@ export default class EasyHome extends plugin {
     }
 
     easyQueryBlood = async (e) => {
-        const battleInfo = GetBattleInfo(e.user_id);
+        const battleInfo = await GetBattleInfo(e.user_id);
         const nowbloodPercent = Math.floor(battleInfo.nowblood / battleInfo.blood * 100);
-        e.reply(`当前血量: ${battleInfo.nowblood}/${battleInfo.blood} [${nowbloodPercent}%]`);
+        e.reply(`当前血量 [${nowbloodPercent}%]:\n ${battleInfo.nowblood} / ${battleInfo.blood}`);
     }
 
     easyRecover = async (e) => {
