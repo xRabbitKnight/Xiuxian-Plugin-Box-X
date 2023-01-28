@@ -12,7 +12,7 @@ const PATH = data.__gameDataPath.backpack;
 
 /*******
  * @description: 获取玩家的背包信息
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return {Promise<any>} 背包信息
  */
 export async function GetBackpack(_uid) {
@@ -23,7 +23,7 @@ export async function GetBackpack(_uid) {
 
 /*******
  * @description: 获取玩家背包灵石数量
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
  */
 export async function GetSpiritStoneCount(_uid) {
@@ -35,7 +35,7 @@ export async function GetSpiritStoneCount(_uid) {
 
 /*******
  * @description: 检查背包灵石能否装下
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {number} _count 增加的数量
  * @return {Promise<bool>} 能否装下
  */
@@ -50,9 +50,9 @@ export async function CheckSpiritStone(_uid, _count) {
 
 /******* 
  * @description: 在背包中按物品名字查找
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {string} _itemName 物品名字
- * @return {Promise<JSON>} 若找到返回物品对象JSON, 没找到返回undefined
+ * @return {Promise<any>} 若找到返回物品对象, 没找到返回undefined
  */
 export async function GetItemByName(_uid, _itemName) {
     return await lock(`${redisKey}:${_uid}`, async () => {
@@ -67,7 +67,7 @@ export async function GetItemByName(_uid, _itemName) {
 
 /*******
  * @description: 设置玩家的背包信息, 注意该方法会覆盖更新玩家背包, 错误操作后果比较严重, 注意使用
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {any} _backpackInfo 玩家背包信息
  * @return 无返回值
  */
@@ -79,7 +79,7 @@ export async function SetBackpack(_uid, _backpackInfo) {
 
 /*******
  * @description: 增加背包灵石
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
@@ -99,8 +99,8 @@ export async function AddSpiritStone(_uid, _count) {
 
 /******* 
  * @description: 按物品obj添加进背包
- * @param {string} _uid 玩家id
- * @param {JSON} _item 物品对象 JSON格式
+ * @param {number} _uid 玩家id
+ * @param {any} _item 物品对象 JSON格式
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
@@ -117,7 +117,7 @@ export async function AddItemByObj(_uid, _item, _count) {
 
 /******* 
  * @description: 批量添加物品进背包
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {[]} _items 物品数组
  * @return 无返回值
  */
@@ -141,7 +141,7 @@ export async function AddItemById(_uid, _itemId, _count) {
 
 /******* 
  * @description: 背包物品排序
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return 无返回值
  */
 export async function SortById(_uid) {
@@ -158,7 +158,7 @@ export async function SortById(_uid) {
 
 /*******
  * @description: 获取玩家的背包信息
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return {Promise<any>} 背包信息
  */
 async function getBackpackInfo(_uid) {
@@ -167,7 +167,7 @@ async function getBackpackInfo(_uid) {
 
 /*******
  * @description: 设置玩家的背包信息
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {any} _backpackInfo 玩家背包信息
  * @return 无返回值
  */
@@ -177,8 +177,8 @@ async function setBackpackInfo(_uid, _backpackInfo) {
 
 /******* 
  * @description: 合法添加物品
- * @param {*} _backpackInfo 背包信息
- * @param {*} _item 待添加的物品
+ * @param {any} _backpackInfo 背包信息
+ * @param {any} _item 待添加的物品
  * @return 无返回值
  */
 function addVaild(_backpackInfo, _item) {

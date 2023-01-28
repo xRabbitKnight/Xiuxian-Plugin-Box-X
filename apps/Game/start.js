@@ -6,7 +6,7 @@ import config from '../../model/System/config.js';
 import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
-import { IsNew, RegNew, SetActionInfo } from '../../model/Cache/player/Action.js';
+import { IsNew, RegNew, SetAction } from '../../model/Cache/player/Action.js';
 import { GetItemByName } from '../../model/Cache/item/Item.js';
 import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
 import { GetNewBattleInfo, SetBattleInfo } from '../../model/Cache/player/Battle.js';
@@ -81,7 +81,7 @@ export default class start extends plugin {
         //获取基础配置
         const newPlayer = config.GetConfig('game/start.yaml');
         //行为相关
-        await SetActionInfo(uid, newPlayer.action);
+        await SetAction(uid, newPlayer.action);
         //背包相关
         await SetBackpack(uid, newPlayer.backpack);
         //攻防属性相关, 生成

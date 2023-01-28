@@ -1,6 +1,6 @@
 import data from '../../System/data.js';
 import { ReadSync } from '../../File/File.js';
-import { GetActionInfo } from '../player/Action.js';
+import { GetAction } from '../player/Action.js';
 
 const redisKey = 'xiuxian:spots';
 
@@ -26,7 +26,7 @@ export async function GetAllSpot() {
  * @return {Promise<bool>} 返回玩家是否在地点
  */
 export async function IfAtSpot(_uid, _spotName) {
-    const player = await GetActionInfo(_uid);
+    const player = await GetAction(_uid);
     const spots = await GetAllSpot();
     if (player == undefined || spots == undefined) return false;
 
