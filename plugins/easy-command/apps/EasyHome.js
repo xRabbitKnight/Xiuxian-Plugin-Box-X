@@ -1,3 +1,4 @@
+import config from '../../../model/System/config.js';
 import { AddItemByObj, AddItemsByObj, GetBackpackInfo, SetBackpackInfo } from '../../../model/Cache/player/Backpack.js';
 import { AddPercentBlood, GetBattleInfo } from '../../../model/Cache/player/Battle.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
@@ -5,7 +6,7 @@ import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { clamp, forceNumber } from '../../../model/util/math.js';
 import { filterItemsByName, listItems } from '../model/utils.js';
-import { AddManual, DelManual } from '../../../model/Cache/player/Talent.js';
+import { AddManual, DelManual, GetTalentInfo } from '../../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../../model/Cache/player/Skill.js';
 
 export default class EasyHome extends plugin {
@@ -123,14 +124,10 @@ export default class EasyHome extends plugin {
         }
 
         let replyStr = '', learnNum = 0;
-        for (let item of included) {
-            if (type == '功法') {
-                if (await AddManual(e.user_id, item)) {
-                    AddItemByObj(e.user_id, item, -1);
-                    replyStr += `\n学习功法『${item.name}』`;
-                    learnNum++;
-                }
-            } else if (type == '技能书') {
+        if (type == '功法') {
+            await getManualPlan(e.user_id, included);
+        } else if (type == '技能书') {
+            for (let item of included) {
                 if (await AddSkill(e.user_id, item)) {
                     AddItemByObj(e.user_id, item, -1);
                     replyStr += `\n学习技能『${item.name.substr(4)}』`;
@@ -176,4 +173,15 @@ function getRecoverPlan(recoverItems, V, minus=false) {
         }
     })
     return {recoverPlan, recoverBlood:dp[V]};
+}
+
+async function getManualPlan(user_id, manualItems) {
+    let maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
+    let talentInfo = await GetTalentInfo(user_id);
+    
+    // if (await AddManual(user_id, item)) {
+    //     AddItemByObj(e.user_id, item, -1);
+    //     replyStr += `\n学习功法『${item.name}』`;
+    //     learnNum++;
+    // }
 }
