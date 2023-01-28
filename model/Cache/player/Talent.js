@@ -3,6 +3,7 @@ import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { rand } from '../../util/math.js';
+import { lock } from '../base.js';
 
 const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;
@@ -104,6 +105,37 @@ export async function DelManual(_uid, _manualName) {
     return true;
 }
 
+/******* 
+ * @description: 生成新的灵根并重新计算天赋
+ * @param {number} _uid 玩家id
+ * @return 无返回值
+ */
+export async function GenerateNewSpiritualRoot(_uid) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await GetTalentInfo(_uid);
+
+        talentInfo.spiritualRoot = randSpiritualRoot();
+        talentInfo.spiritualRootName = getSpiritualRootName(talentInfo.spiritualRoot);
+        talentInfo.buff = getBuff(talentInfo.spiritualRoot, talentInfo.manualList);
+        await SetTalentInfo(_uid, talentInfo);
+    });
+}
+
+/******* 
+ * @description: 设置玩家天赋是否显示
+ * @param {number} _uid 玩家id
+ * @param {boolean} _type 是否显示 true -> 显示
+ * @return 无返回值
+ */
+ export async function SetTalentOnShow(_uid, _type) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await GetTalentInfo(_uid);
+
+        talentInfo.show = _type;
+        await SetTalentInfo(_uid, talentInfo);
+    });
+}
+
 /**
  * @description: 随机生成灵根
  * @return {[]} 灵根数组
@@ -112,10 +144,10 @@ function randSpiritualRoot() {
     const spRoot = [];
     const time = rand(1, 11); //尝试次数
     for (let i = 0; i < time; i++) {
-        const sr  = rand(1, 11);
-        if(-1 != spRoot.indexOf(sr)) continue;
-        if(sr <= 5 && -1 != spRoot.indexOf(sr + 5)) continue;
-        if(sr > 5 && -1 != spRoot.indexOf(sr - 5)) continue;
+        const sr = rand(1, 11);
+        if (-1 != spRoot.indexOf(sr)) continue;
+        if (sr <= 5 && -1 != spRoot.indexOf(sr + 5)) continue;
+        if (sr > 5 && -1 != spRoot.indexOf(sr - 5)) continue;
         spRoot.push(sr);
     }
     return spRoot;
@@ -126,7 +158,7 @@ function randSpiritualRoot() {
  * @param {[]} _spRoot 灵根数组
  * @return {string} 返回灵根名
  */
-function getSpiritualRootName(_spRoot){
+function getSpiritualRootName(_spRoot) {
     let name = "";
     _spRoot.forEach(root => name += data.talentList.find(item => item.id == root).name);
     return name;
@@ -138,7 +170,7 @@ function getSpiritualRootName(_spRoot){
  * @param {[]} _manualList 功法数组
  * @return {number} 修炼效率
  */
-function getBuff(_spRoot, _manualList){
+function getBuff(_spRoot, _manualList) {
     let buff = 250;
     _spRoot.forEach(root => buff -= (root >= 5 ? 40 : 50));
     _manualList.forEach(manual => buff += manual.buff);

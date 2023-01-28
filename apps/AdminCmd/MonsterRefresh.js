@@ -3,12 +3,13 @@ import { GetBattleInfo, RefreshBattleInfo, SetBattleInfo } from "../../model/Cac
 import { GetLevelInfo } from "../../model/Cache/player/Level.js";
 import { forceNumber } from "../../model/util/math.js";
 import data from "../../model/System/data.js";
-import { RefreshBoss } from "../../model/Region/Region.js";
+import { RefreshBoss } from "../../model/Monster/refresh.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
 import { GetSpiritualRoot, GetTalentInfo, SetTalentInfo } from "../../model/Cache/player/Talent.js";
 import { GetAllSkill, SetSkillInfo } from "../../model/Cache/player/Skill.js";
 import { GetItemByName } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
+import MonsterMgr from "../../model/Monster/mgr.js";
 
 
 export default class MonsterRefresh extends plugin {
@@ -39,6 +40,11 @@ export default class MonsterRefresh extends plugin {
                     fnc: 'refreshPlayerSkill',
                     permission: 'master'
                 },
+                {
+                    reg: '^#查看boss数量$',
+                    fnc: 'getBossCount',
+                    permission: 'master'
+                }
 
             ]
         });
@@ -46,6 +52,10 @@ export default class MonsterRefresh extends plugin {
 
     refreshBoss = async () => {
         RefreshBoss();
+    }
+
+    getBossCount = async () => {
+        logger.info(MonsterMgr.BossCount);
     }
 
     refreshPlayerBase = async () => {

@@ -1,16 +1,20 @@
-import { Monster } from "../../../../model/Monster/Monster.js";
+import Monster from "../../../../model/Monster/monster.js";
 
-export class Nian extends Monster{
-    constructor(){
-        super(10);
-
-        //修改属性
-        this.name = `年兽`;
-        this.battleInfo.blood = 10000000;
-        this.battleInfo.nowblood = this.battleInfo.blood;
-        this.battleInfo.attack = 0;
-        this.battleInfo.defense = 0;
-        this.battleInfo.speed = 0;
-        this.dropTip = 'nian';
+export class Nian extends Monster {
+    constructor() {
+        super({
+            name: '年兽',
+            level: 10,
+            dropTip: 'nian',
+            battleInfo: {
+                blood: 10000000,
+                nowblood: 10000000,
+                attack: 0,
+                defense: 0,
+                speed: 0,
+                burst: 0,
+                burstmax: 0,
+            }
+        });
     }
 }

@@ -2,7 +2,7 @@
  * @described : 玩家战斗
  */
 
-import MonsterMgr from '../../model/Region/MonsterMgr.js';
+import MonsterMgr from '../../model/Monster/mgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
 import * as CD from '../../model/CD/Action.js';
 import { PVE, PVP } from '../../model/Battle/Battle.js';
