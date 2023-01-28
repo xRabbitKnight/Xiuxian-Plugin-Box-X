@@ -9,17 +9,18 @@ import plugin from '../../../../lib/plugins/plugin.js'
 import fs from 'node:fs';
 import path from 'path';
 import data from './data.js';
+import PropMgr from '../Prop/mgr.js';
 import { RefreshMonster as InitMonster } from "../Region/Region.js";
 
-class GameMgr {
+export default class GameMgr {
     constructor() {
         if (!GameMgr.instance) GameMgr.instance = this;
         return GameMgr.instance;
     }
 
-    get apps() { return getApps(); }
+    static get apps() { return getApps(); }
 
-    async Init() {
+    static async Init() {
         //游戏数据部分
         data.InitFixData();
         await pluginDataInit();
@@ -28,11 +29,10 @@ class GameMgr {
         
         //游戏内容部分
         InitMonster();
+        PropMgr.Init();
         await pluginGameInit();
     }
-
 }
-export default new GameMgr();
 
 async function pluginDataInit() {
     const dir = path.join(data.__prePath, 'plugins');
@@ -44,7 +44,7 @@ async function pluginDataInit() {
 
         const init = (await import(targetFile))['dataInit'];
         if (init == undefined) continue;
-        init();
+        await init();
     }
 }
 
@@ -58,7 +58,7 @@ async function pluginGameInit(){
 
         const init = (await import(targetFile))['gameInit'];
         if (init == undefined) continue;
-        init();
+        await init();
     }
 }
 

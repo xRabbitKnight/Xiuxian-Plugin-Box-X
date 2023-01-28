@@ -2,13 +2,16 @@
  * @described : 玩家学习功法、技能
  */
 
-import { AddPercentBlood } from '../../model/Cache/player/Battle.js'
+import { AddPercentBlood } from '../../model/Cache/player/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
 import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
 import { clamp, forceNumber } from '../../model/util/math.js';
+import { GetItemReg } from '../../model/Cache/item/Item.js';
+import { UseProp } from '../../model/Prop/base.js';
+import { replyForwardMsg } from '../../model/util/gameUtil.js';
 
 export default class learn extends plugin {
     constructor() {
@@ -20,7 +23,11 @@ export default class learn extends plugin {
             rule: [
                 {
                     reg: '^#服用.*$',
-                    fnc: 'ConsumePellet'
+                    fnc: 'ConsumePellets'
+                },
+                {
+                    reg: '^#使用.*$',
+                    fnc: 'UseProps'
                 },
                 {
                     reg: '^#学习技能.*$',
@@ -42,7 +49,7 @@ export default class learn extends plugin {
         })
     }
 
-    ConsumePellet = async (e) => {
+    ConsumePellets = async (e) => {
         if (!await CheckStatu(e, StatuLevel.alive)) {
             return;
         }
@@ -70,11 +77,41 @@ export default class learn extends plugin {
             e.reply(`修为增加${pellet.experience * count}`);
         }
         else if (pellet.id[2] == '3') {
-            AddBodyExp(e.user_id, pellet.experiencemax * count)
+            AddBodyExp(e.user_id, pellet.experiencemax * count);
             e.reply(`气血增加${pellet.experiencemax * count}`);
         }
 
         AddItemByObj(e.user_id, pellet, -count);
+    }
+
+    UseProps = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
+            return;
+        }
+
+        let [name, count] = e.msg.replace('#使用', '').split('*');
+        count = forceNumber(count);
+
+        const prop = await GetItemByName(e.user_id, name);
+        if (prop == undefined || prop.acount < count) {
+            e.reply(`没有${name} * ${count}`);
+            return;
+        }
+
+        if (!GetItemReg('idReg', '道具')?.test(prop.id)) {
+            e.reply(`不可使用${name}`);
+            return;
+        }
+
+        const msg = [];
+        for (let i = 0; i < count; ++i) {
+            if (await UseProp(name, e.user_id, msg)) {
+                msg.push(`道具${name}使用成功.`);
+            }
+        }
+
+        replyForwardMsg(e, msg);
+        AddItemByObj(e.user_id, prop, -count);
     }
 
     LearnSkill = async (e) => {
