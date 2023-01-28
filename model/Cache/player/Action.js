@@ -14,7 +14,7 @@ const PATH = data.__gameDataPath.action;
  * @return {Promise<any>} 行为信息
  */
 export async function GetAction(_uid) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         return await getActionInfo(_uid);
     });
 }
@@ -25,7 +25,7 @@ export async function GetAction(_uid) {
  * @return {Promise<number>} 区域编号，获取失败返回undefined
  */
 export async function GetPlayerRegion(_uid) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         const actionInfo = await getActionInfo(_uid);
         return actionInfo?.region;
     });
@@ -37,7 +37,7 @@ export async function GetPlayerRegion(_uid) {
  * @return {Promise<bool>}  是->true
  */
 export async function IsNew(_uid) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         const actionInfo = await getActionInfo(_uid);
         return actionInfo?.new;
     });
@@ -55,7 +55,7 @@ export async function IsNew(_uid) {
  */
 export async function SetAction(_uid, _actionInfo) {
     lock(`${redisKey}:${_uid}`, async () => {
-        await setActionInfo(_uid);
+        await setActionInfo(_uid, _actionInfo);
     });
 }
 
@@ -82,7 +82,7 @@ export async function RegNew(_uid) {
  * @return {Promise<any>} 行为信息
  */
 async function getActionInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
+    return GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /******* 

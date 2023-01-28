@@ -16,7 +16,7 @@ const PATH = data.__gameDataPath.backpack;
  * @return {Promise<any>} 背包信息
  */
 export async function GetBackpack(_uid) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         return await getBackpackInfo(_uid);
     });
 }
@@ -27,7 +27,7 @@ export async function GetBackpack(_uid) {
  * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
  */
 export async function GetSpiritStoneCount(_uid) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         return backpackInfo?.spiritStone;
     });
@@ -40,7 +40,7 @@ export async function GetSpiritStoneCount(_uid) {
  * @return {Promise<bool>} 能否装下
  */
 export async function CheckSpiritStone(_uid, _count) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return undefined;
 
@@ -55,7 +55,7 @@ export async function CheckSpiritStone(_uid, _count) {
  * @return {Promise<any>} 若找到返回物品对象, 没找到返回undefined
  */
 export async function GetItemByName(_uid, _itemName) {
-    return await lock(`${redisKey}:${_uid}`, async () => {
+    return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         return backpackInfo?.items.find(item => item.name == _itemName);
     });
@@ -118,10 +118,10 @@ export async function AddItemByObj(_uid, _item, _count) {
 /******* 
  * @description: 批量添加物品进背包
  * @param {number} _uid 玩家id
- * @param {[]} _items 物品数组
+ * @param {array} _items 物品数组
  * @return 无返回值
  */
-export async function AddItemsByObj(_uid, _items) {
+export async function AddItemsByObj(_uid, ..._items) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return;
@@ -147,6 +147,8 @@ export async function AddItemById(_uid, _itemId, _count) {
 export async function SortById(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
+        if(backpackInfo == undefined) return undefined;
+
         backpackInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
         await setBackpackInfo(_uid, backpackInfo);
     });
@@ -162,7 +164,7 @@ export async function SortById(_uid) {
  * @return {Promise<any>} 背包信息
  */
 async function getBackpackInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
+    return GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /*******
