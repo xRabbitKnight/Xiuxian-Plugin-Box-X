@@ -1,5 +1,5 @@
 import { AddItemByObj, AddItemsByObj, GetBackpackInfo, SetBackpackInfo } from '../../../model/Cache/player/Backpack.js';
-import { AddPercentBlood } from '../../../model/Cache/player/Battle.js';
+import { AddPercentBlood, GetBattleInfo } from '../../../model/Cache/player/Battle.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
@@ -17,6 +17,10 @@ export default class EasyHome extends plugin {
             priority: 600,
             rule: [
                 {
+                    reg: '^#快捷恢复',
+                    fnc: 'easyQueryBlood'
+                },
+                {
                     reg: '^#快捷恢复[0-9]+%$',
                     fnc: 'easyRecover'
                 },
@@ -30,6 +34,12 @@ export default class EasyHome extends plugin {
                 }
             ]
         })
+    }
+
+    easyQueryBlood = async (e) => {
+        const battleInfo = GetBattleInfo(e.user_id);
+        const nowbloodPercent = Math.floor(battleInfo.nowblood / battleInfo.blood * 100);
+        e.reply(`当前血量: ${battleInfo.nowblood}/${battleInfo.blood} [${nowbloodPercent}%]`);
     }
 
     easyRecover = async (e) => {
@@ -108,7 +118,7 @@ export default class EasyHome extends plugin {
         let {included, excluded} = await filterItemsByName(type, backpack.items);
 
         if (included.length < 1) {
-            e.reply(`背包里没有可以学习的${type}！`);
+            e.reply(`背包里没有${type}！`);
             return;
         }
 
@@ -129,7 +139,11 @@ export default class EasyHome extends plugin {
             }
         }
         
-        replyStr = `共使用${learnNum}本${type}` + replyStr;
+        if (learnNum == 0) {
+            replyStr = `背包里没有可以学习的${type}！`;
+        } else {
+            replyStr = `共使用${learnNum}本${type}` + replyStr;
+        }
         e.reply(replyStr);
     }
 }

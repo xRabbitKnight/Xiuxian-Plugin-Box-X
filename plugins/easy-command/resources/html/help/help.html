@@ -1,10 +1,46 @@
 <!DOCTYPE html>
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<link rel="stylesheet" type="text/css" href="{{cssCommon}}" />
-	<link rel="stylesheet" type="text/css" href="{{cssHelp}}" />
+	<link rel="stylesheet" type="text/css" href="{{cssPath}}" />
+	<link rel="stylesheet" type="text/css" href="help.css" />
 </head>
 <body>
-	
+	<div class="help-group">
+		<div class="group-head">快捷指令插件帮助</div>
+		<div class="group-body">
+			<div style="line-height: 26px;">
+				· 本插件提供了一些方便操作的快捷指令。<br>
+				· 本插件的指令除了输入
+				<strong>物品名称</strong>
+				外，还可输入以下
+				<strong>物品类别</strong>
+				进行操作。统称【物品】。
+			</div>
+			<div style="text-align:center; font-weight:bold; margin-top:5px;">
+				武器、护具、法宝、装备、恢复药、修为药、气血药、丹药、功法、技能书、全部物品
+			</div>
+		</div>
+	</div>
+	<div class="help-group">
+		<div class="group-head">快捷指令</div>
+		<div class="group-body">
+			<div class="cmd-box">
+				<div>#快捷出售/购买【物品】</div>
+				<div>位于凡仙堂可使用，用于批量操作物品，物品数量为最大值。</div>
+			</div>
+			<div class="cmd-box">
+				<div>#快捷恢复、#快捷恢复80%</div>
+				<div>不指定百分比可查询当前血量。指定百分比则根据背包恢复药情况自动选择搭配方案，并服用恢复药，恢复血量不会超过给出的百分比。</div>
+			</div>
+			<div class="cmd-box">
+				<div>#快捷服用修为药/气血药</div>
+				<div>服用背包所有的修为药或气血药。</div>
+			</div>
+			<div class="cmd-box">
+				<div>#快捷学习功法/技能</div>
+				<div>学习背包里所有可以学习的功法或者技能书。</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
