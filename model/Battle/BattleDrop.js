@@ -39,7 +39,7 @@ async function normal(_uid, _monster, _msg) {
 
     const pellets = await GetRandItem("4", Math.floor(_monster.level / 5 + 1), _monster.level);
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-    AddItemsByObj(_uid, pellets);
+    AddItemsByObj(_uid, ...pellets);
 }
 
 /** boss掉落 */
@@ -49,13 +49,12 @@ async function boss(_uid, _monster, _msg) {
 
     const pellets = await GetRandItem("4", Math.floor(_monster.level * 2));         //TODO 有点丑陋。有时间改改 
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-    AddItemsByObj(_uid, pellets);
 
     const props = await GetRandItem("6");
     props?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-    AddItemsByObj(_uid, props);
 
     const skillBooks = await GetRandItem("7");
     skillBooks?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-    AddItemsByObj(_uid, skillBooks);
+    
+    AddItemsByObj(_uid, ...pellets, ...props, ...skillBooks);
 }
