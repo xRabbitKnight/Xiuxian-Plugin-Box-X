@@ -17,7 +17,7 @@ export default class EasyHome extends plugin {
             priority: 600,
             rule: [
                 {
-                    reg: '^#快捷恢复',
+                    reg: '^#快捷恢复$',
                     fnc: 'easyQueryBlood'
                 },
                 {
