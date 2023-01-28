@@ -55,7 +55,7 @@ export default class wealth extends plugin {
             return;
         }
 
-        const backpack = await bpOp.GetBackpackInfo(uid);
+        const backpack = await bpOp.GetBackpack(uid);
         const cfg = config.GetConfig('game/backpack.yaml');
 
         if (backpack.grade == cfg.maxLevel) {
@@ -70,7 +70,7 @@ export default class wealth extends plugin {
         backpack.spiritStone -= cfg.upgradeCost[backpack.grade];
         backpack.capacity = cfg.capacity[backpack.grade + 1];
         backpack.grade += 1;
-        bpOp.SetBackpackInfo(uid, backpack);
+        bpOp.SetBackpack(uid, backpack);
         e.reply('储物袋升级完毕！');
     }
 

@@ -8,7 +8,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { IsNew, RegNew, SetActionInfo } from '../../model/Cache/player/Action.js';
 import { GetItemByName } from '../../model/Cache/item/Item.js';
-import { AddItemByObj, AddSpiritStone, SetBackpackInfo } from '../../model/Cache/player/Backpack.js';
+import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
 import { GetNewBattleInfo, SetBattleInfo } from '../../model/Cache/player/Battle.js';
 import { SetEquipmentInfo } from '../../model/Cache/player/Equipment.js';
 import { SetLevelInfo } from '../../model/Cache/player/Level.js';
@@ -83,7 +83,7 @@ export default class start extends plugin {
         //行为相关
         await SetActionInfo(uid, newPlayer.action);
         //背包相关
-        await SetBackpackInfo(uid, newPlayer.backpack);
+        await SetBackpack(uid, newPlayer.backpack);
         //攻防属性相关, 生成
         await SetBattleInfo(uid, await GetNewBattleInfo());
         //装备相关
@@ -114,7 +114,7 @@ export default class start extends plugin {
         if (await CD.IfActionInCD(e.user_id, 'reBorn', e.reply)) {
             return;
         }
-        
+
         delRedisKeys(e.user_id);
         e.reply('来世,信则有,不信则无,岁月悠悠,世间终会出现两朵相同的花,千百年的回眸,一花凋零,一花绽。是否为同一朵,任后人去评断');
         await this.Create(e);
