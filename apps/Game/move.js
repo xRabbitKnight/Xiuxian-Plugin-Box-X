@@ -8,7 +8,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { inRange, rand } from '../../model/util/math.js';
 import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
 import { GetSpeed } from '../../model/Cache/player/Battle.js';
-import { GetActionInfo, SetActionInfo } from '../../model/Cache/player/Action.js';
+import { GetAction, SetAction } from '../../model/Cache/player/Action.js';
 import { GetAllSpot, IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { GetAllArea } from '../../model/Cache/place/Area.js';
 
@@ -51,7 +51,7 @@ export default class move extends plugin {
             return;
         }
 
-        const action = await GetActionInfo(e.user_id);
+        const action = await GetAction(e.user_id);
         if (action.address != '1') {
             e.reply('你对这里并不了解...');
             return;
@@ -79,7 +79,7 @@ export default class move extends plugin {
             return;
         }
 
-        const action = await GetActionInfo(e.user_id);
+        const action = await GetAction(e.user_id);
         const point = (await GetAllSpot()).find(spot => spot.x == action.x && spot.y == action.y);
         const position = (await GetAllArea()).find(item => inRange(action.x, item.x1, item.x2) && inRange(action.y, item.y1, item.y2));
         const msg = [`坐标:(${action.x},${action.y})`];
@@ -104,7 +104,7 @@ export default class move extends plugin {
             return;
         }
 
-        const action = await GetActionInfo(e.user_id);
+        const action = await GetAction(e.user_id);
         const distance = Math.abs(action.x - point.x) + Math.abs(action.y - point.y);
         const speed = await GetSpeed(e.user_id);
         const timeCost = Math.floor(distance * (1 - speed * 0.01)) + 1;
@@ -115,7 +115,7 @@ export default class move extends plugin {
             action.y = point.y;
             action.region = regionId;
             action.address = addressId;
-            SetActionInfo(e.user_id, action);
+            SetAction(e.user_id, action);
             e.reply([segment.at(e.user_id), `成功抵达${address}`]);
         }, timeCost * 1000); //参数是ms，所以*1000
 
@@ -136,7 +136,7 @@ export default class move extends plugin {
             return;
         }
 
-        const action = await GetActionInfo(e.user_id);
+        const action = await GetAction(e.user_id);
         const inPortal = await IfAtSpot(e.user_id, '传送阵');           //是否在传送阵
         const Scroll = await GetItemByName(e.user_id, '传送卷轴');      //是否有传送卷轴
 
@@ -170,7 +170,7 @@ export default class move extends plugin {
             action.y = target.y;
             action.region = regionId;
             action.address = addressId;
-            SetActionInfo(e.user_id, action);
+            SetAction(e.user_id, action);
             e.reply([segment.at(e.user_id), `成功传送至${address}`]);
         }, 1000 * timeCost); //参数是ms，所以*1000
 

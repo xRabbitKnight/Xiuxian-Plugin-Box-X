@@ -1,5 +1,5 @@
 import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
-import { CheckSpiritStone, GetBackpackInfo, SetBackpackInfo, SortById } from '../../../model/Cache/player/Backpack.js';
+import { CheckSpiritStone, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
@@ -18,8 +18,8 @@ export default class EasyTrade extends plugin {
             priority: 600,
             rule: [
                 {
-                    reg: '^#快捷出售.+$',   
-                    fnc: 'easySell'          
+                    reg: '^#快捷出售.+$',
+                    fnc: 'easySell'
                 },
                 {
                     reg: '^#快捷购买.+$',
@@ -38,9 +38,9 @@ export default class EasyTrade extends plugin {
             return;
         }
 
-		let itemName = e.msg.substr(5);
-        let backpack = await GetBackpackInfo(e.user_id);
-        let {included, excluded} = await filterItemsByName(itemName, backpack.items);
+        let itemName = e.msg.substr(5);
+        let backpack = await GetBackpack(e.user_id);
+        let { included, excluded } = await filterItemsByName(itemName, backpack.items);
 
         if (included.length < 1) {
             e.reply(`[凡仙堂小二]\n你没有符合的物品[${itemName}]！`);
@@ -74,7 +74,7 @@ export default class EasyTrade extends plugin {
 
         backpack.items = excluded;
         backpack.spiritStone += totalMoney;
-        SetBackpackInfo(e.user_id, backpack);
+        SetBackpack(e.user_id, backpack);
 
         if (included.length == 1) {
             e.reply(`[凡仙堂小二]\n出售[${included[0].name}] * ${included[0].acount}，得到[${totalMoney}]灵石`);
@@ -93,9 +93,9 @@ export default class EasyTrade extends plugin {
             return;
         }
 
-		let itemName = e.msg.substr(5);
+        let itemName = e.msg.substr(5);
         let commodities = await GetCommodities();
-        let {included, excluded} = await filterItemsByName(itemName, commodities);
+        let { included, excluded } = await filterItemsByName(itemName, commodities);
 
         if (included.length < 1) {
             e.reply(`[凡仙堂小二]\n[${itemName}]存量不足！`);
@@ -126,7 +126,7 @@ export default class EasyTrade extends plugin {
 
         backpack.items = mergeItems(backpack.items, included);
         backpack.spiritStone -= cost;
-        SetBackpackInfo(e.user_id, backpack);
+        SetBackpack(e.user_id, backpack);
         SetCommodities(excluded);
 
         if (included.length == 1) {

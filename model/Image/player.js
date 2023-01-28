@@ -6,7 +6,7 @@ import { GetEquipmentInfo } from '../Cache/player/Equipment.js';
 import { GetLevelInfo } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLifeInfo } from '../Cache/player/Life.js';
-import { GetBackpackInfo, SortById as SortBackpack } from '../Cache/player/Backpack.js';
+import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
 import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
 import { GetSkillInfo } from '../Cache/player/Skill.js';
 
@@ -89,7 +89,7 @@ export async function GetPlayerInfoImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetBackpackImage(_uid) {
-    await SortBackpack(_uid);
+    SortBackpack(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/backpack/backpack.html',
@@ -98,7 +98,7 @@ export async function GetBackpackImage(_uid) {
         cssPath: base.res + 'User/backpack/backpack.css',
         uid: _uid,
         life: await GetLifeInfo(_uid),
-        backpack: await GetBackpackInfo(_uid)
+        backpack: await GetBackpack(_uid)
     });
 }
 
@@ -126,7 +126,7 @@ export async function GetWarehouseImage(_uid) {
  * @param {string} _uid 玩家id, plugins参数e.user_id
  * @return {Promise<ImageElem>} 生成的图片
  */
- export async function GetLevelImage(_uid) {
+export async function GetLevelImage(_uid) {
     return await puppeteer.screenshot('state', {
         //puppeteer 所需参数
         tplFile: base.html + 'state/state.html',
@@ -135,7 +135,7 @@ export async function GetWarehouseImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '练气境界',
         list: data.levelList,
-        level : (await GetLevelInfo(_uid)).level
+        level: (await GetLevelInfo(_uid)).level
     });
 }
 
@@ -144,7 +144,7 @@ export async function GetWarehouseImage(_uid) {
  * @param {string} _uid 玩家id, plugins参数e.user_id
  * @return {Promise<ImageElem>} 生成的图片
  */
- export async function GetBodyLevelImage(_uid) {
+export async function GetBodyLevelImage(_uid) {
     return await puppeteer.screenshot('state', {
         //puppeteer 所需参数
         tplFile: base.html + 'state/state.html',
@@ -153,6 +153,6 @@ export async function GetWarehouseImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '炼体境界',
         list: data.bodyLevelList,
-        level : (await GetLevelInfo(_uid)).bodyLevel
+        level: (await GetLevelInfo(_uid)).bodyLevel
     });
 }
