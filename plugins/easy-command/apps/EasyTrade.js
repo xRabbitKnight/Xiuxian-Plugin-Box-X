@@ -53,22 +53,20 @@ export default class EasyTrade extends plugin {
         if(!await CheckSpiritStone(e.user_id, totalMoney)){
             if (included.length > 1) {
                 overflow = true;
+            } else if (backpack.capacity - backpack.spiritStone < included[0].price) {
+                overflow = true;
             } else {
                 let curNum = Math.floor((backpack.capacity - backpack.spiritStone) / included[0].price);
-                if (curNum < 1) {
-                    overflow = true;
-                } else {
-                    let backpackItem = Object.assign({}, included[0]);
-                    let maxNum = included[0].acount;
-                    included[0].acount = curNum;
-                    backpackItem.acount = maxNum - curNum;
-                    excluded.push(backpackItem);
-                    totalMoney = countMoney(included);
-                }
+                let maxNum = included[0].acount;
+                let backpackItem = Object.assign({}, included[0]);
+                included[0].acount = curNum;
+                backpackItem.acount = maxNum - curNum;
+                excluded.push(backpackItem);
+                totalMoney = countMoney(included);
             }
         }
         if (overflow) {
-            e.reply(`[凡仙堂小二]\n储物袋灵石已满，一点都装不下了！`);
+            e.reply(`[凡仙堂小二]\n储物袋灵石已满，装不下这么多灵石！`);
             return;
         }
 
@@ -103,24 +101,26 @@ export default class EasyTrade extends plugin {
         }
 
         let cost = countMoney(included);
-        let backpack = await GetBackpackInfo(e.user_id);
+        let backpack = await GetBackpack(e.user_id);
         
         let lack = false;
         if (backpack.spiritStone < cost) {
             if (included.length > 1) {
                 lack = true;
+            } else if (backpack.spiritStone < included[0].price) {
+                lack = true;
             } else {
                 let curNum = Math.floor(backpack.spiritStone / included[0].price);
-                if (curNum < 1) {
-                    lack = true;
-                } else {
-                    included[0].acount = curNum;
-                    cost = countMoney(included);
-                }
+                let maxNum = included[0].acount;
+                let shopItem = Object.assign({}, included[0]);
+                included[0].acount = curNum;
+                shopItem.acount = maxNum - curNum;
+                excluded.push(shopItem);
+                cost = countMoney(included);
             }
         }
         if (lack) {
-            e.reply(`[凡仙堂小二]\n灵石不足，什么东西都买不了！`);
+            e.reply(`[凡仙堂小二]\n灵石不足，买不了这些东西！`);
             return;
         }
 
@@ -130,7 +130,7 @@ export default class EasyTrade extends plugin {
         SetCommodities(excluded);
 
         if (included.length == 1) {
-            e.reply(`[凡仙堂小二]\n花费[${totalMoney}]灵石购买了[${included[0].name}] * ${included[0].acount}`);
+            e.reply(`[凡仙堂小二]\n花费[${cost}]灵石购买了[${included[0].name}] * ${included[0].acount}`);
         } else {
             let msgList = listItems(`[凡仙堂小二]\n你花[${cost}]灵石购买了全部[${itemName}]`, included);
             replyForwardMsg(e, msgList);

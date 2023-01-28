@@ -122,25 +122,18 @@ export default class EasyHome extends plugin {
             return;
         }
 
-        let replyStr = '', learnNum = 0;
         if (type == '功法') {
-            await getManualPlan(e.user_id, included);
+            var {learnStr, learnNum} = await learnManual(e.user_id, included);
         } else if (type == '技能书') {
-            for (let item of included) {
-                if (await AddSkill(e.user_id, item)) {
-                    AddItemByObj(e.user_id, item, -1);
-                    replyStr += `\n学习技能『${item.name.substr(4)}』`;
-                    learnNum++;
-                }
-            }
+            var {learnStr, learnNum} = await learnSkill(e.user_id, included);
         }
 
         if (learnNum == 0) {
-            replyStr = `背包里没有可以学习的${type}！`;
+            learnStr = `背包里没有可以学习的${type}！`;
         } else {
-            replyStr = `共使用${learnNum}本${type}` + replyStr;
+            learnStr = `共使用${learnNum}本${type}` + learnStr;
         }
-        e.reply(replyStr);
+        e.reply(learnStr);
     }
 }
 
@@ -174,13 +167,55 @@ function getRecoverPlan(recoverItems, V, minus = false) {
     return { recoverPlan, recoverBlood: dp[V] };
 }
 
-async function getManualPlan(user_id, manualItems) {
+async function learnManual(user_id, manualItems) {
     let maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
     let talentInfo = await GetTalentInfo(user_id);
-    
-    // if (await AddManual(user_id, item)) {
-    //     AddItemByObj(e.user_id, item, -1);
-    //     replyStr += `\n学习功法『${item.name}』`;
-    //     learnNum++;
-    // }
+
+    let manualList = [];
+    talentInfo.manualList.forEach(manual => {
+        manualList.push({
+            learned: true,
+            name: manual.name,
+            size: manual.buff
+        });
+    });
+    manualItems.forEach((manual, index, self) => {
+    if (manualList.find(item => item.name == manual.name) == undefined) {
+            manualList.push({
+                learned: false,
+                name: manual.name,
+                size: manual.size,
+                manualItemsIdx: index
+            });
+        }
+    })
+    manualList.sort((a, b) => a.size - b.size);
+    logger.info(manualList)
+
+    let learnStr = '', learnNum = 0;
+    for (let i in manualList) {
+        let manual = manualList[i];
+        if (manualList.length - i > maxLearnNum && manual.learned) {
+            await DelManual(user_id, manual.name);
+            learnStr += `\n忘掉功法『${manual.name}』(${manual.size})`;
+        } else if (manualList.length - i <= maxLearnNum && !manual.learned) {
+            await AddManual(user_id, manual)
+            AddItemByObj(user_id, manualItems[manual.manualItemsIdx], -1);
+            learnStr += `\n学习功法『${manual.name} 』(${manual.size})`;
+            learnNum++;
+        }
+    }
+    return { learnStr, learnNum };
+}
+
+async function learnSkill(user_id, skillItems) {
+    let learnStr = '', learnNum = 0;
+    for (let item of skillItems) {
+        if (await AddSkill(user_id, item)) {
+            AddItemByObj(user_id, item, -1);
+            learnStr += `\n学习技能『${item.name.substr(4)}』`;
+            learnNum++;
+        }
+    }
+    return { learnStr, learnNum };
 }
