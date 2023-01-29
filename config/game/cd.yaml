@@ -14,6 +14,8 @@ action:
   attack: 5
   #击杀
   kill: 3
+  #钻研功法
+  plumbManual: 480
 
 #玩家技能cd
 skill:

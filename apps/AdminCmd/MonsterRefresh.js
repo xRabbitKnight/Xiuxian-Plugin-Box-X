@@ -85,7 +85,8 @@ export default class MonsterRefresh extends plugin {
             talentInfo.manualList.forEach(manual => {
                 newManual.push({
                     name: manual.name,
-                    buff: manual.size,
+                    buff: manual.buff,
+                    maxBuff: Math.floor(manual.buff * 1.5),
                 })
             })
             talentInfo.manualList = newManual;
