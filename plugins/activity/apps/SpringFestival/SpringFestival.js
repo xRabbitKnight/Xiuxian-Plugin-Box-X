@@ -76,6 +76,6 @@ async function nian(_uid, _nian, _msg) {
 
    _msg.push(`你获得了${_nian.giftName}！`);
    _nian.gift.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-   AddItemsByObj(_uid, _nian.gift);
+   AddItemsByObj(_uid, ..._nian.gift);
    _msg.push(`新年快乐！`);
 }

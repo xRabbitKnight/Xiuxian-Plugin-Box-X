@@ -64,7 +64,7 @@ export default class EasyHome extends plugin {
             return;
         }
 
-        AddItemsByObj(e.user_id, recoverPlan);
+        AddItemsByObj(e.user_id, ...recoverPlan);
         AddPercentBlood(e.user_id, recoverBlood);
 
         let replyStr = `血量恢复${recoverBlood}%`;
