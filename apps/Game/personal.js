@@ -3,6 +3,7 @@
  */
 
 import * as CD from '../../model/CD/Action.js';
+import { CheckSensitiveWord } from '../../model/util/sensitive.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
 import { IfAtSpot } from '../../model/Cache/place/Spot.js';
@@ -28,53 +29,60 @@ export default class personal extends plugin {
     }
 
     Rename = async (e) => {
+        const uid = e.user_id;
+        
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
 
-        if (await CD.IfActionInCD(e.user_id, 'reName', e.reply)) {
+        if (await CD.IfActionInCD(uid, 'reName', e.reply)) {
             return;
         }
 
-        if (!await IfAtSpot(e.user_id, '联盟')) {
+        if (!await IfAtSpot(uid, '联盟')) {
             e.reply(`需回联盟`);
             return;
         }
 
-        let new_name = e.msg.replace('#改名', '');
-        if (new_name.length == 0) {
-            return;
-        }
-        const name = ['尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
-        name.forEach(item => new_name = new_name.replace(item, ''));
-        if (new_name.length > 8) {
-            e.reply('[修仙联盟]白老\n小友的这名可真是稀奇');
+        const name = e.msg.replace('#改名', '');
+
+        if (name.length == 0 || name.length > 8) {
+            e.reply('道号限制1-8个字！');
             return;
         }
 
-        SetName(e.user_id, new_name);
-        CD.AddActionCD(e.user_id, 'reName');
+        if(CheckSensitiveWord(name)){
+            e.reply('请文明修仙！');
+            return;
+        }
+
+        SetName(uid, name);
+        CD.AddActionCD(uid, 'reName');
     }
 
     ChangeAutograph = async (e) => {
+        const uid = e.user_id;
+
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
 
-        if (await CD.IfActionInCD(e.user_id, 'autograph', e.reply)) {
+        if (await CD.IfActionInCD(uid, 'autograph', e.reply)) {
             return;
         }
 
-        let new_msg = e.msg.replace('#设置道宣', '');
-        new_msg = new_msg.replace(' ', '');
-        const name = ['尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
-        name.forEach(item => new_msg = new_msg.replace(item, ''));
-        if (new_msg.length == 0 || new_msg.length > 50) {
-            e.reply('请正确设置,且道宣最多50字符');
+        const autograph = e.msg.replace('#设置道宣', '');
+        if (autograph.length == 0 || autograph.length > 50) {
+            e.reply('道宣限制1-50字！');
             return;
         }
 
-        SetAutograph(e.user_id, new_msg);
-        CD.AddActionCD(e.user_id, 'autograph');
+        if(CheckSensitiveWord(autograph)){
+            e.reply('请文明修仙！');
+            return;
+        }
+
+        SetAutograph(uid, autograph);
+        CD.AddActionCD(uid, 'autograph');
     }
 }
