@@ -8,98 +8,136 @@ import { GetInfo, SetInfo } from './InfoCache.js';
 const redisKey = data.__gameDataKey.warehouse;
 const PATH = data.__gameDataPath.warehouse;
 
-/******* 
- * @description: 从cache里获取玩家的仓库信息
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<JSON>} 返回的warehouseInfo JSON对象
- */
-export async function GetWarehouseInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
-}
+//#region Get方法
 
 /******* 
- * @description: 更新玩家仓库信息, 并写入数据
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @param {JSON} _warehouseInfo 玩家仓库信息, 注意是JSON对象
- * @return 无返回值
+ * @description: 获取玩家的仓库信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 仓库信息
  */
-export async function SetWarehouseInfo(_uid, _warehouseInfo) {
-    await SetInfo(_uid, _warehouseInfo, redisKey, path.join(PATH, `${_uid}.json`));
+export async function GetWarehouse(_uid) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        return await getWarehouseInfo(_uid);
+    });
 }
 
 /******* 
  * @description: 在仓库中按物品名字查找
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {string} _itemName 物品名字
- * @return {Promise<JSON>} 若找到返回物品对象JSON, 没找到返回undefined
+ * @return {Promise<any>} 若找到返回物品对象, 没找到返回undefined
  */
 export async function GetItemByName(_uid, _itemName) {
-    const warehouseInfo = await GetWarehouseInfo(_uid);
-    return warehouseInfo?.items.find(item => item.name == _itemName);
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await getWarehouseInfo(_uid);
+        return warehouseInfo?.items.find(item => item.name == _itemName);
+    });
 }
 
 /*******
  * @description: 获取玩家仓库灵石数量
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
  */
- export async function GetSpiritStoneCount(_uid) {
-    const warehouseInfo = await GetWarehouseInfo(_uid);
-    return warehouseInfo?.spiritStone;
+export async function GetSpiritStoneCount(_uid) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await getWarehouseInfo(_uid);
+        return warehouseInfo?.spiritStone;
+    });
 }
 
+//#endregion
+
+//#region Set方法
+
+/******* 
+ * @description: 更新玩家仓库信息, 注意该方法会覆盖更新玩家仓库信息, 错误操作后果比较严重, 注意使用
+ * @param {number} _uid 玩家id
+ * @param {any} _warehouseInfo 玩家仓库信息
+ * @return 无返回值
+ */
+export async function SetWarehouse(_uid, _warehouseInfo) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        await setWarehouseInfo(_uid, _warehouseInfo);
+    });
+}
 
 /*******
  * @description: 增加仓库灵石
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
 export async function AddSpiritStone(_uid, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const warehouseInfo = await GetWarehouseInfo(_uid);
+        const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
 
         warehouseInfo.spiritStone += forceNumber(_count);
-        await SetWarehouseInfo(_uid, warehouseInfo);
+        await setWarehouseInfo(_uid, warehouseInfo);
     });
 }
 
 /******* 
  * @description: 按物品obj添加进仓库
- * @param {string} _uid 玩家id
- * @param {JSON} _item 物品对象 JSON格式
+ * @param {number} _uid 玩家id
+ * @param {any} _item 物品对象
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
 export async function AddItemByObj(_uid, _item, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const warehouseInfo = await GetWarehouseInfo(_uid);
+        const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
 
         _item.acount = forceNumber(_count);
         addVaild(warehouseInfo, _item);
-        await SetWarehouseInfo(_uid, warehouseInfo);
+        await setWarehouseInfo(_uid, warehouseInfo);
     });
 }
 
 /******* 
  * @description: 背包物品排序
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return 无返回值
  */
 export async function SortById(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const warehouseInfo = await GetWarehouseInfo(_uid);
+        const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
 
         warehouseInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
-        await SetWarehouseInfo(_uid, warehouseInfo);
+        await setWarehouseInfo(_uid, warehouseInfo);
     });
 }
 
-/*******--------------------------------------------------------------内部函数
+//#endregion
+
+//#region 内部方法
+
+/******* 
+ * @description: 获取玩家的仓库信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 仓库信息
+ */
+export async function getWarehouseInfo(_uid) {
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
+}
+
+/******* 
+ * @description: 更新玩家仓库信息, 并写入数据
+ * @param {number} _uid 玩家id
+ * @param {any} _warehouseInfo 玩家仓库信息
+ * @return 无返回值
+ */
+export async function setWarehouseInfo(_uid, _warehouseInfo) {
+    await SetInfo(_uid, _warehouseInfo, redisKey, path.join(PATH, `${_uid}.json`));
+}
+
+/******* 
  * @description: 合法添加物品
+ * @param {*} _warehouseInfo 玩家仓库信息
+ * @param {*} _item 待添加的物品
  * @return 无返回值
  */
 function addVaild(_warehouseInfo, _item) {
@@ -119,3 +157,5 @@ function addVaild(_warehouseInfo, _item) {
         _warehouseInfo.items.splice(_warehouseInfo.items.indexOf(targetItem), 1);
     }
 }
+
+//#endregion

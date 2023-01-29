@@ -6,9 +6,10 @@ import { GetEquipment } from '../Cache/player/Equipment.js';
 import { GetLevel } from '../Cache/player/Level.js';
 import { GetTalent } from '../Cache/player/Talent.js';
 import { GetLife } from '../Cache/player/Life.js';
-import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
-import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
 import { GetSkill } from '../Cache/player/Skill.js';
+import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
+import { GetWarehouse, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
+
 
 /******* 
  * @description: 获取玩家装备以及面板信息
@@ -117,7 +118,7 @@ export async function GetWarehouseImage(_uid) {
         cssPath: base.res + 'User/warehouse/warehouse.css',
         uid: _uid,
         life: await GetLife(_uid),
-        warehouse: await GetWarehouseInfo(_uid)
+        warehouse: await GetWarehouse(_uid)
     });
 }
 
