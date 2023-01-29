@@ -13,7 +13,7 @@ import { GetNewBattle, SetBattle } from '../../model/Cache/player/Battle.js';
 import { SetEquipment } from '../../model/Cache/player/Equipment.js';
 import { SetLevel } from '../../model/Cache/player/Level.js';
 import { SetLife } from '../../model/Cache/player/Life.js';
-import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
+import { SetSkill } from '../../model/Cache/player/Skill.js';
 import { GetNewTalentInfo, SetTalentInfo } from '../../model/Cache/player/Talent.js';
 import { SetWarehouseInfo } from '../../model/Cache/player/Warehouse.js';
 import { AddUid } from '../../model/Cache/player/players.js';
@@ -95,7 +95,7 @@ export default class start extends plugin {
         newPlayer.life.lifetime = rand(50, 100);
         await SetLife(uid, newPlayer.life);
         //技能相关
-        await SetSkillInfo(uid, newPlayer.skill);
+        await SetSkill(uid, newPlayer.skill);
         //天赋相关 生成
         await SetTalentInfo(uid, await GetNewTalentInfo());
         //仓库相关

@@ -8,7 +8,7 @@ import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLife } from '../Cache/player/Life.js';
 import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
 import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
-import { GetSkillInfo } from '../Cache/player/Skill.js';
+import { GetSkill } from '../Cache/player/Skill.js';
 
 /******* 
  * @description: 获取玩家装备以及面板信息
@@ -58,7 +58,7 @@ export async function GetSkillImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/skill/skill.css',
         uid: _uid,
-        skill: await GetSkillInfo(_uid),
+        skill: await GetSkill(_uid),
     });
 }
 

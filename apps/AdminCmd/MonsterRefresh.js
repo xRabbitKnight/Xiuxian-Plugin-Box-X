@@ -7,7 +7,7 @@ import { forceNumber } from "../../model/util/math.js";
 import { RefreshBoss } from "../../model/Monster/refresh.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
 import { GetSpiritualRoot, GetTalentInfo, SetTalentInfo } from "../../model/Cache/player/Talent.js";
-import { GetAllSkill, SetSkillInfo } from "../../model/Cache/player/Skill.js";
+import { GetAllSkill, SetSkill } from "../../model/Cache/player/Skill.js";
 import { GetItemByName } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
 
@@ -111,7 +111,7 @@ export default class MonsterRefresh extends plugin {
             }
 
             const obj = {skillList : skills};
-            SetSkillInfo(player, obj);
+            SetSkill(player, obj);
             WriteAsync(`${data.__gameDataPath.skill}/${player}.json`, JSON.stringify(obj));
         });
     }
