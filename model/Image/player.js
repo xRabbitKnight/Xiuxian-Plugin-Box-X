@@ -3,7 +3,7 @@ import base from './base.js';
 import data from '../System/data.js'
 import { GetBattle } from '../Cache/player/Battle.js';
 import { GetEquipment } from '../Cache/player/Equipment.js';
-import { GetLevelInfo } from '../Cache/player/Level.js';
+import { GetLevel } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLifeInfo } from '../Cache/player/Life.js';
 import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
@@ -77,7 +77,7 @@ export async function GetPlayerInfoImage(_uid) {
         uid: _uid,
         life: await GetLifeInfo(_uid),
         battle: await GetBattle(_uid),
-        level: await GetLevelInfo(_uid),
+        level: await GetLevel(_uid),
         talent: await GetTalentInfo(_uid),
         equipment: await GetEquipment(_uid),
     });
@@ -135,7 +135,7 @@ export async function GetLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '练气境界',
         list: data.levelList,
-        level: (await GetLevelInfo(_uid)).level
+        level: (await GetLevel(_uid)).level
     });
 }
 
@@ -153,6 +153,6 @@ export async function GetBodyLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '炼体境界',
         list: data.bodyLevelList,
-        level: (await GetLevelInfo(_uid)).bodyLevel
+        level: (await GetLevel(_uid)).bodyLevel
     });
 }

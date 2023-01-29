@@ -11,7 +11,7 @@ import { GetItemByName } from '../../model/Cache/item/Item.js';
 import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
 import { GetNewBattle, SetBattle } from '../../model/Cache/player/Battle.js';
 import { SetEquipment } from '../../model/Cache/player/Equipment.js';
-import { SetLevelInfo } from '../../model/Cache/player/Level.js';
+import { SetLevel } from '../../model/Cache/player/Level.js';
 import { SetLifeInfo } from '../../model/Cache/player/Life.js';
 import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
 import { GetNewTalentInfo, SetTalentInfo } from '../../model/Cache/player/Talent.js';
@@ -89,7 +89,7 @@ export default class start extends plugin {
         //装备相关
         await SetEquipment(uid, newPlayer.equipment);
         //等级相关
-        await SetLevelInfo(uid, newPlayer.level);
+        await SetLevel(uid, newPlayer.level);
         //基础信息相关 部分信息生成
         newPlayer.life.name = e.sender.nickname;
         newPlayer.life.lifetime = rand(50, 100);
