@@ -1,6 +1,7 @@
+import { segment } from 'oicq';
 import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
-import { replyForwardMsg } from '../../../model/util/gameUtil.js';
+import { getAtUid, replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { filterItemsByName, listItems, mergeItems } from '../model/utils.js';
 import * as bpOp from '../../../model/Cache/player/Backpack.js';
 import * as whOp from '../../../model/Cache/player/Warehouse.js';
@@ -20,6 +21,10 @@ export default class EasyWarehouse extends plugin {
                 {
                     reg: '^#快捷(存|取)(.+)$',
                     fnc: 'easyAccessItems'
+                },
+                {
+                    reg: '^#快捷赠送.*$',
+                    fnc: 'easyGiveProp'
                 }
             ]
         })
@@ -70,7 +75,7 @@ export default class EasyWarehouse extends plugin {
         let { included, excluded } = await filterItemsByName(itemName, op == '存' ? backpack.items : warehouse.items);
 
         if (included.length < 1) {
-            e.reply(`没有可以${op}的[${itemName}]`);
+            e.reply(`没有可以${op}的[${itemName}]！`);
             return;
         }
 
@@ -84,5 +89,46 @@ export default class EasyWarehouse extends plugin {
 
         let msgList = listItems(`共${op == '存' ? '存入' : '取出'}${included.length}种物品`, included);
         replyForwardMsg(e, msgList);
+    }
+
+    easyGiveProp = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.canGive)) {
+            return;
+        }
+        const giverId = e.user_id;
+        const doneeId = getAtUid(e);
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.alive, false)) {
+            e.reply("获赠者不存在！");
+            return;
+        }
+        if (doneeId == giverId) {
+            e.reply("请不要赠送给自己！");
+            return;
+        }
+
+        let itemName = e.msg.substr(5);
+        if (itemName == '灵石') {
+            e.reply('不能快捷赠送灵石！');
+            return;
+        }
+
+        let backpack = await bpOp.GetBackpack(giverId);
+        let { included, excluded } = await filterItemsByName(itemName, backpack.items);
+
+        if (included.length < 1) {
+            e.reply(`没有可以赠送的[${itemName}]！`);
+            return;
+        }
+
+		let minusIncluded = [];
+		included.forEach((item, index, self) => {
+			minusIncluded.push(Object.assign({}, item));
+			minusIncluded[index].acount *= -1;
+		});
+		bpOp.AddItemsByObj(giverId, ...minusIncluded);
+		whOp.AddItemsByObj(doneeId, ...included);
+        
+        e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的[${itemName}]`]);
+        replyForwardMsg(e, listItems(`共赠送${included.length}种物品`, included));
     }
 }
