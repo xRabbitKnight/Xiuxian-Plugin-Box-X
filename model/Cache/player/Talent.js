@@ -8,30 +8,24 @@ import { lock } from '../base.js';
 const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;
 
-/******* 
- * @description: 从cache里获取玩家的天赋信息
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<JSON>} 返回的TalentInfo JSON对象
- */
-export async function GetTalentInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
-}
+//#region Get方法
 
 /******* 
- * @description: 更新玩家天赋信息, 并写入数据
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @param {JSON} _talentInfo 玩家天赋信息, 注意是JSON对象
- * @return 无返回值
+ * @description: 获取玩家的天赋信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 天赋信息
  */
-export async function SetTalentInfo(_uid, _talentInfo) {
-    await SetInfo(_uid, _talentInfo, redisKey, path.join(PATH, `${_uid}.json`));
+export async function GetTalent(_uid) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        return await getTalentInfo(_uid);
+    });
 }
 
 /**
  * @description: 获取一份新玩家战斗面板
- * @return {Promise<*>} talentInfo对象
+ * @return {Promise<any>} talentInfo对象
  */
-export async function GetNewTalentInfo() {
+export async function GetNewTalent() {
     const talentInfo = {};
     talentInfo.spiritualRoot = randSpiritualRoot();
     talentInfo.spiritualRootName = getSpiritualRootName(talentInfo.spiritualRoot);
@@ -42,67 +36,91 @@ export async function GetNewTalentInfo() {
 }
 
 /******* 
- * @description: 从cache里获取玩家的修炼天赋加成信息
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<number>} 返回的修炼天赋加成信息 JSON对象
+ * @description: 获取玩家的修炼天赋加成
+ * @param {number} _uid 玩家id
+ * @return {Promise<number>} 修炼天赋加成
  */
 export async function GetTalentBuff(_uid) {
-    const talentInfo = await GetTalentInfo(_uid);
-    return talentInfo?.buff;
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await getTalentInfo(_uid);
+        return talentInfo?.buff;
+    });
 }
 
 /******* 
- * @description: 从cache里获取玩家的灵根信息
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<[]>} 返回的灵根信息 JSON对象
+ * @description: 获取玩家的灵根信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<[]>} 灵根数组
  */
 export async function GetSpiritualRoot(_uid) {
-    const talentInfo = await GetTalentInfo(_uid);
-    return talentInfo?.spiritualRoot;
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await getTalentInfo(_uid);
+        return talentInfo?.spiritualRoot;
+    });
 }
 
 /******* 
  * @description: 学习新功法
- * @param {string} _uid 玩家id
- * @param {*} _manual 功法对象
+ * @param {number} _uid 玩家id
+ * @param {any} _manual 功法对象
  * @return {Promise<boolean>} 返回是否学习成功 true->学习成功
  */
 export async function AddManual(_uid, _manual) {
-    const talentInfo = await GetTalentInfo(_uid);
-    const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await getTalentInfo(_uid);
+        const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
 
-    if (talentInfo.manualList.find(item => item.name == _manual.name) != undefined || talentInfo.manualList.length >= maxLearnNum) {
-        return false;
-    }
+        if (talentInfo.manualList.find(item => item.name == _manual.name) != undefined || talentInfo.manualList.length >= maxLearnNum) {
+            return false;
+        }
 
-    talentInfo.manualList.push({
-        name: _manual.name,
-        buff: _manual.size
+        talentInfo.manualList.push({
+            name: _manual.name,
+            buff: _manual.size
+        });
+
+        talentInfo.buff += _manual.size;
+        await setTalentInfo(_uid, talentInfo);
+        return true;
     });
-
-    talentInfo.buff += _manual.size;
-    await SetTalentInfo(_uid, talentInfo);
-    return true;
 }
 
 /******* 
  * @description: 忘掉功法
- * @param {string} _uid 玩家id
- * @param {*} _manualName 功法名
+ * @param {number} _uid 玩家id
+ * @param {any} _manualName 功法名
  * @return {Promise<boolean>} 返回是否忘掉成功 true->忘掉成功
  */
 export async function DelManual(_uid, _manualName) {
-    const talentInfo = await GetTalentInfo(_uid);
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await getTalentInfo(_uid);
 
-    const targetManual = talentInfo.manualList.find(item => item.name == _manualName);
-    if (targetManual == undefined) {
-        return false;
-    }
+        const targetManual = talentInfo.manualList.find(item => item.name == _manualName);
+        if (targetManual == undefined) {
+            return false;
+        }
 
-    talentInfo.manualList.splice(talentInfo.manualList.indexOf(targetManual), 1);
-    talentInfo.buff -= targetManual.buff;
-    await SetTalentInfo(_uid, talentInfo);
-    return true;
+        talentInfo.manualList.splice(talentInfo.manualList.indexOf(targetManual), 1);
+        talentInfo.buff -= targetManual.buff;
+        await setTalentInfo(_uid, talentInfo);
+        return true;
+    });
+}
+
+//#endregion
+
+//#region Set方法
+
+/******* 
+ * @description: 更新玩家天赋信息, 注意该方法会覆盖更新玩家天赋信息, 错误操作后果比较严重, 注意使用
+ * @param {number} _uid 玩家id
+ * @param {any} _talentInfo 玩家天赋信息
+ * @return 无返回值
+ */
+export async function SetTalent(_uid, _talentInfo) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        await setTalentInfo(_uid, _talentInfo);
+    });
 }
 
 /******* 
@@ -112,12 +130,12 @@ export async function DelManual(_uid, _manualName) {
  */
 export async function GenerateNewSpiritualRoot(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const talentInfo = await GetTalentInfo(_uid);
+        const talentInfo = await getTalentInfo(_uid);
 
         talentInfo.spiritualRoot = randSpiritualRoot();
         talentInfo.spiritualRootName = getSpiritualRootName(talentInfo.spiritualRoot);
         talentInfo.buff = getBuff(talentInfo.spiritualRoot, talentInfo.manualList);
-        await SetTalentInfo(_uid, talentInfo);
+        await setTalentInfo(_uid, talentInfo);
     });
 }
 
@@ -127,13 +145,36 @@ export async function GenerateNewSpiritualRoot(_uid) {
  * @param {boolean} _type 是否显示 true -> 显示
  * @return 无返回值
  */
- export async function SetTalentOnShow(_uid, _type) {
+export async function SetTalentOnShow(_uid, _type) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const talentInfo = await GetTalentInfo(_uid);
+        const talentInfo = await getTalentInfo(_uid);
 
         talentInfo.show = _type;
-        await SetTalentInfo(_uid, talentInfo);
+        await setTalentInfo(_uid, talentInfo);
     });
+}
+
+//#endregion
+
+//#region 内部方法
+
+/******* 
+ * @description: 获取玩家的天赋信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 天赋信息
+ */
+export async function getTalentInfo(_uid) {
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
+}
+
+/******* 
+ * @description: 更新玩家天赋信息, 并写入数据
+ * @param {number} _uid 玩家id
+ * @param {any} _talentInfo 玩家天赋信息
+ * @return 无返回值
+ */
+export async function setTalentInfo(_uid, _talentInfo) {
+    await SetInfo(_uid, _talentInfo, redisKey, path.join(PATH, `${_uid}.json`));
 }
 
 /**
@@ -176,3 +217,5 @@ function getBuff(_spRoot, _manualList) {
     _manualList.forEach(manual => buff += manual.buff);
     return buff;
 }
+
+//#endregion

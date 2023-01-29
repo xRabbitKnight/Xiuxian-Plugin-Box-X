@@ -4,7 +4,7 @@ import data from '../System/data.js'
 import { GetBattle } from '../Cache/player/Battle.js';
 import { GetEquipment } from '../Cache/player/Equipment.js';
 import { GetLevel } from '../Cache/player/Level.js';
-import { GetTalentInfo } from '../Cache/player/Talent.js';
+import { GetTalent } from '../Cache/player/Talent.js';
 import { GetLife } from '../Cache/player/Life.js';
 import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
 import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
@@ -41,7 +41,7 @@ export async function GetManualImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/manual/manual.css',
         uid: _uid,
-        talent: await GetTalentInfo(_uid),
+        talent: await GetTalent(_uid),
     });
 }
 
@@ -78,7 +78,7 @@ export async function GetPlayerInfoImage(_uid) {
         life: await GetLife(_uid),
         battle: await GetBattle(_uid),
         level: await GetLevel(_uid),
-        talent: await GetTalentInfo(_uid),
+        talent: await GetTalent(_uid),
         equipment: await GetEquipment(_uid),
     });
 }
