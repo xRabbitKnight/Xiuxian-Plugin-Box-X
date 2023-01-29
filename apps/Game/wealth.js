@@ -105,7 +105,7 @@ export default class wealth extends plugin {
 
         bpOp.AddSpiritStone(uid, count);
         whOp.AddSpiritStone(uid, -count);
-        e.reply(`操作完成！\n储物袋灵石:${bpSpStone + count}\n仓库灵石:${whSpStone - count}`);
+        e.reply(`操作完成！\n储物袋灵石：${bpSpStone + count}\n仓库灵石：${whSpStone - count}`);
     }
 
     AccessItem = async (e) => {

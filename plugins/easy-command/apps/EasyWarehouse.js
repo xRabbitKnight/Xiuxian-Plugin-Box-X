@@ -67,22 +67,20 @@ export default class EasyWarehouse extends plugin {
         let backpack = await bpOp.GetBackpack(e.user_id);
         let warehouse = await whOp.GetWarehouse(e.user_id);
 
-        let { included, excluded } = await filterItemsByName(itemName, '存' ? backpack.items : warehouse.items);
+        let { included, excluded } = await filterItemsByName(itemName, op == '存' ? backpack.items : warehouse.items);
 
         if (included.length < 1) {
             e.reply(`没有可以${op}的[${itemName}]`);
             return;
         }
 
-        if (op == '存') {
-            await whOp.AddItemsByObj(e.user_id, ...included);
-            included.forEach(item => { item.acount *= -1; });
-            bpOp.AddItemsByObj(e.user_id, ...included);
-        } else {
-            await bpOp.AddItemsByObj(e.user_id, ...included);
-            included.forEach(item => { item.acount *= -1; });
-            whOp.AddItemsByObj(e.user_id, ...included);
-        }
+		let minusIncluded = [];
+		included.forEach((item, index, self) => {
+			minusIncluded.push(Object.assign({}, item));
+			minusIncluded[index].acount *= -1;
+		});
+		bpOp.AddItemsByObj(e.user_id, ...(op == '存' ? minusIncluded : included));
+		whOp.AddItemsByObj(e.user_id, ...(op == '存' ? included : minusIncluded));
 
         let msgList = listItems(`共${op == '存' ? '存入' : '取出'}${included.length}种物品`, included);
         replyForwardMsg(e, msgList);
