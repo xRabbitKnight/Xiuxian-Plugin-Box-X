@@ -5,7 +5,7 @@ import { GetBattle } from '../Cache/player/Battle.js';
 import { GetEquipment } from '../Cache/player/Equipment.js';
 import { GetLevel } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
-import { GetLifeInfo } from '../Cache/player/Life.js';
+import { GetLife } from '../Cache/player/Life.js';
 import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
 import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
 import { GetSkillInfo } from '../Cache/player/Skill.js';
@@ -75,7 +75,7 @@ export async function GetPlayerInfoImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/player/player.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
+        life: await GetLife(_uid),
         battle: await GetBattle(_uid),
         level: await GetLevel(_uid),
         talent: await GetTalentInfo(_uid),
@@ -97,7 +97,7 @@ export async function GetBackpackImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/backpack/backpack.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
+        life: await GetLife(_uid),
         backpack: await GetBackpack(_uid)
     });
 }
@@ -116,7 +116,7 @@ export async function GetWarehouseImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/warehouse/warehouse.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
+        life: await GetLife(_uid),
         warehouse: await GetWarehouseInfo(_uid)
     });
 }
