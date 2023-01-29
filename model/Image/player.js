@@ -2,13 +2,14 @@ import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
 import data from '../System/data.js'
 import { GetBattle } from '../Cache/player/Battle.js';
-import { GetEquipmentInfo } from '../Cache/player/Equipment.js';
-import { GetLevelInfo } from '../Cache/player/Level.js';
-import { GetTalentInfo } from '../Cache/player/Talent.js';
-import { GetLifeInfo } from '../Cache/player/Life.js';
+import { GetEquipment } from '../Cache/player/Equipment.js';
+import { GetLevel } from '../Cache/player/Level.js';
+import { GetTalent } from '../Cache/player/Talent.js';
+import { GetLife } from '../Cache/player/Life.js';
+import { GetSkill } from '../Cache/player/Skill.js';
 import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
-import { GetWarehouseInfo, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
-import { GetSkillInfo } from '../Cache/player/Skill.js';
+import { GetWarehouse, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
+
 
 /******* 
  * @description: 获取玩家装备以及面板信息
@@ -24,7 +25,7 @@ export async function GetEquipmentImage(_uid) {
         cssPath: base.res + 'User/equipment/equipment.css',
         uid: _uid,
         battle: await GetBattle(_uid),
-        equipment: await GetEquipmentInfo(_uid),
+        equipment: await GetEquipment(_uid),
     });
 }
 
@@ -41,7 +42,7 @@ export async function GetManualImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/manual/manual.css',
         uid: _uid,
-        talent: await GetTalentInfo(_uid),
+        talent: await GetTalent(_uid),
     });
 }
 
@@ -58,7 +59,7 @@ export async function GetSkillImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/skill/skill.css',
         uid: _uid,
-        skill: await GetSkillInfo(_uid),
+        skill: await GetSkill(_uid),
     });
 }
 
@@ -75,11 +76,11 @@ export async function GetPlayerInfoImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/player/player.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
+        life: await GetLife(_uid),
         battle: await GetBattle(_uid),
-        level: await GetLevelInfo(_uid),
-        talent: await GetTalentInfo(_uid),
-        equipment: await GetEquipmentInfo(_uid),
+        level: await GetLevel(_uid),
+        talent: await GetTalent(_uid),
+        equipment: await GetEquipment(_uid),
     });
 }
 
@@ -97,7 +98,7 @@ export async function GetBackpackImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/backpack/backpack.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
+        life: await GetLife(_uid),
         backpack: await GetBackpack(_uid)
     });
 }
@@ -116,8 +117,8 @@ export async function GetWarehouseImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/warehouse/warehouse.css',
         uid: _uid,
-        life: await GetLifeInfo(_uid),
-        warehouse: await GetWarehouseInfo(_uid)
+        life: await GetLife(_uid),
+        warehouse: await GetWarehouse(_uid)
     });
 }
 
@@ -135,7 +136,7 @@ export async function GetLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '练气境界',
         list: data.levelList,
-        level: (await GetLevelInfo(_uid)).level
+        level: (await GetLevel(_uid)).level
     });
 }
 
@@ -153,6 +154,6 @@ export async function GetBodyLevelImage(_uid) {
         cssPath: base.res + 'state/state.css',
         name: '炼体境界',
         list: data.bodyLevelList,
-        level: (await GetLevelInfo(_uid)).bodyLevel
+        level: (await GetLevel(_uid)).bodyLevel
     });
 }

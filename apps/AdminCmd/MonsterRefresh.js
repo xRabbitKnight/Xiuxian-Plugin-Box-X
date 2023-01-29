@@ -1,15 +1,16 @@
 import plugin from "../../../../lib/plugins/plugin.js";
-import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Battle.js";
-import { GetLevelInfo } from "../../model/Cache/player/Level.js";
-import { forceNumber } from "../../model/util/math.js";
 import data from "../../model/System/data.js";
+import MonsterMgr from "../../model/Monster/mgr.js";
+import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Battle.js";
+import { GetLevel } from "../../model/Cache/player/Level.js";
+import { forceNumber } from "../../model/util/math.js";
 import { RefreshBoss } from "../../model/Monster/refresh.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
-import { GetSpiritualRoot, GetTalentInfo, SetTalentInfo } from "../../model/Cache/player/Talent.js";
-import { GetAllSkill, SetSkillInfo } from "../../model/Cache/player/Skill.js";
+import { GetSpiritualRoot, GetTalent, SetTalent } from "../../model/Cache/player/Talent.js";
+import { GetAllSkill, SetSkill } from "../../model/Cache/player/Skill.js";
 import { GetItemByName } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
-import MonsterMgr from "../../model/Monster/mgr.js";
+
 
 
 export default class MonsterRefresh extends plugin {
@@ -62,7 +63,7 @@ export default class MonsterRefresh extends plugin {
         const players = await GetAllUid();
         players.forEach(async (player) => {
             const battleInfo = await GetBattle(player);
-            const levelInfo = await GetLevelInfo(player);
+            const levelInfo = await GetLevel(player);
             if (battleInfo == undefined || levelInfo == undefined) return;
 
             Object.keys(battleInfo.base).forEach(attr => {
@@ -77,7 +78,7 @@ export default class MonsterRefresh extends plugin {
     refreshPlayerManual = async () => {
         const players = await GetAllUid();
         players.forEach(async (player) => {
-            const talentInfo = await GetTalentInfo(player);
+            const talentInfo = await GetTalent(player);
             if (talentInfo == undefined) return;
 
             const newManual = [];
@@ -88,7 +89,7 @@ export default class MonsterRefresh extends plugin {
                 })
             })
             talentInfo.manualList = newManual;
-            SetTalentInfo(player, talentInfo);
+            SetTalent(player, talentInfo);
         });
     }
 
@@ -98,7 +99,7 @@ export default class MonsterRefresh extends plugin {
             const spiritualRoots = await GetSpiritualRoot(player);
             const skills = await GetAllSkill(player);
 
-            for(let sk of skills){
+            for (let sk of skills) {
                 const skill = await GetItemByName(`技能书：${sk.name}`, 1);
                 let power = skill.power;
                 //每多一种符合属性的灵根 +20倍率， 多一种不合属性的 -10倍率
@@ -109,8 +110,8 @@ export default class MonsterRefresh extends plugin {
                 sk.power = power;
             }
 
-            const obj = {skillList : skills};
-            SetSkillInfo(player, obj);
+            const obj = { skillList: skills };
+            SetSkill(player, obj);
             WriteAsync(`${data.__gameDataPath.skill}/${player}.json`, JSON.stringify(obj));
         });
     }

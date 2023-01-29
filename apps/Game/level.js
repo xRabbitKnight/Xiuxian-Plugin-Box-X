@@ -7,7 +7,7 @@ import config from '../../model/System/config.js';
 import * as CD from '../../model/CD/Action.js';
 import { segment } from 'oicq';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { AddExp, AddBodyExp, GetLevelInfo, SetLevelInfo } from '../../model/Cache/player/Level.js';
+import { AddExp, AddBodyExp, GetLevel, SetLevel } from '../../model/Cache/player/Level.js';
 import { AddPowerByLevelUp, AddBloodToPercent } from '../../model/Cache/player/Battle.js';
 import { AddLife } from '../../model/Cache/player/Life.js';
 import { GetTalentBuff } from '../../model/Cache/player/Talent.js';
@@ -96,7 +96,7 @@ export default class level extends plugin {
             return;
         }
 
-        const player = await GetLevelInfo(e.user_id);
+        const player = await GetLevel(e.user_id);
 
         if (player.level >= 10) {
             e.reply('您已经到达巅峰！');
@@ -128,7 +128,7 @@ export default class level extends plugin {
         player.levelName = list[player.level - 1].name;
 
 
-        SetLevelInfo(e.user_id, player);
+        SetLevel(e.user_id, player);
         e.reply(`突破成功至${player.levelName}${RankName[player.rank]}！`);
 
         //大境界突破，更新面板，增加寿命
@@ -186,7 +186,7 @@ export default class level extends plugin {
             return;
         }
 
-        const player = await GetLevelInfo(e.user_id);
+        const player = await GetLevel(e.user_id);
 
         if (player.bodyLevel >= 10) {
             e.reply('您已经到达巅峰！');
@@ -217,7 +217,7 @@ export default class level extends plugin {
 
         player.bodyLevelName = list[player.bodyLevel - 1].name;
 
-        SetLevelInfo(e.user_id, player);
+        SetLevel(e.user_id, player);
         e.reply(`突破成功至${player.bodyLevelName}${RankName[player.bodyRank]}`);
 
         //大境界突破，更新面板

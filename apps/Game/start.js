@@ -10,12 +10,12 @@ import { IsNew, RegNew, SetAction } from '../../model/Cache/player/Action.js';
 import { GetItemByName } from '../../model/Cache/item/Item.js';
 import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
 import { GetNewBattle, SetBattle } from '../../model/Cache/player/Battle.js';
-import { SetEquipmentInfo } from '../../model/Cache/player/Equipment.js';
-import { SetLevelInfo } from '../../model/Cache/player/Level.js';
-import { SetLifeInfo } from '../../model/Cache/player/Life.js';
-import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
-import { GetNewTalentInfo, SetTalentInfo } from '../../model/Cache/player/Talent.js';
-import { SetWarehouseInfo } from '../../model/Cache/player/Warehouse.js';
+import { SetEquipment } from '../../model/Cache/player/Equipment.js';
+import { SetLevel } from '../../model/Cache/player/Level.js';
+import { SetLife } from '../../model/Cache/player/Life.js';
+import { SetSkill } from '../../model/Cache/player/Skill.js';
+import { GetNewTalent, SetTalent } from '../../model/Cache/player/Talent.js';
+import { SetWarehouse } from '../../model/Cache/player/Warehouse.js';
 import { AddUid } from '../../model/Cache/player/players.js';
 import { rand } from '../../model/util/math.js';
 import { delRedisKeys } from '../../model/util/gameUtil.js';
@@ -87,19 +87,19 @@ export default class start extends plugin {
         //攻防属性相关, 生成
         await SetBattle(uid, await GetNewBattle());
         //装备相关
-        await SetEquipmentInfo(uid, newPlayer.equipment);
+        await SetEquipment(uid, newPlayer.equipment);
         //等级相关
-        await SetLevelInfo(uid, newPlayer.level);
+        await SetLevel(uid, newPlayer.level);
         //基础信息相关 部分信息生成
         newPlayer.life.name = e.sender.nickname;
         newPlayer.life.lifetime = rand(50, 100);
-        await SetLifeInfo(uid, newPlayer.life);
+        await SetLife(uid, newPlayer.life);
         //技能相关
-        await SetSkillInfo(uid, newPlayer.skill);
+        await SetSkill(uid, newPlayer.skill);
         //天赋相关 生成
-        await SetTalentInfo(uid, await GetNewTalentInfo());
+        await SetTalent(uid, await GetNewTalent());
         //仓库相关
-        await SetWarehouseInfo(uid, newPlayer.warehouse);
+        await SetWarehouse(uid, newPlayer.warehouse);
         //添加players
         await AddUid(uid);
 

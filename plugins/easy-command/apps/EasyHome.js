@@ -6,7 +6,7 @@ import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { clamp, forceNumber } from '../../../model/util/math.js';
 import { filterItemsByName, listItems } from '../model/utils.js';
-import { AddManual, DelManual, GetTalentInfo } from '../../../model/Cache/player/Talent.js';
+import { AddManual, DelManual, GetTalent } from '../../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../../model/Cache/player/Skill.js';
 
 export default class EasyHome extends plugin {
@@ -123,9 +123,9 @@ export default class EasyHome extends plugin {
         }
 
         if (type == '功法') {
-            var {learnStr, learnNum} = await learnManual(e.user_id, included);
+            var { learnStr, learnNum } = await learnManual(e.user_id, included);
         } else if (type == '技能书') {
-            var {learnStr, learnNum} = await learnSkill(e.user_id, included);
+            var { learnStr, learnNum } = await learnSkill(e.user_id, included);
         }
 
         if (learnNum == 0) {
@@ -169,7 +169,7 @@ function getRecoverPlan(recoverItems, V, minus = false) {
 
 async function learnManual(user_id, manualItems) {
     let maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
-    let talentInfo = await GetTalentInfo(user_id);
+    let talentInfo = await GetTalent(user_id);
 
     let manualList = [];
     talentInfo.manualList.forEach(manual => {
@@ -180,7 +180,7 @@ async function learnManual(user_id, manualItems) {
         });
     });
     manualItems.forEach((manual, index, self) => {
-    if (manualList.find(item => item.name == manual.name) == undefined) {
+        if (manualList.find(item => item.name == manual.name) == undefined) {
             manualList.push({
                 learned: false,
                 name: manual.name,
