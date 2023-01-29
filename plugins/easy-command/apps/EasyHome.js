@@ -201,7 +201,7 @@ async function learnManual(user_id, manualItems) {
         } else if (manualList.length - i <= maxLearnNum && !manual.learned) {
             await AddManual(user_id, manual)
             AddItemByObj(user_id, manualItems[manual.manualItemsIdx], -1);
-            learnStr += `\n学习功法『${manual.name} 』(${manual.size})`;
+            learnStr += `\n学习功法『${manual.name} 』(${manual.size}%)`;
             learnNum++;
         }
     }

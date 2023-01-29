@@ -5,10 +5,6 @@ import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
 import { filterItemsByName, listItems, mergeItems } from '../model/utils.js';
 
-/**
- * 快捷出售购买所有物品或者某个类别物品
- * 武器 护具 法宝 装备 恢复药 修为药 气血药 丹药 功法 技能书 全部物品 [物品名称]
- */
 export default class EasyTrade extends plugin {
     constructor() {
         super({
@@ -49,12 +45,12 @@ export default class EasyTrade extends plugin {
 
         let totalMoney = countMoney(included);
         
-        let overflow = false;
+        let isOverflow = false;
         if(!await CheckSpiritStone(e.user_id, totalMoney)){
             if (included.length > 1) {
-                overflow = true;
+                isOverflow = true;
             } else if (backpack.capacity - backpack.spiritStone < included[0].price) {
-                overflow = true;
+                isOverflow = true;
             } else {
                 let curNum = Math.floor((backpack.capacity - backpack.spiritStone) / included[0].price);
                 let maxNum = included[0].acount;
@@ -65,7 +61,7 @@ export default class EasyTrade extends plugin {
                 totalMoney = countMoney(included);
             }
         }
-        if (overflow) {
+        if (isOverflow) {
             e.reply(`[凡仙堂小二]\n储物袋灵石已满，装不下这么多灵石！`);
             return;
         }
@@ -103,12 +99,12 @@ export default class EasyTrade extends plugin {
         let cost = countMoney(included);
         let backpack = await GetBackpack(e.user_id);
         
-        let lack = false;
+        let isLack = false;
         if (backpack.spiritStone < cost) {
             if (included.length > 1) {
-                lack = true;
+                isLack = true;
             } else if (backpack.spiritStone < included[0].price) {
-                lack = true;
+                isLack = true;
             } else {
                 let curNum = Math.floor(backpack.spiritStone / included[0].price);
                 let maxNum = included[0].acount;
@@ -119,7 +115,7 @@ export default class EasyTrade extends plugin {
                 cost = countMoney(included);
             }
         }
-        if (lack) {
+        if (isLack) {
             e.reply(`[凡仙堂小二]\n灵石不足，买不了这些东西！`);
             return;
         }

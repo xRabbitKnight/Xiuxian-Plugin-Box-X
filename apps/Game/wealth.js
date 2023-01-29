@@ -87,12 +87,12 @@ export default class wealth extends plugin {
         }
 
         const bpSpStone = await bpOp.GetSpiritStoneCount(uid);
-        const whSpSone = await whOp.GetSpiritStoneCount(uid);
+        const whSpStone = await whOp.GetSpiritStoneCount(uid);
         const op = e.msg[1];
         let count = Math.max(1, forceNumber(e.msg.substr(4)));  //修正灵石数量至少为1
 
 
-        if (op == '存' ? bpSpStone < count : whSpSone < count) {
+        if (op == '存' ? bpSpStone < count : whSpStone < count) {
             e.reply('灵石不足!');
             return;
         }
@@ -105,7 +105,7 @@ export default class wealth extends plugin {
 
         bpOp.AddSpiritStone(uid, count);
         whOp.AddSpiritStone(uid, -count);
-        e.reply(`操作完成！储物袋灵石:${bpSpStone + count}, 仓库灵石:${whSpSone - count}`);
+        e.reply(`操作完成！储物袋灵石:${bpSpStone + count}, 仓库灵石:${whSpStone - count}`);
     }
 
     AccessItem = async (e) => {

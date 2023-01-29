@@ -75,6 +75,8 @@ async function getIdReg(name) {
 			return /^4-/;
 		case '功法':
 			return /^5-/;
+		case '道具':
+			return /^6-/;
 		case '技能书':
 			return /^7-/;
 		case '全部物品':
