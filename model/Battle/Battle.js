@@ -2,7 +2,7 @@ import MonsterMgr from "../Monster/mgr.js";
 import * as util from '../util/gameUtil.js';
 import { _1v1 as pve } from "./PVE.js";
 import { _1v1 as pvp } from './PVP.js';
-import { GetBattleInfo, SetNowblood } from "../Cache/player/Battle.js";
+import { GetBattle, SetNowblood } from "../Cache/player/Battle.js";
 
 /**
  * @description: PVE 1v1战斗
@@ -19,7 +19,7 @@ export async function PVE(_e, _monster, _msg) {
     const attacker = {
         uid: _e.user_id,
         name: _e.sender.nickname,
-        battleInfo: await GetBattleInfo(_e.user_id)
+        battleInfo: await GetBattle(_e.user_id)
     }
     const battleResult = await battleModel(attacker, _monster, _msg);
 
@@ -45,12 +45,12 @@ export async function PVP(_e, _targetId, _msg) {
     const attacker = {
         uid: _e.user_id,
         name: _e.sender.nickname,
-        battleInfo: await GetBattleInfo(_e.user_id)
+        battleInfo: await GetBattle(_e.user_id)
     }
     const target = {
         uid: _targetId,
         name: (await util.getQQInfo(Number(_targetId))).nickname,
-        battleInfo: await GetBattleInfo(_targetId)
+        battleInfo: await GetBattle(_targetId)
     }
     const battleResult = await battleModel(attacker, target, _msg);
 

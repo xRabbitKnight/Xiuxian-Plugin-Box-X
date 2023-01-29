@@ -1,5 +1,5 @@
 import plugin from "../../../../lib/plugins/plugin.js";
-import { GetBattleInfo, RefreshBattleInfo, SetBattleInfo } from "../../model/Cache/player/Battle.js";
+import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Battle.js";
 import { GetLevelInfo } from "../../model/Cache/player/Level.js";
 import { forceNumber } from "../../model/util/math.js";
 import data from "../../model/System/data.js";
@@ -61,7 +61,7 @@ export default class MonsterRefresh extends plugin {
     refreshPlayerBase = async () => {
         const players = await GetAllUid();
         players.forEach(async (player) => {
-            const battleInfo = await GetBattleInfo(player);
+            const battleInfo = await GetBattle(player);
             const levelInfo = await GetLevelInfo(player);
             if (battleInfo == undefined || levelInfo == undefined) return;
 
@@ -69,8 +69,8 @@ export default class MonsterRefresh extends plugin {
                 battleInfo.base[attr] = forceNumber(data.levelList[levelInfo.level - 1][attr]) + forceNumber(data.bodyLevelList[levelInfo.bodyLevel - 1][attr]);
             });
             battleInfo.nowblood = battleInfo.base.blood;
-            await SetBattleInfo(player, battleInfo);
-            RefreshBattleInfo(player);
+            await SetBattle(player, battleInfo);
+            RefreshBattle(player);
         });
     }
 

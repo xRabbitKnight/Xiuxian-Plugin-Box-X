@@ -10,32 +10,26 @@ const PATH = data.__gameDataPath.battle;
 
 const allAttrs = ['attack', 'defense', 'blood', 'burst', 'burstmax', 'speed'];
 
-/******* 
- * @description: 从cache里获取玩家的战斗面板信息
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @return {Promise<JSON>} 返回的BattleInfo JSON对象
- */
-export async function GetBattleInfo(_uid) {
-    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
-}
+//#region Get方法 
 
 /******* 
- * @description: 更新玩家战斗面板信息, 并写入数据
- * @param {string} _uid 玩家id, plugin参数e.user_id
- * @param {JSON} _battleInfo 玩家面板信息, 注意是JSON对象
- * @return 无返回值
+ * @description: 从cache里获取玩家的战斗面板信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 战斗面板信息
  */
-export async function SetBattleInfo(_uid, _battleInfo) {
-    await SetInfo(_uid, _battleInfo, redisKey, path.join(PATH, `${_uid}.json`));
+export async function GetBattle(_uid) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        return await getBattleInfo(_uid);
+    });
 }
 
 /**
  * @description: 获取一份新玩家战斗面板
- * @return {Promise<*>} battleInfo对象
+ * @return {Promise<any>} battleInfo对象
  */
-export async function GetNewBattleInfo(){
-    const battleInfo = { power : 0, base : {} };
-    for(let attr of allAttrs){
+export async function GetNewBattle() {
+    const battleInfo = { power: 0, base: {} };
+    for (let attr of allAttrs) {
         battleInfo.base[attr] = data.levelList[0][attr] + data.bodyLevelList[0][attr];
         battleInfo[attr] = battleInfo.base[attr];
         battleInfo.power += battleInfo[attr];
@@ -45,60 +39,90 @@ export async function GetNewBattleInfo(){
 }
 
 /*******
+ * @description: 获取玩家当前血量
+ * @param {number} _uid 玩家id
+ * @return {Promise<number>} 返回当前血量，获取失败时返回undefined
+ */
+ export async function GetNowBlood(_uid) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await getBattleInfo(_uid);
+        return battleInfo?.nowblood;
+    });
+}
+
+/*******
  * @description: 获取玩家移动速度
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回移动速度，获取失败时返回undefined
  */
 export async function GetSpeed(_uid) {
-    const battleInfo = await GetBattleInfo(_uid);
-    return battleInfo?.speed;
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const battleInfo = await getBattleInfo(_uid);
+        return battleInfo?.speed;
+    });
+}
+
+//#endregion
+
+//#region Set方法
+
+/******* 
+ * @description: 设置玩家战斗面板信息, 注意该方法会覆盖更新玩家战斗面板, 错误操作后果比较严重, 注意使用
+ * @param {number} _uid 玩家id
+ * @param {any} _battleInfo 玩家面板信息
+ * @return 无返回值
+ */
+export async function SetBattle(_uid, _battleInfo) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        await setBattleInfo(_uid, _battleInfo);
+    });
 }
 
 /**
- * @description: 设置玩家nowblood
- * @param {string} _uid 玩家id
- * @param {number} _num nowblood值
+ * @description: 设置玩家当前血量
+ * @param {number} _uid 玩家id
+ * @param {number} _nowblood 当前血量
  * @return 无返回
  */
- export async function SetNowblood(_uid, _num) {
+export async function SetNowblood(_uid, _nowblood) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
-        battleInfo.nowblood = clamp(forceNumber(_num), 0, battleInfo.blood);
-        await SetBattleInfo(_uid, battleInfo);
+        battleInfo.nowblood = clamp(forceNumber(_nowblood), 0, battleInfo.blood);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
 
 /**
  * @description: 血量回复到指定百分比
- * @param {string} _uid 玩家id
- * @param {number} _percent 回复到百分比
+ * @param {number} _uid 玩家id
+ * @param {number} _percent 目标百分比
  * @return 无返回
  */
 export async function AddBloodToPercent(_uid, _percent) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
         battleInfo.nowblood = Math.max(battleInfo.nowblood, Math.floor(battleInfo.blood * _percent * 0.01));
-        await SetBattleInfo(_uid, battleInfo);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
 
 /**
  * @description: 回复额外百分比血量
- * @param {string} _uid 玩家id 
- * @param {number} _percent 回复到百分比
+ * @param {number} _uid 玩家id 
+ * @param {number} _percent 额外百分比
  * @return 无返回
  */
 export async function AddPercentBlood(_uid, _percent) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
         battleInfo.nowblood = Math.min(battleInfo.blood, battleInfo.nowblood + Math.floor(battleInfo.blood * _percent * 0.01));
-        await SetBattleInfo(_uid, battleInfo);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
 
@@ -106,12 +130,13 @@ export async function AddPercentBlood(_uid, _percent) {
 /******* 
  * @description: 奇遇，增加基础属性
  * @param {number} _uid 玩家id
- * @param {*} _amount 属性对象 eg. { attack : 10 , defence : 10} 加10攻击10防御
+ * @param {*} _amount 属性对象
  * @return 无返回
+ * @example AddPowerByEvent(10000, {attack : 10, defence : 10}) //效果为玩家(id:10000) 加10基础攻击10基础防御
  */
 export async function AddPowerByEvent(_uid, _amount) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
         for (let attr of Object.keys(_amount)) {
@@ -119,50 +144,71 @@ export async function AddPowerByEvent(_uid, _amount) {
             battleInfo.base[attr] += forceNumber(_amount[attr]);
         }
         refresh(battleInfo, await GetEquipmentInfo(_uid));
-        await SetBattleInfo(_uid, battleInfo);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
 
 /******* 
  * @description: 突破升级，增加基础属性
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @param {[]} _levelList 等级列表 练气等级表或炼体等级表
  * @param {number} _level 当前等级
  * @return 无返回
  */
 export async function AddPowerByLevelUp(_uid, _levelList, _level) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
         allAttrs.forEach(attr => {
             battleInfo.base[attr] += forceNumber(_levelList[_level - 1][attr]) - forceNumber(_levelList[_level - 2][attr]);
         });
         refresh(battleInfo, await GetEquipmentInfo(_uid));
-        await SetBattleInfo(_uid, battleInfo);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
 
 /******* 
  * @description: 刷新战斗面板
- * @param {string} _uid 玩家id
+ * @param {number} _uid 玩家id
  * @return 无返回值
  */
-export async function RefreshBattleInfo(_uid) {
+export async function RefreshBattle(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
-        const battleInfo = await GetBattleInfo(_uid);
+        const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
         refresh(battleInfo, await GetEquipmentInfo(_uid))
-        await SetBattleInfo(_uid, battleInfo);
+        await setBattleInfo(_uid, battleInfo);
     });
 }
+//#endregion
 
+//#region 内部方法
+
+/******* 
+ * @description: 获取玩家的战斗面板信息
+ * @param {number} _uid 玩家id
+ * @return {Promise<any>} 战斗面板信息
+ */
+export async function getBattleInfo(_uid) {
+    return await GetInfo(_uid, redisKey, path.join(PATH, `${_uid}.json`));
+}
+
+/******* 
+ * @description: 设置玩家的战斗面板信息
+ * @param {number} _uid 玩家id
+ * @param {any} _battleInfo 玩家面板信息
+ * @return 无返回值
+ */
+export async function setBattleInfo(_uid, _battleInfo) {
+    await SetInfo(_uid, _battleInfo, redisKey, path.join(PATH, `${_uid}.json`));
+}
 
 /******* 
  * @description: 刷新面板
- * @param {*} battleInfo 需要刷新的对象战斗信息
- * @param {*} equipmentInfo 需要刷新的对象装备信息
+ * @param {any} battleInfo 目标的战斗信息
+ * @param {any} equipmentInfo 目标的装备信息
  * @return 无返回值
  */
 function refresh(battleInfo, equipmentInfo) {
@@ -181,3 +227,16 @@ function refresh(battleInfo, equipmentInfo) {
     battleInfo.power = 0;
     allAttrs.forEach(attr => battleInfo.power += battleInfo[attr]);
 }
+
+//#endregion
+
+
+
+
+
+
+
+
+
+
+

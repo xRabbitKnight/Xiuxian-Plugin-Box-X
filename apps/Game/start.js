@@ -9,7 +9,7 @@ import { IfAtSpot } from '../../model/Cache/place/Spot.js';
 import { IsNew, RegNew, SetAction } from '../../model/Cache/player/Action.js';
 import { GetItemByName } from '../../model/Cache/item/Item.js';
 import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
-import { GetNewBattleInfo, SetBattleInfo } from '../../model/Cache/player/Battle.js';
+import { GetNewBattle, SetBattle } from '../../model/Cache/player/Battle.js';
 import { SetEquipmentInfo } from '../../model/Cache/player/Equipment.js';
 import { SetLevelInfo } from '../../model/Cache/player/Level.js';
 import { SetLifeInfo } from '../../model/Cache/player/Life.js';
@@ -85,7 +85,7 @@ export default class start extends plugin {
         //背包相关
         await SetBackpack(uid, newPlayer.backpack);
         //攻防属性相关, 生成
-        await SetBattleInfo(uid, await GetNewBattleInfo());
+        await SetBattle(uid, await GetNewBattle());
         //装备相关
         await SetEquipmentInfo(uid, newPlayer.equipment);
         //等级相关

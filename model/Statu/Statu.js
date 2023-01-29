@@ -1,4 +1,4 @@
-import { GetBattleInfo } from "../Cache/player/Battle.js";
+import { GetNowBlood } from "../Cache/player/Battle.js";
 import { GetStatus } from "../Cache/player/Life.js";
 import { GetAllUid } from "../Cache/player/players.js";
 
@@ -65,7 +65,7 @@ async function moving(_e, _reply) {
  * @description: 检查血量是否充足
  */
 async function blood(_e, _reply) {
-    if ((await GetBattleInfo(_e.user_id)).nowblood <= 1) {
+    if ((await GetNowBlood(_e.user_id)) <= 1) {
         if (_reply) _e.reply("血量不足......");
         return false;
     }

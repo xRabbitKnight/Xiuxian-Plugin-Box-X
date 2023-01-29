@@ -1,6 +1,6 @@
 import config from '../../../model/System/config.js';
 import { AddItemByObj, AddItemsByObj, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
-import { AddPercentBlood, GetBattleInfo } from '../../../model/Cache/player/Battle.js';
+import { AddPercentBlood, GetBattle } from '../../../model/Cache/player/Battle.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
@@ -38,7 +38,7 @@ export default class EasyHome extends plugin {
     }
 
     easyQueryBlood = async (e) => {
-        const battleInfo = await GetBattleInfo(e.user_id);
+        const battleInfo = await GetBattle(e.user_id);
         const nowbloodPercent = Math.floor(battleInfo.nowblood / battleInfo.blood * 100);
         e.reply(`当前血量 [${nowbloodPercent}%]:\n ${battleInfo.nowblood} / ${battleInfo.blood}`);
     }

@@ -1,7 +1,7 @@
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
 import data from '../System/data.js'
-import { GetBattleInfo } from '../Cache/player/Battle.js';
+import { GetBattle } from '../Cache/player/Battle.js';
 import { GetEquipmentInfo } from '../Cache/player/Equipment.js';
 import { GetLevelInfo } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
@@ -23,7 +23,7 @@ export async function GetEquipmentImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/equipment/equipment.css',
         uid: _uid,
-        battle: await GetBattleInfo(_uid),
+        battle: await GetBattle(_uid),
         equipment: await GetEquipmentInfo(_uid),
     });
 }
@@ -76,7 +76,7 @@ export async function GetPlayerInfoImage(_uid) {
         cssPath: base.res + 'User/player/player.css',
         uid: _uid,
         life: await GetLifeInfo(_uid),
-        battle: await GetBattleInfo(_uid),
+        battle: await GetBattle(_uid),
         level: await GetLevelInfo(_uid),
         talent: await GetTalentInfo(_uid),
         equipment: await GetEquipmentInfo(_uid),
