@@ -66,7 +66,7 @@ export async function GetStatus(_uid) {
  * @param {any} _lifeInfo 玩家生涯信息
  * @return 无返回值
  */
-export async function setLifeInfo(_uid, _lifeInfo) {
+export async function SetLife(_uid, _lifeInfo) {
     lock(`${redisKey}:${_uid}`, async () => {
         await setLifeInfo(_uid, _lifeInfo);
     });

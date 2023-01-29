@@ -1,5 +1,6 @@
 import data from '../../System/data.js';
 import path from 'path';
+import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { GetSpiritualRoot } from './Talent.js';
 

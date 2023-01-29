@@ -60,7 +60,7 @@ export async function DelEquipment(_uid, _equipmentName) {
  * @param {any} _equipmentInfo 玩家装备信息
  * @return 无返回值
  */
-export async function setEquipmentInfo(_uid, _equipmentInfo) {
+export async function SetEquipment(_uid, _equipmentInfo) {
     lock(`${redisKey}:${_uid}`, async () => {
         await setEquipmentInfo(_uid, _equipmentInfo);
     });
