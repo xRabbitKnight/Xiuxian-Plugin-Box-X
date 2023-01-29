@@ -2,11 +2,12 @@
  * @described : 玩家学习功法、技能
  */
 
+import * as CD from '../../model/CD/Action.js'
 import { AddPercentBlood } from '../../model/Cache/player/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
 import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
-import { AddManual, DelManual } from '../../model/Cache/player/Talent.js';
+import { AddManual, AddManualBuff, DelManual } from '../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
 import { clamp, forceNumber } from '../../model/util/math.js';
 import { GetItemReg } from '../../model/Cache/item/Item.js';
@@ -44,6 +45,10 @@ export default class learn extends plugin {
                 {
                     reg: '^#忘掉功法.*$',
                     fnc: 'ForgetManual'
+                },
+                {
+                    reg: '^#钻研功法.*$',
+                    fnc: 'PlumbManual'
                 }
             ]
         })
@@ -177,7 +182,7 @@ export default class learn extends plugin {
         }
 
         AddItemByObj(e.user_id, manual, -1);
-        e.reply(`学习${name}`);
+        e.reply(`学习功法『${name} 』！`);
     }
 
     ForgetManual = async (e) => {
@@ -187,10 +192,29 @@ export default class learn extends plugin {
 
         const name = e.msg.replace('#忘掉功法', '');
         if (!await DelManual(e.user_id, name)) {
-            e.reply(`没学过${name}`);
+            e.reply(`没学过功法『${name} 』`);
             return;
         }
 
-        e.reply(`忘了${name}`);
+        e.reply(`忘了功法『${name} 』.`);
+    }
+
+    PlumbManual = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
+            return;
+        }
+
+        if (await CD.IfActionInCD(e.user_id, 'plumbManual', e.reply)) {
+            return;
+        }
+
+        const name = e.msg.replace('#钻研功法', '');
+        if (!await AddManualBuff(e.user_id, name)) {
+            e.reply(`没学过功法『${name} 』`);
+            return;
+        }
+
+        CD.AddActionCD(e.user_id, 'plumbManual');
+        e.reply(`钻研功法『${name} 』成功！`);
     }
 }

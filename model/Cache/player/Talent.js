@@ -76,7 +76,8 @@ export async function AddManual(_uid, _manual) {
 
         talentInfo.manualList.push({
             name: _manual.name,
-            buff: _manual.size
+            buff: _manual.size,
+            maxBuff: Math.floor(_manual.size * 1.5),
         });
 
         talentInfo.buff += _manual.size;
@@ -102,6 +103,30 @@ export async function DelManual(_uid, _manualName) {
 
         talentInfo.manualList.splice(talentInfo.manualList.indexOf(targetManual), 1);
         talentInfo.buff -= targetManual.buff;
+        await setTalentInfo(_uid, talentInfo);
+        return true;
+    });
+}
+
+/******* 
+ * @description: 钻研功法, 增加功法效率
+ * @param {number} _uid 玩家id
+ * @param {any} _manualName 功法名
+ * @return {Promise<boolean>} 返回是否钻研成功 true->忘掉成功
+ */
+ export async function AddManualBuff(_uid, _manualName) {
+    return lock(`${redisKey}:${_uid}`, async () => {
+        const talentInfo = await getTalentInfo(_uid);
+
+        const targetManual = talentInfo.manualList.find(item => item.name == _manualName);
+        if (targetManual == undefined) {
+            return false;
+        }
+
+        talentInfo.buff -= targetManual.buff;
+        targetManual.buff = Math.min(targetManual.maxBuff, Math.floor(targetManual.buff * 1.05));
+        talentInfo.buff += targetManual.buff;
+        
         await setTalentInfo(_uid, talentInfo);
         return true;
     });
