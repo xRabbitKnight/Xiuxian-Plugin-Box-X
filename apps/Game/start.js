@@ -10,7 +10,7 @@ import { IsNew, RegNew, SetAction } from '../../model/Cache/player/Action.js';
 import { GetItemByName } from '../../model/Cache/item/Item.js';
 import { AddItemByObj, AddSpiritStone, SetBackpack } from '../../model/Cache/player/Backpack.js';
 import { GetNewBattle, SetBattle } from '../../model/Cache/player/Battle.js';
-import { SetEquipmentInfo } from '../../model/Cache/player/Equipment.js';
+import { SetEquipment } from '../../model/Cache/player/Equipment.js';
 import { SetLevelInfo } from '../../model/Cache/player/Level.js';
 import { SetLifeInfo } from '../../model/Cache/player/Life.js';
 import { SetSkillInfo } from '../../model/Cache/player/Skill.js';
@@ -87,7 +87,7 @@ export default class start extends plugin {
         //攻防属性相关, 生成
         await SetBattle(uid, await GetNewBattle());
         //装备相关
-        await SetEquipmentInfo(uid, newPlayer.equipment);
+        await SetEquipment(uid, newPlayer.equipment);
         //等级相关
         await SetLevelInfo(uid, newPlayer.level);
         //基础信息相关 部分信息生成

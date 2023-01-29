@@ -2,7 +2,7 @@ import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
 import { clamp, forceNumber } from '../../util/math.js';
-import { GetEquipmentInfo } from './Equipment.js';
+import { GetEquipment } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.battle;
@@ -143,7 +143,7 @@ export async function AddPowerByEvent(_uid, _amount) {
             if (!allAttrs.includes(attr)) continue;
             battleInfo.base[attr] += forceNumber(_amount[attr]);
         }
-        refresh(battleInfo, await GetEquipmentInfo(_uid));
+        refresh(battleInfo, await GetEquipment(_uid));
         await setBattleInfo(_uid, battleInfo);
     });
 }
@@ -163,7 +163,7 @@ export async function AddPowerByLevelUp(_uid, _levelList, _level) {
         allAttrs.forEach(attr => {
             battleInfo.base[attr] += forceNumber(_levelList[_level - 1][attr]) - forceNumber(_levelList[_level - 2][attr]);
         });
-        refresh(battleInfo, await GetEquipmentInfo(_uid));
+        refresh(battleInfo, await GetEquipment(_uid));
         await setBattleInfo(_uid, battleInfo);
     });
 }
@@ -178,7 +178,7 @@ export async function RefreshBattle(_uid) {
         const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
-        refresh(battleInfo, await GetEquipmentInfo(_uid))
+        refresh(battleInfo, await GetEquipment(_uid))
         await setBattleInfo(_uid, battleInfo);
     });
 }

@@ -2,7 +2,7 @@ import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
 import data from '../System/data.js'
 import { GetBattle } from '../Cache/player/Battle.js';
-import { GetEquipmentInfo } from '../Cache/player/Equipment.js';
+import { GetEquipment } from '../Cache/player/Equipment.js';
 import { GetLevelInfo } from '../Cache/player/Level.js';
 import { GetTalentInfo } from '../Cache/player/Talent.js';
 import { GetLifeInfo } from '../Cache/player/Life.js';
@@ -24,7 +24,7 @@ export async function GetEquipmentImage(_uid) {
         cssPath: base.res + 'User/equipment/equipment.css',
         uid: _uid,
         battle: await GetBattle(_uid),
-        equipment: await GetEquipmentInfo(_uid),
+        equipment: await GetEquipment(_uid),
     });
 }
 
@@ -79,7 +79,7 @@ export async function GetPlayerInfoImage(_uid) {
         battle: await GetBattle(_uid),
         level: await GetLevelInfo(_uid),
         talent: await GetTalentInfo(_uid),
-        equipment: await GetEquipmentInfo(_uid),
+        equipment: await GetEquipment(_uid),
     });
 }
 
