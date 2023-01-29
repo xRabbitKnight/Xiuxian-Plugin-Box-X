@@ -45,23 +45,18 @@ export default class EasyTrade extends plugin {
 
         let totalMoney = countMoney(included);
         
-        let isOverflow = false;
-        if(!await CheckSpiritStone(e.user_id, totalMoney)){
-            if (included.length > 1) {
-                isOverflow = true;
-            } else if (backpack.capacity - backpack.spiritStone < included[0].price) {
-                isOverflow = true;
-            } else {
-                let curNum = Math.floor((backpack.capacity - backpack.spiritStone) / included[0].price);
-                let maxNum = included[0].acount;
-                let backpackItem = Object.assign({}, included[0]);
-                included[0].acount = curNum;
-                backpackItem.acount = maxNum - curNum;
-                excluded.push(backpackItem);
-                totalMoney = countMoney(included);
-            }
-        }
-        if (isOverflow) {
+        let boolA = !await CheckSpiritStone(e.user_id, totalMoney);
+        let boolB = included.length == 1;
+        let boolC = backpack.capacity - backpack.spiritStone >= included[0].price;
+        if (boolA && boolB && boolC) {
+            let curNum = Math.floor((backpack.capacity - backpack.spiritStone) / included[0].price);
+            let maxNum = included[0].acount;
+            let backpackItem = Object.assign({}, included[0]);
+            included[0].acount = curNum;
+            backpackItem.acount = maxNum - curNum;
+            excluded.push(backpackItem);
+            totalMoney = countMoney(included);
+        } else if (boolA && !(boolB && boolC)) {
             e.reply(`[凡仙堂小二]\n储物袋灵石已满，装不下这么多灵石！`);
             return;
         }
@@ -99,23 +94,18 @@ export default class EasyTrade extends plugin {
         let cost = countMoney(included);
         let backpack = await GetBackpack(e.user_id);
         
-        let isLack = false;
-        if (backpack.spiritStone < cost) {
-            if (included.length > 1) {
-                isLack = true;
-            } else if (backpack.spiritStone < included[0].price) {
-                isLack = true;
-            } else {
-                let curNum = Math.floor(backpack.spiritStone / included[0].price);
-                let maxNum = included[0].acount;
-                let shopItem = Object.assign({}, included[0]);
-                included[0].acount = curNum;
-                shopItem.acount = maxNum - curNum;
-                excluded.push(shopItem);
-                cost = countMoney(included);
-            }
-        }
-        if (isLack) {
+        let boolA = backpack.spiritStone < cost;
+        let boolB = included.length == 1;
+        let boolC = backpack.spiritStone >= included[0].price;
+        if (boolA && boolB && boolC) {
+            let curNum = Math.floor(backpack.spiritStone / included[0].price);
+            let maxNum = included[0].acount;
+            let shopItem = Object.assign({}, included[0]);
+            included[0].acount = curNum;
+            shopItem.acount = maxNum - curNum;
+            excluded.push(shopItem);
+            cost = countMoney(included);
+        } else if (boolA && !(boolB && boolC)) {
             e.reply(`[凡仙堂小二]\n灵石不足，买不了这些东西！`);
             return;
         }

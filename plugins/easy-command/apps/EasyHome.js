@@ -197,11 +197,11 @@ async function learnManual(user_id, manualItems) {
         let manual = manualList[i];
         if (manualList.length - i > maxLearnNum && manual.learned) {
             await DelManual(user_id, manual.name);
-            learnStr += `\n忘掉功法『${manual.name}』(${manual.size})`;
+            learnStr += `\n忘掉功法『${manual.name}』(${manual.size}%)`;
         } else if (manualList.length - i <= maxLearnNum && !manual.learned) {
             await AddManual(user_id, manual)
             AddItemByObj(user_id, manualItems[manual.manualItemsIdx], -1);
-            learnStr += `\n学习功法『${manual.name} 』(${manual.size}%)`;
+            learnStr += `\n学习功法『${manual.name}』(${manual.size}%)`;
             learnNum++;
         }
     }
