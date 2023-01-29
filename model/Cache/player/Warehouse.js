@@ -97,6 +97,22 @@ export async function AddItemByObj(_uid, _item, _count) {
 }
 
 /******* 
+ * @description: 批量添加物品进仓库
+ * @param {number} _uid 玩家id
+ * @param {array} _items 物品数组
+ * @return 无返回值
+ */
+export async function AddItemsByObj(_uid, ..._items) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const warehouseInfo = await getWarehouseInfo(_uid);
+        if (warehouseInfo == undefined) return;
+
+        _items.forEach(item => addVaild(warehouseInfo, item));
+        await setWarehouseInfo(_uid, warehouseInfo);
+    });
+}
+
+/******* 
  * @description: 背包物品排序
  * @param {number} _uid 玩家id
  * @return 无返回值
