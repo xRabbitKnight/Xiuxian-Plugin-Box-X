@@ -7,6 +7,7 @@
     }
  -----------------------------------------------**/
 
+import { RefreshSkill } from "../Cache/player/Skill.js";
 import { GenerateNewSpiritualRoot, SetTalentOnShow } from "../Cache/player/Talent.js";
 
 export async function 望灵珠(_uid, _msg) {
@@ -14,7 +15,8 @@ export async function 望灵珠(_uid, _msg) {
     SetTalentOnShow(_uid, true);
 }
 
-export async function 洗根水(_uid) {
+export async function 洗根水(_uid, _msg) {
     _msg.push('一股神秘的力量冲刷过你的身体，你的天赋似乎发生了一些变化！');
     GenerateNewSpiritualRoot(_uid);
+    RefreshSkill(_uid);
 }

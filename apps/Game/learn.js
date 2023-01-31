@@ -112,7 +112,10 @@ export default class learn extends plugin {
         for (let i = 0; i < count; ++i) {
             if (await UseProp(name, e.user_id, msg)) {
                 msg.push(`道具${name}使用成功.`);
+                continue;
             }
+            //使用失败，发生错误
+            return;
         }
 
         replyForwardMsg(e, msg);
