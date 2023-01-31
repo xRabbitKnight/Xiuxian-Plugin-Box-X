@@ -18,11 +18,13 @@ export default class Monster {
      */
     constructor(data) {
         /** 怪物等级 */
-        this.level = data.level || rand(1, MonsterLevelName.length + 1);
+        this.level = data.level != undefined ? 
+                     clamp(forceNumber(data.level), 1, MonsterLevelName.length) : 
+                     rand(1, MonsterLevelName.length + 1);
         /** 怪物名 */
         this.name = data.name || MonsterName[rand(0, MonsterName.length)] + MonsterLevelName[this.level - 1];
         /** 怪物战斗面板信息 */
-        this.battleInfo = data.battleInfo || generateMonsterBattleInfo(clamp(forceNumber(this.level), 1, MonsterLevelName.length));
+        this.battleInfo = data.battleInfo || generateMonsterBattleInfo(this.level);
         /** 怪物掉落标签 */
         this.dropTip = data.dropTip || 'normal';
         /** 怪物添加时事件 */
