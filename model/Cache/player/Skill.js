@@ -3,6 +3,7 @@ import path from 'path';
 import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { GetSpiritualRoot } from './Talent.js';
+import { GetItemByName } from '../item/Item.js';
 
 const redisKey = data.__gameDataKey.skill;
 const PATH = data.__gameDataPath.skill;
@@ -49,8 +50,9 @@ export async function AddSkill(_uid, _skillBook) {
 
         skillInfo.skillList.push({
             name: name,
-            power: await getSkillPower(_uid, _skillBook)
+            power: getSkillPower(_skillBook, await GetSpiritualRoot(_uid))
         });
+
         await setSkillInfo(_uid, skillInfo);
         return true;
     });
@@ -94,6 +96,31 @@ export async function SetSkill(_uid, _skillInfo) {
     });
 }
 
+/******* 
+ * @description: 刷新玩家所有技能倍率
+ * @param {number} _uid 玩家id
+ * @return 无返回值
+ */
+export async function RefreshSkill(_uid) {
+    lock(`${redisKey}:${_uid}`, async () => {
+        const skillInfo = await getSkillInfo(_uid);
+        const spRoots = await GetSpiritualRoot(_uid);
+        if (skillInfo == undefined || spRoots == undefined) return;
+
+        for (let skill of skillInfo.skillList) {
+            const skillBook = await GetItemByName(`技能书：${skill.name}`, 1);
+            if (skillBook == undefined) {
+                logger.error(`更新技能${skill.name}失败!`);
+                continue;
+            }
+
+            skill.power = getSkillPower(skillBook, spRoots);
+        }
+
+        await setSkillInfo(_uid, skillInfo);
+    });
+}
+
 //#endregion
 
 //#region 内部方法
@@ -119,18 +146,17 @@ export async function setSkillInfo(_uid, _skillInfo) {
 
 /******* 
  * @description: 根据玩家灵根以及对应技能计算玩家该技能倍率
- * @param {number} _uid 玩家id
  * @param {any} _skillBook 技能书对象
- * @return {Promise<number>} 技能倍率
+ * @param {any} _spRoots 玩家灵根信息
+ * @return {number} 技能倍率
  */
-async function getSkillPower(_uid, _skill) {
+function getSkillPower(_skillBook, _spRoots) {
     //基础倍率
-    let power = _skill.power;
+    let power = _skillBook.power;
 
     //每多一种符合属性的灵根 +20倍率， 多一种不合属性的 -10倍率
-    const spiritualRoots = await GetSpiritualRoot(_uid);
-    spiritualRoots.forEach(spiritualRoot => {
-        const result = _skill.spiritualRoot.find(root => spiritualRoot == root);
+    _spRoots.forEach(spRoot => {
+        const result = _skillBook.spiritualRoot.find(root => spRoot == root);
         power += (result == undefined ? -10 : 20);
     });
 
