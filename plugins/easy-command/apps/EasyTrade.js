@@ -1,5 +1,6 @@
+import MonsterMgr from '../../../model/Monster/mgr.js';
 import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
-import { CheckSpiritStone, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
+import { AddSpiritStone, CheckSpiritStone, GetBackpack, GetSpiritStoneCount, SetBackpack } from '../../../model/Cache/player/Backpack.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
@@ -20,6 +21,10 @@ export default class EasyTrade extends plugin {
                 {
                     reg: '^#快捷购买.+$',
                     fnc: 'easyBuy'
+                },
+                {
+                    reg: '^#小道消息$',
+                    fnc: 'easyAsk'
                 }
             ]
         })
@@ -121,6 +126,26 @@ export default class EasyTrade extends plugin {
             let msgList = listItems(`[凡仙堂小二]\n你花[${cost}]灵石购买了全部[${itemName}]`, included);
             replyForwardMsg(e, msgList);
         }
+    }
+
+    easyAsk = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.inAction)) {
+            return;
+        }
+        if (!await IfAtSpot(e.user_id, '凡仙堂')) {
+            e.reply(`凡仙堂有各种小道消息！前往花费1000灵石即可购买！`);
+            return;
+        }
+
+        let spStoneCount = GetSpiritStoneCount(e.user_id);
+        if (spStoneCount == undefined || spStoneCount < 1000) {
+            e.reply('你的灵石不足1000，无法购买小道消息！');
+            return;
+        }
+        let bossCount = MonsterMgr.BossCount ? MonsterMgr.BossCount : 0;
+
+        AddSpiritStone(e.user_id, -1000);
+        e.reply(`传言道，当今修仙界共有「${bossCount}」头不同寻常的上古凶兽！`);
     }
 }
 
