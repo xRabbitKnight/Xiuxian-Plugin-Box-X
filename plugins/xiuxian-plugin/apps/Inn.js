@@ -13,7 +13,7 @@ let msgCount = 4;
 /** 已经提供错误消息数 */
 let errorMsgCount = 0;
 /** 正确消息保底 */
-const MaxErrorMsgCount = 4;
+const MaxErrorMsgCount = 4 - 1;
 /** 消息正确概率(%) */
 const TrueMsgPercent = 50;
 
