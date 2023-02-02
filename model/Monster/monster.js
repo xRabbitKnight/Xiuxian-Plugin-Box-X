@@ -18,9 +18,9 @@ export default class Monster {
      */
     constructor(data) {
         /** 怪物等级 */
-        this.level = data.level != undefined ? 
-                     clamp(forceNumber(data.level), 1, MonsterLevelName.length) : 
-                     rand(1, MonsterLevelName.length + 1);
+        this.level = data.level != undefined ?
+            clamp(forceNumber(data.level), 1, MonsterLevelName.length) :
+            rand(1, MonsterLevelName.length + 1);
         /** 怪物名 */
         this.name = data.name || MonsterName[rand(0, MonsterName.length)] + MonsterLevelName[this.level - 1];
         /** 怪物战斗面板信息 */
@@ -29,7 +29,7 @@ export default class Monster {
         this.dropTip = data.dropTip || 'normal';
         /** 怪物添加时事件 */
         this.addEvent = data.addEvent || undefined;
-        /** 怪物等级 */
+        /** 怪物删除时事件 */
         this.delEvent = data.delEvent || undefined;
     }
 }

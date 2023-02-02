@@ -18,6 +18,8 @@ export default class MonsterMgr {
     static Init() {
         //补全所有地区怪物
         RefreshMonster();
+        /** 储存所有boss */
+        this.Boss = [];
     }
 
     /******* 

@@ -7,7 +7,8 @@ export default class Boss extends Monster {
         //先随便构造一个monster
         super({
             dropTip: 'boss',
-            delEvent: () => { MonsterMgr.BossCount -= 1; }
+            addEvent: () => { MonsterMgr.Boss.push(this); },
+            delEvent: () => { MonsterMgr.Boss.splice(MonsterMgr.Boss.indexOf(this), 1); }
         });
 
         //修改属性

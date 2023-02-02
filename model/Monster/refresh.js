@@ -2,7 +2,7 @@ import MonsterMgr from "./mgr.js"
 import Monster from "./monster.js";
 import Boss from "./boss.js";
 import { rand } from '../util/math.js';
-import { GetAllArea, GetAreaName } from '../Cache/place/Area.js';
+import { GetAllArea, GetRandArea } from '../Cache/place/Area.js';
 
 
 /******* 
@@ -24,12 +24,10 @@ export async function RefreshMonster() {
  */
 export async function RefreshBoss() {
     const MAX_BOSS_COUNT = 4;
-    if (MonsterMgr.BossCount == undefined) MonsterMgr.BossCount = 0;
-    if (MonsterMgr.BossCount >= MAX_BOSS_COUNT) return;
+    if (MonsterMgr.Boss.length >= MAX_BOSS_COUNT) return;
 
-    MonsterMgr.BossCount += 1;
-    const regions = await GetAllArea();
-    const targetRegionId = regions[rand(0, regions.length)].id.split("-")[1];
-    logger.info(await GetAreaName(targetRegionId));
+    const region = await GetRandArea();
+    const targetRegionId = region?.id.split("-")[1];
+    logger.info(region.name);
     MonsterMgr.AddMonster(targetRegionId, new Boss());
 }
