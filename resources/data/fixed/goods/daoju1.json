@@ -28,5 +28,20 @@
         "speed": 0,
         "acount": 0,
         "price": 5000
+    },
+    {
+        "id": "6-1-4",
+        "name": "寻灵尺",
+        "attack": 0,
+        "defense": 0,
+        "blood": 0,
+        "burst": 0,
+        "burstmax": 0,
+        "size": 0,
+        "experience": 0,
+        "experiencemax": 0,
+        "speed": 0,
+        "acount": 0,
+        "price": 8000
     }
 ]

@@ -55,12 +55,12 @@ export default class Inn extends plugin {
 
         const spStoneCount = await GetSpiritStoneCount(e.user_id);
         if (spStoneCount == undefined || spStoneCount < 1000) {
-            e.reply('这消息这么点灵石可买不到！');
+            e.reply('[小二] 客官，这消息多少得花1000灵石吧！');
             return;
         }
 
         AddSpiritStone(e.user_id, -1000);
-        e.reply(`传言道，当今修仙界共有「${MonsterMgr.Boss.length}」头不同寻常的上古凶兽！`);
+        e.reply(`[小二] 传言道，当今修仙界共有「${MonsterMgr.Boss.length}」头不同寻常的上古凶兽！`);
     }
 
     Ask = async (e) => {
@@ -74,13 +74,13 @@ export default class Inn extends plugin {
         }
 
         if (msgCount <= 0 || MonsterMgr.Boss.length <= 0) {
-            e.reply(`不好意思客官，小店目前没打听到什么消息.`);
+            e.reply(`[小二] 不好意思客官，小店目前没打听到什么消息。`);
             return;
         }
 
         const spStoneCount = await GetSpiritStoneCount(e.user_id);
         if (spStoneCount == undefined || spStoneCount < 2000) {
-            e.reply('这消息这么点灵石可买不到！');
+            e.reply('[小二] 客官，这消息多少得花2000灵石吧！');
             return;
         }
 
@@ -94,7 +94,7 @@ export default class Inn extends plugin {
         errorMsgCount = result ? 0 : errorMsgCount + 1;
         msgCount--;
 
-        e.reply(`小二\n 听闻${place}附近有奇怪的动静.`);
+        e.reply(`[小二] 听闻「${place}」附近有奇怪的动静....`);
     }
 
     GetMsg = async (e) => {

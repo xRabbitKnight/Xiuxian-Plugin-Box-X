@@ -1,6 +1,5 @@
 import plugin from "../../../../lib/plugins/plugin.js";
 import data from "../../model/System/data.js";
-import MonsterMgr from "../../model/Monster/mgr.js";
 import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Battle.js";
 import { GetLevel } from "../../model/Cache/player/Level.js";
 import { forceNumber } from "../../model/util/math.js";
@@ -40,11 +39,6 @@ export default class MonsterRefresh extends plugin {
                     reg: '^#刷新玩家技能列表$',
                     fnc: 'refreshPlayerSkill',
                     permission: 'master'
-                },
-                {
-                    reg: '^#查看boss数量$',
-                    fnc: 'getBossCount',
-                    permission: 'master'
                 }
 
             ]
@@ -53,10 +47,6 @@ export default class MonsterRefresh extends plugin {
 
     refreshBoss = async () => {
         RefreshBoss();
-    }
-
-    getBossCount = async () => {
-        logger.info(MonsterMgr.BossCount);
     }
 
     refreshPlayerBase = async () => {
