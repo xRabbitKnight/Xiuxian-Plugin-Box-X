@@ -26,20 +26,11 @@
       title: "#下架+编号"
       desc: "下架物品"  
 
-- group: 万宝楼
+- group: 有间客栈
   list:
     - icon: help-icon_44
-      title: "#一键出售所有"
-      desc: "出售储物袋里所有物品"  
-
-- group: 
-  list:
-    - icon: help-icon_60
-      title: "#至尊榜"
-      desc: "凡人战力榜(可私聊)"
-    - icon: help-icon_60
-      title: "#封神榜"
-      desc: "仙人战力榜(可私聊)"
-    - icon: help-icon_60
-      title: "#杀神榜"
-      desc: "罪恶魔力榜(可私聊)"
+      title: "#小道消息"
+      desc: "打听现存超级凶兽数量"  
+    - icon: help-icon_44
+      title: "#打听消息"
+      desc: "打听现存超级凶兽位置"  
