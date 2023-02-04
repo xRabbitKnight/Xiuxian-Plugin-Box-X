@@ -11,9 +11,10 @@ import { AddManual, AddManualBuff, DelManual } from '../../model/Cache/player/Ta
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
 import { clamp, forceNumber, rand } from '../../model/util/math.js';
 import { GetItemReg } from '../../model/Cache/item/Item.js';
-import { UseProp } from '../../model/Prop/base.js';
+import { UseProp } from '../../model/Items/Prop/base.js';
 import { replyForwardMsg } from '../../model/util/gameUtil.js';
 import { CheckSensitiveWord } from '../../model/util/sensitive.js';
+import { ConsumePellet } from '../../model/Items/Pellet/base.js';
 
 export default class learn extends plugin {
     constructor() {
@@ -73,24 +74,18 @@ export default class learn extends plugin {
             return;
         }
 
-        if (pellet.id[0] != '4') {
+        if (!GetItemReg('丹药')?.test(pellet.id)) {
             e.reply(`不可服用${name}`);
             return;
         }
 
-        if (pellet.id[2] == '1') {
-            AddPercentBlood(e.user_id, pellet.blood * count);
-            e.reply(`血量恢复${clamp(pellet.blood * count, 1, 100)}%`);
-        }
-        else if (pellet.id[2] == '2') {
-            AddExp(e.user_id, pellet.experience * count);
-            e.reply(`修为增加${pellet.experience * count}`);
-        }
-        else if (pellet.id[2] == '3') {
-            AddBodyExp(e.user_id, pellet.experiencemax * count);
-            e.reply(`气血增加${pellet.experiencemax * count}`);
+        const msg = [];
+        if (!await ConsumePellet(e.user_id, pellet, msg, count)) {
+            e.reply(`服用${name}失败！`);
+            return;
         }
 
+        replyForwardMsg(e, msg);
         AddItemByObj(e.user_id, pellet, -count);
     }
 
@@ -198,27 +193,27 @@ export default class learn extends plugin {
             return;
         }
 
-        if(await CD.IfActionInCD(e.user_id, 'createManual', e.reply)){
+        if (await CD.IfActionInCD(e.user_id, 'createManual', e.reply)) {
             return;
         }
 
         const levelInfo = await GetLevel(e.user_id);
         const expCost = 10000 * levelInfo.level;
 
-        if(expCost > levelInfo.exp){
+        if (expCost > levelInfo.exp) {
             e.reply(`修为不足，无法自创功法！`);
             return;
         }
- 
+
         const manualName = e.msg.replace('#自创功法', '');
-        if(CheckSensitiveWord(manualName)){
+        if (CheckSensitiveWord(manualName)) {
             e.reply(`请文明修仙！`);
             return;
         }
 
         const manual = {
-            name : manualName,
-            size : levelInfo.level * 10 + rand(0, 9)
+            name: manualName,
+            size: levelInfo.level * 10 + rand(0, 9)
         }
 
         if (!await AddManual(e.user_id, manual)) {

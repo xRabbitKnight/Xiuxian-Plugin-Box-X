@@ -9,8 +9,9 @@ import plugin from '../../../../lib/plugins/plugin.js'
 import fs from 'node:fs';
 import path from 'path';
 import data from './data.js';
-import PropMgr from '../Prop/mgr.js';
+import PropMgr from '../Items/Prop/mgr.js';
 import MonsterMgr from '../Monster/mgr.js';
+import PelletMgr from '../Items/Pellet/mgr.js';
 
 export default class GameMgr {
     constructor() {
@@ -26,10 +27,11 @@ export default class GameMgr {
         await pluginDataInit();
         data.SaveFixData();
         data.SaveCmdCfg();
-        
+
         //游戏内容部分
         MonsterMgr.Init()
         PropMgr.Init();
+        PelletMgr.Init();
         await pluginGameInit();
     }
 }
@@ -48,7 +50,7 @@ async function pluginDataInit() {
     }
 }
 
-async function pluginGameInit(){
+async function pluginGameInit() {
     const dir = path.join(data.__prePath, 'plugins');
 
     const plugins = fs.readdirSync(dir);

@@ -7,11 +7,11 @@
     }
  -----------------------------------------------**/
 
-import MonsterMgr from "../Monster/mgr.js";
-import { RefreshSkill } from "../Cache/player/Skill.js";
-import { GenerateNewSpiritualRoot, SetTalentOnShow } from "../Cache/player/Talent.js";
-import { GetAreaName } from "../Cache/place/Area.js";
-import { randItem } from "../util/commonUtil.js";
+import MonsterMgr from "../../Monster/mgr.js";
+import { RefreshSkill } from "../../Cache/player/Skill.js";
+import { GenerateNewSpiritualRoot, SetTalentOnShow } from "../../Cache/player/Talent.js";
+import { GetAreaName } from "../../Cache/place/Area.js";
+import { randItem } from "../../util/commonUtil.js";
 
 export async function 望灵珠(_uid, _targets, _msg) {
     _msg.push('透过神秘的玉珠，你观察到了自己的天赋！');
