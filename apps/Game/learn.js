@@ -6,13 +6,14 @@ import * as CD from '../../model/CD/Action.js'
 import { AddPercentBlood } from '../../model/Cache/player/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
-import { AddExp, AddBodyExp } from '../../model/Cache/player/Level.js';
+import { AddExp, AddBodyExp, GetLevel } from '../../model/Cache/player/Level.js';
 import { AddManual, AddManualBuff, DelManual } from '../../model/Cache/player/Talent.js';
 import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
-import { clamp, forceNumber } from '../../model/util/math.js';
+import { clamp, forceNumber, rand } from '../../model/util/math.js';
 import { GetItemReg } from '../../model/Cache/item/Item.js';
 import { UseProp } from '../../model/Prop/base.js';
 import { replyForwardMsg } from '../../model/util/gameUtil.js';
+import { CheckSensitiveWord } from '../../model/util/sensitive.js';
 
 export default class learn extends plugin {
     constructor() {
@@ -41,6 +42,10 @@ export default class learn extends plugin {
                 {
                     reg: '^#学习功法.*$',
                     fnc: 'LearnManual'
+                },
+                {
+                    reg: '^#自创功法.*$',
+                    fnc: 'CreateManual'
                 },
                 {
                     reg: '^#忘掉功法.*$',
@@ -103,7 +108,7 @@ export default class learn extends plugin {
             return;
         }
 
-        if (!GetItemReg('idReg', '道具')?.test(prop.id)) {
+        if (!GetItemReg('道具')?.test(prop.id)) {
             e.reply(`不可使用${name}`);
             return;
         }
@@ -134,7 +139,7 @@ export default class learn extends plugin {
             return;
         }
 
-        if (skillBook.id[0] != '7') {
+        if (!GetItemReg('技能书')?.test(skillBook.id)) {
             e.reply(`${name}不是技能书`);
             return;
         }
@@ -174,7 +179,7 @@ export default class learn extends plugin {
             return;
         }
 
-        if (manual.id[0] != '5') {
+        if (!GetItemReg('功法')?.test(manual.id)) {
             e.reply(`${name}不是功法`);
             return;
         }
@@ -186,6 +191,44 @@ export default class learn extends plugin {
 
         AddItemByObj(e.user_id, manual, -1);
         e.reply(`学习功法『${name} 』！`);
+    }
+
+    CreateManual = async (e) => {
+        if (!await CheckStatu(e, StatuLevel.alive)) {
+            return;
+        }
+
+        if(await CD.IfActionInCD(e.user_id, 'createManual', e.reply)){
+            return;
+        }
+
+        const levelInfo = await GetLevel(e.user_id);
+        const expCost = 10000 * levelInfo.level;
+
+        if(expCost > levelInfo.exp){
+            e.reply(`修为不足，无法自创功法！`);
+            return;
+        }
+ 
+        const manualName = e.msg.replace('#自创功法', '');
+        if(CheckSensitiveWord(manualName)){
+            e.reply(`请文明修仙！`);
+            return;
+        }
+
+        const manual = {
+            name : manualName,
+            size : levelInfo.level * 10 + rand(0, 9)
+        }
+
+        if (!await AddManual(e.user_id, manual)) {
+            e.reply('自创功法失败');
+            return;
+        }
+
+        AddExp(e.user_id, -expCost);
+        e.reply(`你成功自创功法『${manualName} 』！`);
+        CD.AddActionCD(e.user_id, 'createManual');
     }
 
     ForgetManual = async (e) => {

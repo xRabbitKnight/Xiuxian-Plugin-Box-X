@@ -16,6 +16,8 @@ action:
   kill: 3
   #钻研功法
   plumbManual: 480
+  #自创功法
+  createManual: 1440
 
 #玩家技能cd
 skill:

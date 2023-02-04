@@ -80,11 +80,11 @@ export async function GetItemByName(_name, _count) {
 
 /**
  * @description: 获取物品某属性某类别正则表达式，配置在config/game/items.yaml
- * @param {string} _type 物品属性正则名
  * @param {string} _name 类别名
+ * @param {string} _type 物品属性正则名 默认为'idReg', 即获取id正则
  * @return {RegExp} 成功获取返回正则表达式，未找到返回undefined
  */
- export function GetItemReg(_type, _name) {
+export function GetItemReg(_name, _type = 'idReg') {
     const regs = config.GetConfig(path.join('game', 'items.yaml'))[_type];
     if (regs == undefined || regs[_name] == undefined) {
         logger.warn(`${_name} 未定义正则表达式！`);
