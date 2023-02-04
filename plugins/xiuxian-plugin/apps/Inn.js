@@ -98,6 +98,7 @@ export default class Inn extends plugin {
     }
 
     GetMsg = async (e) => {
-        msgCount++;
+        const MaxMsg = 16;
+        if (msgCount < MaxMsg) msgCount++;
     }
 }
