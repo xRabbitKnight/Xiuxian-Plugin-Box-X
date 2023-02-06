@@ -6,42 +6,32 @@ import { rand, forceNumber } from '../../util/math.js';
 
 const redisKey = 'xiuxian:items';
 
-/** ***** 
- * @description: 从cache里所有物品信息, 若没有则读文件, 读文件失败返回undefined
- * @return {Promise<JSON>} 返回的对应信息 JSON对象 物品信息数组
- */
-export async function GetAll() {
-    let value = await redis.get(redisKey);
-    if (value == null) {
-        value = ReadSync(data.__gameDataPath.allItem);
-        if (value == undefined) return undefined;
-
-        redis.set(redisKey, value);
-    }
-    return JSON.parse(value);
-}
-
 /******* 
- * @description: 获取指定类型全部物品
- * @param {[]} _types 指定类型数组 见id数据头 1武器2护具3法宝4丹药5功法6道具7技能书
+ * @description: 获取指定类别全部物品
+ * @param {array} _names 指定类别数组 eg 武器,护具,法宝,丹药,功法,道具,技能书 详细类别参考config/game/items.yaml
  * @return {Promise<[]>} 物品数组，获取物品失败时返回undefined
  */
-export async function GetAllItem(_types) {
-    const items = await GetAll();
+export async function GetItems(..._names) {
+    const items = await getAll();
     if (items == undefined) return undefined;
 
-    return items.filter(item => undefined != _types.find(type => type == item.id.split('-')[0]));
+    let regs = [];
+    _names.forEach(name => regs.push(GetItemReg(name)?.source));
+    regs.filter(reg => reg != undefined);
+    const reg = RegExp(regs.join('|'));
+
+    return items.filter(item => reg.test(item.id));
 }
 
 /******* 
  * @description: 获取随机数量的物品
- * @param {string} _type 物品种类，见id数据头 1武器2护具3法宝4丹药5功法6道具7技能书
+ * @param {string} _type 物品种类，eg 武器,护具,法宝,丹药,功法,道具,技能书 详细类别参考config/game/items.yaml
  * @param {number} _count 需获取物品的数量, 不填默认为1
  * @param {number} _dropLevel 设置掉落等级，不填则全掉落
  * @return {Promise<[]>} 物品数组，获取物品失败时返回undefined
  */
 export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
-    let items = await GetAllItem([_type]);
+    let items = await GetItems(_type);
     if (items == undefined) return undefined;
     if (_dropLevel != undefined) items = items.filter(item => item.dropLevel <= _dropLevel);
 
@@ -68,7 +58,7 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
  * @return {Promise<any>} 对应物品
  */
 export async function GetItemByName(_name, _count) {
-    const items = await GetAll();
+    const items = await getAll();
     if (items == undefined) return undefined;
 
     const item = items.find(item => item.name == _name);
@@ -106,4 +96,19 @@ export function FilterItemByIdReg(_attr, _reg, _items) {
         _reg.test(item[_attr]) ? included.push(item) : excluded.push(item)
     );
     return { included, excluded };
+}
+
+/** ***** 
+ * @description: 从cache里所有物品信息, 若没有则读文件, 读文件失败返回undefined
+ * @return {Promise<JSON>} 返回的对应信息 JSON对象 物品信息数组
+ */
+ export async function getAll() {
+    let value = await redis.get(redisKey);
+    if (value == null) {
+        value = ReadSync(data.__gameDataPath.allItem);
+        if (value == undefined) return undefined;
+
+        redis.set(redisKey, value);
+    }
+    return JSON.parse(value);
 }
