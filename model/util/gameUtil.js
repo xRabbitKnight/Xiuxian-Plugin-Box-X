@@ -39,7 +39,13 @@ export function getAtUid(_e) {
  * @param {[]} _msg 消息数组
  * @return 无返回值
  */
-export async function replyForwardMsg(_e, _msg) {
+export async function replyForwardMsg(_e, _msg, limit = 2) {
+    //转发消息过短直接单条消息换行输出
+    if(_msg.length <= limit){
+        e.reply(_msg.join('\n'));
+        return;
+    }
+
     const msg = [];
     _msg.forEach(m => msg.push({
         user_id: Bot.uin,

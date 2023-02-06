@@ -4,7 +4,7 @@
 
 import Mint from 'mint-filter';
 
-const WordList = ['尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
+const WordList = ['脚本', '尼玛', '妈的', '他妈', '卧槽', '操', '操蛋', '麻痹', '傻逼', '妈逼'];
 const filter = new Mint.default(WordList);
 
 /******* 
