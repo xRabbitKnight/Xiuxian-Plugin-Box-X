@@ -139,7 +139,7 @@ export async function AddPowerByEvent(_uid, _amount) {
         const battleInfo = await getBattleInfo(_uid);
         if (battleInfo == undefined) return;
 
-        for (let attr of Object.keys(_amount)) {
+        for (let attr in _amount) {
             if (!allAttrs.includes(attr)) continue;
             battleInfo.base[attr] += forceNumber(_amount[attr]);
         }

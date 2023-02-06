@@ -2,7 +2,9 @@ import data from '../../System/data.js';
 import path from 'path';
 import config from "../../System/config.js";
 import { ReadSync } from '../../File/File.js';
-import { rand, forceNumber } from '../../util/math.js';
+import { forceNumber } from '../../util/math.js';
+import { cloneObj, randItem } from '../../util/commonUtil.js';
+import { mergeItems } from '../../util/gameUtil.js';
 
 const redisKey = 'xiuxian:items';
 
@@ -36,19 +38,10 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
     if (_dropLevel != undefined) items = items.filter(item => item.dropLevel <= _dropLevel);
 
     const ret = [];
-    for (let i = 0; i < _count; ++i) {
-        const item = items[rand(0, items.length)];
-        const target = ret.find(tmp => tmp.id == item.id);
+    for (let i = 0; i < _count; ++i)
+        ret.push(cloneObj(randItem(items)));
 
-        if (target != undefined) {
-            target.acount++;
-        }
-        else {
-            item.acount = 1;
-            ret.push(item);
-        }
-    }
-    return ret;
+    return mergeItems(...ret);
 }
 
 /******* 
@@ -102,7 +95,7 @@ export function FilterItemByIdReg(_attr, _reg, _items) {
  * @description: 从cache里所有物品信息, 若没有则读文件, 读文件失败返回undefined
  * @return {Promise<JSON>} 返回的对应信息 JSON对象 物品信息数组
  */
- export async function getAll() {
+export async function getAll() {
     let value = await redis.get(redisKey);
     if (value == null) {
         value = ReadSync(data.__gameDataPath.allItem);

@@ -30,3 +30,18 @@ export function randItem(_array) {
 
    return _array[rand(0, _array.length)];
 }
+
+/******* 
+ * @description: 深拷贝对象
+ * @param {*} _obj 待拷贝对象
+ * @return {*} 新对象
+ */
+export function cloneObj(_obj) {
+   const newObj = (_obj instanceof Array) ? [] : {};
+
+   for (var key in _obj) {
+      var val = _obj[key];
+      newObj[key] = (typeof val === 'object') ? cloneObj(val) : val;
+   }
+   return newObj;
+}

@@ -15,14 +15,16 @@ export default class PropMgr {
 
     /******* 
      * @description: 插件调用该方法将插件特有道具方法加入游戏，注意道具方法重名时会放弃加入
-     * @param {array} props 键值对数组 [propName, propFnc]，建议使用 import() 然后...解包 
+     * @param {array} lists {[propName, propFnc], ...}，建议使用 import()
      * @return {number} 返回成功添加方法个数
      */
-    static AddProp(...props) {
+    static AddProp(...lists) {
         let cnt = 0;
-        props.forEach(prop => {
-            if (PropMgr.props[Object.keys(prop)[0]] == undefined) {
-                Object.assign(PropMgr.props, prop);
+        lists.forEach(list => {
+            for(let key in list){
+                if (PropMgr.props[key] != undefined) continue;
+
+                PropMgr.props[key] = list[key];
                 cnt++;
             }
         });

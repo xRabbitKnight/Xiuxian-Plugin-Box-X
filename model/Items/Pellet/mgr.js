@@ -15,14 +15,16 @@ export default class PelletMgr {
 
     /******* 
      * @description: 插件调用该方法将插件特有丹药方法加入游戏，注意丹药方法重名时会放弃加入
-     * @param {array} pellet 键值对数组 [pelletName, pelletFnc]，建议使用 import() 然后...解包 
+     * @param {array} lists {[pelletName, pelletFnc], ...}，建议使用 import()
      * @return {number} 返回成功添加方法个数
      */
-    static AddPellet(...pellets) {
+    static AddPellet(...lists) {
         let cnt = 0;
-        pellets.forEach(pellet => {
-            if (PelletMgr.pellets[Object.keys(pellet)[0]] == undefined) {
-                Object.assign(PelletMgr.pellets, pellet);
+        lists.forEach(list => {
+            for(let key in list){
+                if (PelletMgr.pellets[key] != undefined) continue;
+
+                PelletMgr.pellets[key] = list[key];
                 cnt++;
             }
         });

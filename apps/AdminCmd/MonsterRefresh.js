@@ -56,9 +56,9 @@ export default class MonsterRefresh extends plugin {
             const levelInfo = await GetLevel(player);
             if (battleInfo == undefined || levelInfo == undefined) return;
 
-            Object.keys(battleInfo.base).forEach(attr => {
+            for(let attr in battleInfo.base){
                 battleInfo.base[attr] = forceNumber(data.levelList[levelInfo.level - 1][attr]) + forceNumber(data.bodyLevelList[levelInfo.bodyLevel - 1][attr]);
-            });
+            }
             battleInfo.nowblood = battleInfo.base.blood;
             await SetBattle(player, battleInfo);
             RefreshBattle(player);

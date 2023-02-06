@@ -23,6 +23,24 @@ export function compareByIdAsc(_id1, _id2) {
 }
 
 /******* 
+ * @description: 合并所有物品
+ * @param {array} items 所有物品
+ * @return {[]} 合并后的物品数组
+ */
+export function mergeItems(...items) {
+    const hash = {};
+    for (let item of items) {
+        if (hash[item.id] == undefined) {
+            hash[item.id] = item;
+            continue;
+        }
+
+        hash[item.id].acount += forceNumber(item.acount);
+    }
+    return Object.values(hash);
+}
+
+/******* 
  * @description: 解析消息并返回被at的uid（qq）, at多人只返回第一个at的uid
  * @param {*} _e plugin参数e
  * @return {number} uid号，解析失败返回undefined
@@ -41,7 +59,7 @@ export function getAtUid(_e) {
  */
 export async function replyForwardMsg(_e, _msg, limit = 2) {
     //转发消息过短直接单条消息换行输出
-    if(_msg.length <= limit){
+    if (_msg.length <= limit) {
         e.reply(_msg.join('\n'));
         return;
     }
