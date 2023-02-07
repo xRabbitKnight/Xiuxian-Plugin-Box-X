@@ -1,8 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { forceNumber } from '../../util/math.js';
-import { compareByIdAsc } from '../../util/gameUtil.js';
+import { forceNumber, compareByIdAsc } from '../../util';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.warehouse;
@@ -27,7 +26,7 @@ export async function GetWarehouse(_uid) {
  * @param {string} _itemName 物品名字
  * @return {Promise<any>} 若找到返回物品对象, 没找到返回undefined
  */
-export async function GetItemByName(_uid, _itemName) {
+export async function GetWarehouseItem(_uid, _itemName) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         return warehouseInfo?.items.find(item => item.name == _itemName);
@@ -39,7 +38,7 @@ export async function GetItemByName(_uid, _itemName) {
  * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
  */
-export async function GetSpiritStoneCount(_uid) {
+export async function GetWarehouseSpiritStoneCount(_uid) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         return warehouseInfo?.spiritStone;
@@ -68,7 +67,7 @@ export async function SetWarehouse(_uid, _warehouseInfo) {
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
-export async function AddSpiritStone(_uid, _count) {
+export async function AddSpiritStoneToWarehouse(_uid, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
@@ -85,7 +84,7 @@ export async function AddSpiritStone(_uid, _count) {
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
-export async function AddItemByObj(_uid, _item, _count) {
+export async function AddItemToWarehouse(_uid, _item, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
@@ -102,7 +101,7 @@ export async function AddItemByObj(_uid, _item, _count) {
  * @param {array} _items 物品数组
  * @return 无返回值
  */
-export async function AddItemsByObj(_uid, ..._items) {
+export async function AddItemsToWarehouse(_uid, ..._items) {
     lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;
@@ -117,7 +116,7 @@ export async function AddItemsByObj(_uid, ..._items) {
  * @param {number} _uid 玩家id
  * @return 无返回值
  */
-export async function SortById(_uid) {
+export async function SortWarehouseItem(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
         const warehouseInfo = await getWarehouseInfo(_uid);
         if (warehouseInfo == undefined) return;

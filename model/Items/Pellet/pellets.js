@@ -13,9 +13,11 @@
     }
  -----------------------------------------------*/
 
-import { AddPercentBlood } from "../../Cache/player/Battle.js";
-import { AddExp, AddBodyExp } from "../../Cache/player/Level.js";
-import { clamp } from "../../util/math.js";
+import { clamp } from "../../util";
+import {
+    AddPercentBlood,
+    AddExp, AddBodyExp
+} from "../../Cache";
 
 export async function 恢复药(_uid, _pellet, _count, _msg) {
     AddPercentBlood(_uid, _pellet.blood * _count);

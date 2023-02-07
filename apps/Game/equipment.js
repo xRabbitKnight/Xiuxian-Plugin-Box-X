@@ -4,9 +4,11 @@
 
 import config from '../../model/System/config.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
-import { AddEquipment, DelEquipment, GetEquipmentCount } from '../../model/Cache/player/Equipment.js';
-import { RefreshBattle } from '../../model/Cache/player/Battle.js';
+import {
+    AddItemToBackpack, GetBackpackItem,
+    AddEquipment, DelEquipment, GetEquipmentCount,
+    RefreshBattle
+} from '../../model/Cache';
 
 export default class equipment extends plugin {
     constructor() {
@@ -34,7 +36,7 @@ export default class equipment extends plugin {
         }
 
         const name = e.msg.replace('#装备', '');
-        const equipment = await GetItemByName(e.user_id, name);
+        const equipment = await GetBackpackItem(e.user_id, name);
         if (equipment == undefined) {
             e.reply(`没有${name}.`);
             return;
@@ -51,7 +53,7 @@ export default class equipment extends plugin {
         }
 
         AddEquipment(e.user_id, equipment);
-        AddItemByObj(e.user_id, equipment, -1);
+        AddItemToBackpack(e.user_id, equipment, -1);
         RefreshBattle(e.user_id);
         e.reply(`装备${name}`);
     }
@@ -69,7 +71,7 @@ export default class equipment extends plugin {
             return;
         }
 
-        AddItemByObj(e.user_id, equipment, 1);
+        AddItemToBackpack(e.user_id, equipment, 1);
         RefreshBattle(e.user_id);
         e.reply(`已卸下${name}`);
     }

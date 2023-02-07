@@ -1,4 +1,4 @@
-import { GetItemByName } from '../../../model/Cache/item/Item.js'
+import { GetItemObj } from '../../../model/Cache/item/Item.js'
 
 /**
  * @description: 通过名字过滤物品
@@ -18,7 +18,7 @@ export async function filterItemsByName(name, gallery) {
 			}
 		})
 	}
-	return {included, excluded};
+	return { included, excluded };
 }
 
 /**
@@ -48,15 +48,15 @@ export function mergeItems(...itemLists) {
  * @return {[]} 物品列表消息
  */
 export function listItems(preMsg, items) {
-    let msgList = [preMsg];
-    items.forEach(item => {
-        msgList.push(`${item.name} * ${item.acount}`)
-    });
-    return msgList;
+	let msgList = [preMsg];
+	items.forEach(item => {
+		msgList.push(`${item.name} * ${item.acount}`)
+	});
+	return msgList;
 }
 
 async function getIdReg(name) {
-	switch(name) {
+	switch (name) {
 		case '武器':
 			return /^1-/;
 		case '护具':
@@ -82,7 +82,7 @@ async function getIdReg(name) {
 		case '全部物品':
 			return /.+/;
 		default:
-			const ITEM = await GetItemByName(name, 1);
+			const ITEM = await GetItemObj(name, 1);
 			return new RegExp(`^${ITEM ? ITEM.id : ''}$`);
 	}
 }

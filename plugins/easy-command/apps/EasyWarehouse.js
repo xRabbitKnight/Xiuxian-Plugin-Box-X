@@ -41,7 +41,7 @@ export default class EasyWarehouse extends plugin {
 
         let op = e.msg[3], count = 0;
         let backpack = await bpOp.GetBackpack(e.user_id);
-        let whSpStone = await whOp.GetSpiritStoneCount(e.user_id);
+        let whSpStone = await whOp.GetWarehouseSpiritStoneCount(e.user_id);
 
         let restCapacity = backpack.capacity - backpack.spiritStone;
         if (op == '存') {
@@ -53,8 +53,8 @@ export default class EasyWarehouse extends plugin {
             count = -Math.min(whSpStone, restCapacity);
         }
 
-        bpOp.AddSpiritStone(e.user_id, -count);
-        whOp.AddSpiritStone(e.user_id, count);
+        bpOp.AddSpiritStoneToBackpack(e.user_id, -count);
+        whOp.AddSpiritStoneToWarehouse(e.user_id, count);
         e.reply(`${op == '存' ? '存入' : '取出'}${Math.abs(count)}灵石\n储物袋灵石：${backpack.spiritStone - count}\n仓库灵石：${whSpStone + count}`);
     }
 
@@ -79,13 +79,13 @@ export default class EasyWarehouse extends plugin {
             return;
         }
 
-		let minusIncluded = [];
-		included.forEach((item, index, self) => {
-			minusIncluded.push(Object.assign({}, item));
-			minusIncluded[index].acount *= -1;
-		});
-		bpOp.AddItemsByObj(e.user_id, ...(op == '存' ? minusIncluded : included));
-		whOp.AddItemsByObj(e.user_id, ...(op == '存' ? included : minusIncluded));
+        let minusIncluded = [];
+        included.forEach((item, index, self) => {
+            minusIncluded.push(Object.assign({}, item));
+            minusIncluded[index].acount *= -1;
+        });
+        bpOp.AddItemsToBackpack(e.user_id, ...(op == '存' ? minusIncluded : included));
+        whOp.AddItemsToWarehouse(e.user_id, ...(op == '存' ? included : minusIncluded));
 
         let msgList = listItems(`共${op == '存' ? '存入' : '取出'}${included.length}种物品`, included);
         replyForwardMsg(e, msgList);
@@ -120,14 +120,14 @@ export default class EasyWarehouse extends plugin {
             return;
         }
 
-		let minusIncluded = [];
-		included.forEach((item, index, self) => {
-			minusIncluded.push(Object.assign({}, item));
-			minusIncluded[index].acount *= -1;
-		});
-		bpOp.AddItemsByObj(giverId, ...minusIncluded);
-		whOp.AddItemsByObj(doneeId, ...included);
-        
+        let minusIncluded = [];
+        included.forEach((item, index, self) => {
+            minusIncluded.push(Object.assign({}, item));
+            minusIncluded[index].acount *= -1;
+        });
+        bpOp.AddItemsToBackpack(giverId, ...minusIncluded);
+        whOp.AddItemsToWarehouse(doneeId, ...included);
+
         e.reply([segment.at(doneeId), `你获得了由${e.sender.nickname}赠送的[${itemName}]`]);
         replyForwardMsg(e, listItems(`共赠送${included.length}种物品`, included));
     }

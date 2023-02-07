@@ -1,8 +1,8 @@
 import MonsterMgr from "./mgr.js"
 import Monster from "./monster.js";
 import Boss from "./boss.js";
-import { rand } from '../util/math.js';
-import { GetAllArea, GetRandArea } from '../Cache/place/Area.js';
+import { rand } from '../util';
+import { GetAllArea, GetRandArea } from '../Cache';
 
 
 /******* 

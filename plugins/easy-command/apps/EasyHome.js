@@ -1,5 +1,5 @@
 import config from '../../../model/System/config.js';
-import { AddItemByObj, AddItemsByObj, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
+import { AddItemToBackpack, AddItemsToBackpack, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
 import { AddPercentBlood, GetBattle } from '../../../model/Cache/player/Battle.js';
 import { AddBodyExp, AddExp } from '../../../model/Cache/player/Level.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
@@ -64,7 +64,7 @@ export default class EasyHome extends plugin {
             return;
         }
 
-        AddItemsByObj(e.user_id, ...recoverPlan);
+        AddItemsToBackpack(e.user_id, ...recoverPlan);
         AddPercentBlood(e.user_id, recoverBlood);
 
         let replyStr = `血量恢复${recoverBlood}%`;
@@ -200,7 +200,7 @@ async function learnManual(user_id, manualItems) {
             learnStr += `\n忘掉功法『${manual.name}』(${manual.size}%)`;
         } else if (manualList.length - i <= maxLearnNum && !manual.learned) {
             await AddManual(user_id, manual)
-            AddItemByObj(user_id, manualItems[manual.manualItemsIdx], -1);
+            AddItemToBackpack(user_id, manualItems[manual.manualItemsIdx], -1);
             learnStr += `\n学习功法『${manual.name}』(${manual.size}%)`;
             learnNum++;
         }
@@ -212,7 +212,7 @@ async function learnSkill(user_id, skillItems) {
     let learnStr = '', learnNum = 0;
     for (let item of skillItems) {
         if (await AddSkill(user_id, item)) {
-            AddItemByObj(user_id, item, -1);
+            AddItemToBackpack(user_id, item, -1);
             learnStr += `\n学习技能『${item.name.substr(4)}』`;
             learnNum++;
         }

@@ -5,11 +5,13 @@
 
 import RandomEvent from "./base.js";
 import XiuxianMsg from "../common/msg.js";
-import { rand, clamp } from '../util/math.js'
-import { AddPowerByEvent } from '../Cache/player/Battle.js';
-import { AddExp, AddBodyExp } from '../Cache/player/Level.js';
-import { AddItemByObj, AddSpiritStone } from '../Cache/player/Backpack.js';
-import { GetRandItem } from '../Cache/item/Item.js';
+import { rand, clamp } from '../util';
+import {
+    AddPowerByEvent,
+    AddExp, AddBodyExp,
+    AddItemToBackpack, AddSpiritStoneToBackpack,
+    GetRandItem
+} from '../Cache';
 
 /** 目前掉落物品的最高最低等级 */
 const MaxLevel = 10, MinLevel = 0;
@@ -69,7 +71,7 @@ export const getLargeMoney = new RandomEvent({
         const { uid, monster } = data;
         const money = rand(700, 1000) * monster.level;
         const msg = [`跟随濒死的${monster.name}，你发现了一条灵石矿脉，你获得了${money}灵石！！`];
-        AddSpiritStone(uid, money);
+        AddSpiritStoneToBackpack(uid, money);
         return XiuxianMsg({ msg: msg });
     }
 });
@@ -81,7 +83,7 @@ export const getMediumMoney = new RandomEvent({
         const { uid, monster } = data;
         const money = rand(200, 500) * monster.level;
         const msg = [`击杀${monster.name}，你在旁边发现一个储物袋，你获得了${money}灵石！！`];
-        AddSpiritStone(uid, money);
+        AddSpiritStoneToBackpack(uid, money);
         return XiuxianMsg({ msg: msg });
     }
 });
@@ -94,7 +96,7 @@ export const getAheadEquipment = new RandomEvent({
         const targetLevel = clamp(monster.level + 5, MinLevel, MaxLevel);
         const equipment = GetRandItem('装备', 1, targetLevel);
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`];
-        AddItemByObj(uid, equipment, 1);
+        AddItemToBackpack(uid, equipment, 1);
         return XiuxianMsg({ msg: msg });
     }
 });
@@ -107,7 +109,7 @@ export const getRelateEquipment = new RandomEvent({
         const targetLevel = clamp(monster.level, MinLevel, MaxLevel);
         const equipment = GetRandItem('装备', 1, targetLevel);
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`];
-        AddItemByObj(uid, equipment, 1);
+        AddItemToBackpack(uid, equipment, 1);
         return XiuxianMsg({ msg: msg });
     }
 });
@@ -120,7 +122,7 @@ export const getAheadManual = new RandomEvent({
         const targetLevel = clamp(monster.level + 5, MinLevel, MaxLevel);
         const manual = GetRandItem('功法', 1, targetLevel);
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了《${manual.name}》！！`];
-        AddItemByObj(uid, manual, 1);
+        AddItemToBackpack(uid, manual, 1);
         return XiuxianMsg({ msg: msg });
     }
 });
@@ -133,7 +135,7 @@ export const getRelateManual = new RandomEvent({
         const targetLevel = clamp(monster.level, MinLevel, MaxLevel);
         const manual = GetRandItem('功法', 1, targetLevel);
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了《${manual.name}》！！`];
-        AddItemByObj(uid, manual, 1);
+        AddItemToBackpack(uid, manual, 1);
         return XiuxianMsg({ msg: msg });
     }
 });

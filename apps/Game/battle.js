@@ -5,11 +5,10 @@
 import MonsterMgr from '../../model/Monster/mgr.js';
 import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
 import * as CD from '../../model/CD/Action.js';
-import { PVE, PVP } from '../../model/Battle/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { GetPlayerRegion } from '../../model/Cache/player/Action.js';
-import { GetDrops } from '../../model/Battle/BattleDrop.js';
-import { replyForwardMsg, getAtUid } from '../../model/util/gameUtil.js';
+import { PVE, PVP, GetDrops } from '../../model/Battle';
+import { GetPlayerRegion } from '../../model/Cache';
+import { replyForwardMsg, getAtUid } from '../../model/util';
 
 export default class battle extends plugin {
     constructor() {

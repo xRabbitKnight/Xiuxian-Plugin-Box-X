@@ -12,7 +12,7 @@ import { Nian } from "./Nian.js";
 import { GetRandItem } from "../../../../model/Cache/item/Item.js";
 import { GetAllArea } from "../../../../model/Cache/place/Area.js";
 import MonsterMgr from "../../../../model/Monster/mgr.js";
-import { AddItemsByObj, AddSpiritStone } from "../../../../model/Cache/player/Backpack.js";
+import { AddItemsToBackpack, AddSpiritStoneToBackpack } from "../../../../model/Cache/player/Backpack.js";
 
 
 /** 初始化载入年兽掉落 */
@@ -72,10 +72,10 @@ async function nian(_uid, _nian, _msg) {
 
    const spStone = spiritStone[rand(0, spiritStone.length)];
    _msg.push(`你获得了${spStone}灵石！`);
-   AddSpiritStone(_uid, spStone);
+   AddSpiritStoneToBackpack(_uid, spStone);
 
    _msg.push(`你获得了${_nian.giftName}！`);
    _nian.gift.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
-   AddItemsByObj(_uid, ..._nian.gift);
+   AddItemsToBackpack(_uid, ..._nian.gift);
    _msg.push(`新年快乐！`);
 }

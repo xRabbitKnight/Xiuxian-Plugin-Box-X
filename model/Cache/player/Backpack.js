@@ -1,8 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { lock } from '../base.js';
-import { forceNumber } from '../../util/math.js';
-import { compareByIdAsc } from '../../util/gameUtil.js';
+import { forceNumber, compareByIdAsc } from '../../util';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.backpack;
@@ -26,7 +25,7 @@ export async function GetBackpack(_uid) {
  * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回灵石数量，获取失败时返回undefined
  */
-export async function GetSpiritStoneCount(_uid) {
+export async function GetBackpackSpiritStoneCount(_uid) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         return backpackInfo?.spiritStone;
@@ -39,7 +38,7 @@ export async function GetSpiritStoneCount(_uid) {
  * @param {number} _count 增加的数量
  * @return {Promise<bool>} 能否装下
  */
-export async function CheckSpiritStone(_uid, _count) {
+export async function CheckBackpackSpiritStone(_uid, _count) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return undefined;
@@ -54,7 +53,7 @@ export async function CheckSpiritStone(_uid, _count) {
  * @param {string} _itemName 物品名字
  * @return {Promise<any>} 若找到返回物品对象, 没找到返回undefined
  */
-export async function GetItemByName(_uid, _itemName) {
+export async function GetBackpackItem(_uid, _itemName) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         return backpackInfo?.items.find(item => item.name == _itemName);
@@ -83,7 +82,7 @@ export async function SetBackpack(_uid, _backpackInfo) {
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
-export async function AddSpiritStone(_uid, _count) {
+export async function AddSpiritStoneToBackpack(_uid, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return;
@@ -104,7 +103,7 @@ export async function AddSpiritStone(_uid, _count) {
  * @param {number} _count 增加的数量
  * @return 无返回值
  */
-export async function AddItemByObj(_uid, _item, _count) {
+export async function AddItemToBackpack(_uid, _item, _count) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return;
@@ -121,7 +120,7 @@ export async function AddItemByObj(_uid, _item, _count) {
  * @param {array} _items 物品数组
  * @return 无返回值
  */
-export async function AddItemsByObj(_uid, ..._items) {
+export async function AddItemsToBackpack(_uid, ..._items) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
         if (backpackInfo == undefined) return;
@@ -131,23 +130,15 @@ export async function AddItemsByObj(_uid, ..._items) {
     });
 }
 
-export async function AddItemByName(_uid, _itemName, _count) {
-
-}
-
-export async function AddItemById(_uid, _itemId, _count) {
-
-}
-
 /******* 
  * @description: 背包物品排序
  * @param {number} _uid 玩家id
  * @return 无返回值
  */
-export async function SortById(_uid) {
+export async function SortBackpackItem(_uid) {
     lock(`${redisKey}:${_uid}`, async () => {
         const backpackInfo = await getBackpackInfo(_uid);
-        if(backpackInfo == undefined) return undefined;
+        if (backpackInfo == undefined) return undefined;
 
         backpackInfo.items.sort((a, b) => compareByIdAsc(a.id, b.id));
         await setBackpackInfo(_uid, backpackInfo);

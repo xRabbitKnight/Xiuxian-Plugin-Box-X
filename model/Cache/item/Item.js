@@ -50,7 +50,7 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
  * @param {number} _count 获取数量
  * @return {Promise<any>} 对应物品
  */
-export async function GetItemByName(_name, _count) {
+export async function GetItemObj(_name, _count) {
     const items = await getAll();
     if (items == undefined) return undefined;
 

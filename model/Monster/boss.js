@@ -1,4 +1,4 @@
-import { rand } from "../util/math.js";
+import { rand } from "../util";
 import MonsterMgr from "./mgr.js";
 import Monster from "./monster.js";
 

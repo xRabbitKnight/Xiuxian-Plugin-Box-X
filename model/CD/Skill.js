@@ -1,6 +1,6 @@
-import * as Util from '../util/commonUtil.js';
 import * as CD from './base.js';
 import config from '../System/config.js';
+import { secondToHour } from '../util';
 
 const redisKeyPre = 'xiuxian:skill';
 
@@ -29,6 +29,6 @@ export function AddSkillCD(_uid, _skillName) {
  */
 export async function IfSkillInCD(_uid, _skillName, _msg = undefined) {
     const time = await CD.GetCD(`${redisKeyPre}:${_uid}:${_skillName}`);
-    if (_msg != undefined && time > 0) _msg(`冷却时间: ${Util.secondToHour(time)}`);
+    if (_msg != undefined && time > 0) _msg(`冷却时间: ${secondToHour(time)}`);
     return time > 0;
 }

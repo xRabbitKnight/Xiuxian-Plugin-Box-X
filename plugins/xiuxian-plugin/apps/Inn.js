@@ -1,12 +1,13 @@
 import config from "../../../model/System/config.js";
 import data from "../model/System/data.js";
 import MonsterMgr from "../../../model/Monster/mgr.js";
-import { IfAtSpot } from "../../../model/Cache/place/Spot.js";
-import { GetSpiritStoneCount, AddSpiritStone } from "../../../model/Cache/player/Backpack.js";
 import { CheckStatu, StatuLevel } from "../../../model/Statu/Statu.js";
-import { GetAreaName, GetRandArea } from "../../../model/Cache/place/Area.js";
-import { rand } from "../../../model/util/math.js";
-import { randItem } from "../../../model/util/commonUtil.js";
+import {
+    IfAtSpot,
+    GetAreaName, GetRandArea,
+    GetBackpackSpiritStoneCount, AddSpiritStoneToBackpack
+} from "../../../model/Cache";
+import { randItem, rand } from "../../../model/util";
 
 /** 可打听消息数量 */
 let msgCount = 4;
@@ -53,13 +54,13 @@ export default class Inn extends plugin {
             return;
         }
 
-        const spStoneCount = await GetSpiritStoneCount(e.user_id);
+        const spStoneCount = await GetBackpackSpiritStoneCount(e.user_id);
         if (spStoneCount == undefined || spStoneCount < 1000) {
             e.reply('[小二] 客官，这消息多少得花1000灵石吧！');
             return;
         }
 
-        AddSpiritStone(e.user_id, -1000);
+        AddSpiritStoneToBackpack(e.user_id, -1000);
         e.reply(`[小二] 传言道，当今修仙界共有「${MonsterMgr.Boss.length}」头不同寻常的上古凶兽！`);
     }
 
@@ -78,7 +79,7 @@ export default class Inn extends plugin {
             return;
         }
 
-        const spStoneCount = await GetSpiritStoneCount(e.user_id);
+        const spStoneCount = await GetBackpackSpiritStoneCount(e.user_id);
         if (spStoneCount == undefined || spStoneCount < 2000) {
             e.reply('[小二] 客官，这消息多少得花2000灵石吧！');
             return;
@@ -90,7 +91,7 @@ export default class Inn extends plugin {
             (await GetAreaName(randItem(MonsterMgr.Boss).region)) : //正确地点
             (await GetRandArea())?.name;  //随机错误地点
 
-        AddSpiritStone(e.user_id, -2000);
+        AddSpiritStoneToBackpack(e.user_id, -2000);
         errorMsgCount = result ? 0 : errorMsgCount + 1;
         msgCount--;
 

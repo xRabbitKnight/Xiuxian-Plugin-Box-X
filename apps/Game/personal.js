@@ -3,10 +3,12 @@
  */
 
 import * as CD from '../../model/CD/Action.js';
-import { CheckSensitiveWord } from '../../model/util/sensitive.js';
+import { CheckSensitiveWord } from '../../model/util';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { SetAutograph, SetName } from '../../model/Cache/player/Life.js';
-import { IfAtSpot } from '../../model/Cache/place/Spot.js';
+import {
+    IfAtSpot,
+    SetAutograph, SetName
+} from '../../model/Cache';
 
 export default class personal extends plugin {
     constructor() {
@@ -30,7 +32,7 @@ export default class personal extends plugin {
 
     Rename = async (e) => {
         const uid = e.user_id;
-        
+
         if (!await CheckStatu(e, StatuLevel.inAction)) {
             return;
         }
@@ -51,7 +53,7 @@ export default class personal extends plugin {
             return;
         }
 
-        if(CheckSensitiveWord(name)){
+        if (CheckSensitiveWord(name)) {
             e.reply('请文明修仙！');
             return;
         }
@@ -77,7 +79,7 @@ export default class personal extends plugin {
             return;
         }
 
-        if(CheckSensitiveWord(autograph)){
+        if (CheckSensitiveWord(autograph)) {
             e.reply('请文明修仙！');
             return;
         }

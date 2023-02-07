@@ -1,14 +1,10 @@
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
 import data from '../System/data.js'
-import { GetBattle } from '../Cache/player/Battle.js';
-import { GetEquipment } from '../Cache/player/Equipment.js';
-import { GetLevel } from '../Cache/player/Level.js';
-import { GetTalent } from '../Cache/player/Talent.js';
-import { GetLife } from '../Cache/player/Life.js';
-import { GetSkill } from '../Cache/player/Skill.js';
-import { GetBackpack, SortById as SortBackpack } from '../Cache/player/Backpack.js';
-import { GetWarehouse, SortById as SortWarehouse } from '../Cache/player/Warehouse.js';
+import {
+    GetBattle, GetEquipment, GetLevel, GetTalent, GetLife, GetSkill, GetBackpack, GetWarehouse,
+    SortBackpackItem, SortWarehouseItem
+} from '../Cache';
 
 
 /******* 
@@ -90,7 +86,7 @@ export async function GetPlayerInfoImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetBackpackImage(_uid) {
-    SortBackpack(_uid);
+    SortBackpackItem(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/backpack/backpack.html',
@@ -109,7 +105,7 @@ export async function GetBackpackImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetWarehouseImage(_uid) {
-    await SortWarehouse(_uid);
+    await SortWarehouseItem(_uid);
     return await puppeteer.screenshot('backpack', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/warehouse/warehouse.html',

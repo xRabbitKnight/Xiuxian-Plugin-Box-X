@@ -1,6 +1,5 @@
 import config from '../../../model/System/config.js';
-import { AddAge } from '../../../model/Cache/player/Life.js';
-import { GetAllUid } from '../../../model/Cache/player/players.js';
+import { AddAge, GetAllUid } from '../../../model/Cache';
 
 export default class AgeTask extends plugin {
     constructor() {

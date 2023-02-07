@@ -1,12 +1,14 @@
 import config from "../../../model/System/config.js"
 import data from "../model/System/data.js";
-import { IfAtSpot } from "../../../model/Cache/place/Spot.js";
-import { AddItemByObj, AddSpiritStone, GetSpiritStoneCount, GetItemByName as GetBackpackItem, CheckSpiritStone } from "../../../model/Cache/player/Backpack.js";
 import { CheckStatu, StatuLevel } from "../../../model/Statu/Statu.js";
 import { GetCommodities, SetCommodities } from "../model/Cache/shop.js";
 import { GetShopImage } from "../model/Image/pluginImage.js";
-import { GetItemByName, GetRandItem } from "../../../model/Cache/item/Item.js";
-import { clamp, forceNumber } from "../../../model/util/math.js";
+import {
+    GetItemObj, GetRandItem,
+    IfAtSpot,
+    AddItemToBackpack, AddSpiritStoneToBackpack, GetBackpackSpiritStoneCount, GetBackpackItem, CheckBackpackSpiritStone
+} from "../../../model/Cache";
+import { clamp, forceNumber } from "../../../model/util";
 
 export default class Shop extends plugin {
     constructor() {
@@ -71,7 +73,7 @@ export default class Shop extends plugin {
         }
 
         const cost = commodity.price * count;
-        if ((await GetSpiritStoneCount(e.user_id)) < cost) {
+        if ((await GetBackpackSpiritStoneCount(e.user_id)) < cost) {
             e.reply(`[凡仙堂]小二\n灵石不足`);
             return;
         }
@@ -80,8 +82,8 @@ export default class Shop extends plugin {
         SetCommodities(commodities);
 
         e.reply(`[凡仙堂]小二\n你花[${cost}]灵石购买了[${name}]*${count}`);
-        AddSpiritStone(e.user_id, -cost);
-        AddItemByObj(e.user_id, commodity, count);
+        AddSpiritStoneToBackpack(e.user_id, -cost);
+        AddItemToBackpack(e.user_id, commodity, count);
     }
 
     Sell = async (e) => {
@@ -104,13 +106,13 @@ export default class Shop extends plugin {
         }
 
         const money = commodity.price * count;
-        if(!await CheckSpiritStone(e.user_id, money)){
+        if (!await CheckBackpackSpiritStone(e.user_id, money)) {
             e.reply(`[凡仙堂]小二\n你的储物袋装不下${money}灵石！`);
             return;
         }
 
-        AddSpiritStone(e.user_id, money);
-        AddItemByObj(e.user_id, commodity, -count);
+        AddSpiritStoneToBackpack(e.user_id, money);
+        AddItemToBackpack(e.user_id, commodity, -count);
 
         e.reply(`[凡仙堂]小二\n出售${name}*${count},得到${money}灵石 `);
     }
@@ -121,7 +123,7 @@ export default class Shop extends plugin {
         const commodities = [];
         commodities.push(...(await GetRandItem('4', cfg.pellet.count, cfg.pellet.maxLevel)));
         commodities.push(...(await GetRandItem('5', cfg.manual.count, cfg.manual.maxLevel)));
-        commodities.push(await GetItemByName('传送卷轴', 20));
+        commodities.push(await GetItemObj('传送卷轴', 20));
 
         commodities.sort((a, b) => a.id.localeCompare(b.id));
         SetCommodities(commodities);

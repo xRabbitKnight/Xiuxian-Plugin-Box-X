@@ -3,14 +3,15 @@
  */
 
 import { segment } from 'oicq';
-import { replyForwardMsg } from '../../model/util/gameUtil.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { inRange, rand } from '../../model/util/math.js';
-import { AddItemByObj, AddSpiritStone, GetItemByName, GetSpiritStoneCount } from '../../model/Cache/player/Backpack.js';
-import { GetSpeed } from '../../model/Cache/player/Battle.js';
-import { GetAction, SetAction } from '../../model/Cache/player/Action.js';
-import { GetAllSpot, IfAtSpot } from '../../model/Cache/place/Spot.js';
-import { GetAllArea } from '../../model/Cache/place/Area.js';
+import {
+    GetAllSpot, IfAtSpot,
+    GetAllArea,
+    AddItemToBackpack, AddSpiritStoneToBackpack, GetBackpackItem, GetBackpackSpiritStoneCount,
+    GetSpeed,
+    GetAction, SetAction
+} from '../../model/Cache';
+import { replyForwardMsg, inRange, rand } from '../../model/util';
 
 const isMoving = [];
 
@@ -138,24 +139,24 @@ export default class move extends plugin {
 
         const action = await GetAction(e.user_id);
         const inPortal = await IfAtSpot(e.user_id, '传送阵');           //是否在传送阵
-        const Scroll = await GetItemByName(e.user_id, '传送卷轴');      //是否有传送卷轴
+        const Scroll = await GetBackpackItem(e.user_id, '传送卷轴');      //是否有传送卷轴
 
         if (!inPortal && Scroll == undefined) {
             e.reply('请前往传送阵或者使用传送卷轴！');
             return;
         }
 
-        const wealth = await GetSpiritStoneCount(e.user_id);
+        const wealth = await GetBackpackSpiritStoneCount(e.user_id);
         const cost = 1000;
         if (wealth == undefined || wealth < cost) {
             e.reply(`传送需要花费${cost}灵石`);
             return;
         }
-        AddSpiritStone(e.user_id, -cost);
+        AddSpiritStoneToBackpack(e.user_id, -cost);
 
 
         if (!inPortal) { //不在传送点， 消耗传送卷轴
-            AddItemByObj(e.user_id, Scroll, -1);
+            AddItemToBackpack(e.user_id, Scroll, -1);
         }
 
         const target = {

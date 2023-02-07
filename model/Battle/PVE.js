@@ -1,4 +1,4 @@
-import { rand } from "../util/math.js";
+import { rand } from "../util";
 import { AutoSkillInBattle } from "../Skill/base.js";
 
 /**

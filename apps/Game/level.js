@@ -7,10 +7,12 @@ import config from '../../model/System/config.js';
 import * as CD from '../../model/CD/Action.js';
 import { segment } from 'oicq';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { AddExp, AddBodyExp, GetLevel, SetLevel } from '../../model/Cache/player/Level.js';
-import { AddPowerByLevelUp, AddBloodToPercent } from '../../model/Cache/player/Battle.js';
-import { AddLife } from '../../model/Cache/player/Life.js';
-import { GetTalentBuff } from '../../model/Cache/player/Talent.js';
+import {
+    AddExp, AddBodyExp, GetLevel, SetLevel,
+    AddPowerByLevelUp, AddBloodToPercent,
+    AddLife,
+    GetTalentBuff
+} from '../../model/Cache';
 
 const RankName = ["初期", "中期", "后期", "巅峰", "圆满"];
 

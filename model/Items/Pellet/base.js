@@ -1,5 +1,5 @@
-import { GetItemReg } from "../../Cache/item/Item.js";
-import { forceNumber } from "../../util/math.js";
+import { GetItemReg } from "../../Cache";
+import { forceNumber } from "../../util";
 import PelletMgr from "./mgr.js";
 
 /******* 

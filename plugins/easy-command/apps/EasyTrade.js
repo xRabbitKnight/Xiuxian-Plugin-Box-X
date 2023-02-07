@@ -1,5 +1,5 @@
 import { IfAtSpot } from '../../../model/Cache/place/Spot.js';
-import { CheckSpiritStone, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
+import { CheckBackpackSpiritStone, GetBackpack, SetBackpack } from '../../../model/Cache/player/Backpack.js';
 import { CheckStatu, StatuLevel } from '../../../model/Statu/Statu.js';
 import { replyForwardMsg } from '../../../model/util/gameUtil.js';
 import { GetCommodities, SetCommodities } from '../../xiuxian-plugin/model/Cache/shop.js';
@@ -45,7 +45,7 @@ export default class EasyTrade extends plugin {
 
         let totalMoney = countMoney(included);
 
-        let boolA = !await CheckSpiritStone(e.user_id, totalMoney);
+        let boolA = !await CheckBackpackSpiritStone(e.user_id, totalMoney);
         let boolB = included.length == 1;
         let boolC = backpack.capacity - backpack.spiritStone >= included[0].price;
         if (boolA && boolB && boolC) {

@@ -3,18 +3,17 @@
  */
 
 import * as CD from '../../model/CD/Action.js'
-import { AddPercentBlood } from '../../model/Cache/player/Battle.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
-import { AddItemByObj, GetItemByName } from '../../model/Cache/player/Backpack.js';
-import { AddExp, AddBodyExp, GetLevel } from '../../model/Cache/player/Level.js';
-import { AddManual, AddManualBuff, DelManual } from '../../model/Cache/player/Talent.js';
-import { AddSkill, DelSkill } from '../../model/Cache/player/Skill.js';
-import { clamp, forceNumber, rand } from '../../model/util/math.js';
-import { GetItemReg } from '../../model/Cache/item/Item.js';
 import { UseProp } from '../../model/Items/Prop/base.js';
-import { replyForwardMsg } from '../../model/util/gameUtil.js';
-import { CheckSensitiveWord } from '../../model/util/sensitive.js';
 import { ConsumePellet } from '../../model/Items/Pellet/base.js';
+import {
+    GetItemReg,
+    AddItemToBackpack, GetBackpackItem,
+    AddExp, GetLevel,
+    AddManual, AddManualBuff, DelManual,
+    AddSkill, DelSkill
+} from '../../model/Cache';
+import { forceNumber, rand, CheckSensitiveWord, replyForwardMsg } from '../../model/util';
 
 export default class learn extends plugin {
     constructor() {
@@ -68,7 +67,7 @@ export default class learn extends plugin {
         let [name, count] = e.msg.replace('#服用', '').split('*');
         count = forceNumber(count);
 
-        const pellet = await GetItemByName(e.user_id, name);
+        const pellet = await GetBackpackItem(e.user_id, name);
         if (pellet == undefined || pellet.acount < count) {
             e.reply(`没有${name} * ${count}`);
             return;
@@ -86,7 +85,7 @@ export default class learn extends plugin {
         }
 
         replyForwardMsg(e, msg);
-        AddItemByObj(e.user_id, pellet, -count);
+        AddItemToBackpack(e.user_id, pellet, -count);
     }
 
     UseProps = async (e) => {
@@ -97,7 +96,7 @@ export default class learn extends plugin {
         let [name, count] = e.msg.replace('#使用', '').split('*');
         count = forceNumber(count);
 
-        const prop = await GetItemByName(e.user_id, name);
+        const prop = await GetBackpackItem(e.user_id, name);
         if (prop == undefined || prop.acount < count) {
             e.reply(`没有${name} * ${count}`);
             return;
@@ -119,7 +118,7 @@ export default class learn extends plugin {
         }
 
         replyForwardMsg(e, msg);
-        AddItemByObj(e.user_id, prop, -count);
+        AddItemToBackpack(e.user_id, prop, -count);
     }
 
     LearnSkill = async (e) => {
@@ -128,7 +127,7 @@ export default class learn extends plugin {
         }
 
         const name = e.msg.replace('#学习技能', '');
-        const skillBook = await GetItemByName(e.user_id, `技能书：${name}`);
+        const skillBook = await GetBackpackItem(e.user_id, `技能书：${name}`);
         if (skillBook == undefined) {
             e.reply(`没有[技能书：${name}]`);
             return;
@@ -144,7 +143,7 @@ export default class learn extends plugin {
             return;
         }
 
-        AddItemByObj(e.user_id, skillBook, -1);
+        AddItemToBackpack(e.user_id, skillBook, -1);
         e.reply(`学习技能${name}`);
     }
 
@@ -168,7 +167,7 @@ export default class learn extends plugin {
         }
 
         const name = e.msg.replace('#学习功法', '');
-        const manual = await GetItemByName(e.user_id, name);
+        const manual = await GetBackpackItem(e.user_id, name);
         if (manual == undefined) {
             e.reply(`没有[${name}]`);
             return;
@@ -184,7 +183,7 @@ export default class learn extends plugin {
             return;
         }
 
-        AddItemByObj(e.user_id, manual, -1);
+        AddItemToBackpack(e.user_id, manual, -1);
         e.reply(`学习功法『${name} 』！`);
     }
 

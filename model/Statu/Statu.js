@@ -1,6 +1,4 @@
-import { GetNowBlood } from "../Cache/player/Battle.js";
-import { GetStatus } from "../Cache/player/Life.js";
-import { GetAllUid } from "../Cache/player/players.js";
+import { GetNowBlood, GetStatus, GetAllUid } from "../Cache";
 
 /******* 
  * @description: 检查有无此人存档
@@ -119,7 +117,7 @@ export const StatuLevel = {
     /**  检查是否移动中*/
     isMoving: content.exist | content.isAlive | content.inGroup | content.action | content.moving,
     /**  检查是否可战斗*/
-    canBattle: content.exist | content.isAlive |  content.action | content.moving | content.blood,
+    canBattle: content.exist | content.isAlive | content.action | content.moving | content.blood,
     /**  检查是否可移动*/
     canMove: content.exist | content.isAlive | content.inGroup | content.action | content.moving | content.blood,
     /**  检查是否可赠与*/

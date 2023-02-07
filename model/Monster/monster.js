@@ -1,5 +1,5 @@
 import data from "../System/data.js";
-import { clamp, forceNumber, rand } from '../util/math.js'
+import { clamp, forceNumber, rand, randItem } from '../util'
 
 const MonsterName = ['蜥', '狮', '鹏', '雕', '雀', '豹', '虎', '龟', '猫', '龙', '鲲', '鸡', '蛇', '狼', '鼠', '鹿', '貂', '猴', '狗', '熊', '羊', '牛', '象', '兔', '猪'];
 const MonsterLevelName = ['小兵', '兵', '将', '兽', '魔', '妖', '大妖', '王', '皇', '帝', '神'];
@@ -22,7 +22,7 @@ export default class Monster {
             clamp(forceNumber(data.level), 1, MonsterLevelName.length) :
             rand(1, MonsterLevelName.length + 1);
         /** 怪物名 */
-        this.name = data.name || MonsterName[rand(0, MonsterName.length)] + MonsterLevelName[this.level - 1];
+        this.name = data.name || randItem(MonsterName) + MonsterLevelName[this.level - 1];
         /** 怪物战斗面板信息 */
         this.battleInfo = data.battleInfo || generateMonsterBattleInfo(this.level);
         /** 怪物掉落标签 */

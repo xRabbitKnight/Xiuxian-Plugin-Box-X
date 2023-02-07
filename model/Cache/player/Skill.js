@@ -3,7 +3,7 @@ import path from 'path';
 import { lock } from '../base.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { GetSpiritualRoot } from './Talent.js';
-import { GetItemByName } from '../item/Item.js';
+import { GetItemObj } from '../item/Item.js';
 
 const redisKey = data.__gameDataKey.skill;
 const PATH = data.__gameDataPath.skill;
@@ -65,7 +65,6 @@ export async function AddSkill(_uid, _skillBook) {
  * @return {Promise<boolean>} 返回是否忘掉成功 true->忘掉成功
  */
 export async function DelSkill(_uid, _skillName) {
-
     return lock(`${redisKey}:${_uid}`, async () => {
         const skillInfo = await getSkillInfo(_uid);
 
@@ -108,7 +107,7 @@ export async function RefreshSkill(_uid) {
         if (skillInfo == undefined || spRoots == undefined) return;
 
         for (let skill of skillInfo.skillList) {
-            const skillBook = await GetItemByName(`技能书：${skill.name}`, 1);
+            const skillBook = await GetItemObj(`技能书：${skill.name}`, 1);
             if (skillBook == undefined) {
                 logger.error(`更新技能${skill.name}失败!`);
                 continue;
