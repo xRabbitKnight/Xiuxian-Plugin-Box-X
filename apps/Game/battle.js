@@ -3,7 +3,7 @@
  */
 
 import MonsterMgr from '../../model/Monster/mgr.js';
-import BattleVictory from '../../model/RandomEvent/BattleVictory.js';
+import EventMgr from '../../model/RandomEvent/mgr.js';
 import * as CD from '../../model/CD/Action.js';
 import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import { PVE, PVP, GetDrops } from '../../model/Battle';
@@ -89,7 +89,8 @@ export default class battle extends plugin {
         const battleResult = await PVE(e, targetMonster, msg);
         if (battleResult) {
             await GetDrops(e.user_id, targetMonster, msg);
-            await BattleVictory.TriggerEvent(e, targetMonster, msg);
+            const eventRslt = await EventMgr.TriggerEvent('battleVictory', { uid: e.user_id, monster: targetMonster });
+            if(eventRslt.result) msg.push(...eventRslt.msg);
         }
 
         CD.AddActionCD(e.user_id, 'kill');

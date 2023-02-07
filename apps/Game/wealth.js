@@ -9,7 +9,7 @@ import { CheckStatu, StatuLevel } from '../../model/Statu/Statu.js';
 import {
     IfAtSpot,
     GetBackpack, SetBackpack, CheckBackpackSpiritStone, GetBackpackSpiritStoneCount, AddSpiritStoneToBackpack, GetBackpackItem, AddItemToBackpack,
-    CheckBackpackSpiritStone, GetWarehouseSpiritStoneCount, AddSpiritStoneToWarehouse, GetWarehouseItem, AddItemToWarehouse
+    GetWarehouseSpiritStoneCount, AddSpiritStoneToWarehouse, GetWarehouseItem, AddItemToWarehouse
 } from '../../model/Cache';
 
 export default class wealth extends plugin {

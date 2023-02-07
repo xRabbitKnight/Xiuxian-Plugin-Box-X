@@ -12,6 +12,7 @@ import data from './data.js';
 import PropMgr from '../Items/Prop/mgr.js';
 import MonsterMgr from '../Monster/mgr.js';
 import PelletMgr from '../Items/Pellet/mgr.js';
+import EventMgr from '../RandomEvent/mgr.js';
 
 export default class GameMgr {
     constructor() {
@@ -32,6 +33,7 @@ export default class GameMgr {
         MonsterMgr.Init()
         PropMgr.Init();
         PelletMgr.Init();
+        EventMgr.Init();
         await pluginGameInit();
     }
 }

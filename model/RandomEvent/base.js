@@ -6,7 +6,7 @@
     // data中一般包含玩家uid，其余需求信息可自行配置
     export function xxx(data){
         ...
-        return XiuxianMsg(...);
+        return new XiuxianMsg(...);
     }
  -----------------------------------------------*/
 

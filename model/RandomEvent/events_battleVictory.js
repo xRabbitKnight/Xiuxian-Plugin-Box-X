@@ -1,6 +1,10 @@
 /**-----------------------------------------------
  @description: 
     怪物战斗胜利后随机事件    
+    data：{
+       uid {number} 玩家id 
+       monster {Monster} 战胜怪物对象
+    } 
  -----------------------------------------------*/
 
 import RandomEvent from "./base.js";
@@ -24,7 +28,7 @@ export const addLargeExp = new RandomEvent({
         const exp = rand(700, 1000) * monster.level;
         const msg = [`击杀${monster.name}后，你发现了一颗完整的内丹，服下后你的修为提升了${exp}！！`];
         AddExp(uid, exp);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -36,7 +40,7 @@ export const addMediumExp = new RandomEvent({
         const exp = rand(200, 500) * monster.level;
         const msg = [`击杀${monster.name}后，你发现了怪物的内丹被拍碎了，只剩下一颗残破的内丹，服下后你的修为提升了${exp}！`];
         AddExp(uid, exp);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -48,7 +52,7 @@ export const addLargeBodyExp = new RandomEvent({
         const bodyExp = rand(700, 1000) * monster.level;
         const msg = [`击杀${monster.name}后，你提炼出一瓶高品质精血，服下后你的气血提升了${bodyExp}！！！`];
         AddBodyExp(uid, exp);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -60,7 +64,7 @@ export const addMediumExpHP = new RandomEvent({
         const bodyExp = rand(200, 500) * monster.level;
         const msg = [`击杀${monster.name}后，你提炼出一瓶带有瑕疵的精血，服下后你的气血提升了${bodyExp}！`];
         AddBodyExp(uid, exp);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -72,7 +76,7 @@ export const getLargeMoney = new RandomEvent({
         const money = rand(700, 1000) * monster.level;
         const msg = [`跟随濒死的${monster.name}，你发现了一条灵石矿脉，你获得了${money}灵石！！`];
         AddSpiritStoneToBackpack(uid, money);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -84,7 +88,7 @@ export const getMediumMoney = new RandomEvent({
         const money = rand(200, 500) * monster.level;
         const msg = [`击杀${monster.name}，你在旁边发现一个储物袋，你获得了${money}灵石！！`];
         AddSpiritStoneToBackpack(uid, money);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -97,7 +101,7 @@ export const getAheadEquipment = new RandomEvent({
         const equipment = GetRandItem('装备', 1, targetLevel);
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`];
         AddItemToBackpack(uid, equipment, 1);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -110,7 +114,7 @@ export const getRelateEquipment = new RandomEvent({
         const equipment = GetRandItem('装备', 1, targetLevel);
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`];
         AddItemToBackpack(uid, equipment, 1);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -123,7 +127,7 @@ export const getAheadManual = new RandomEvent({
         const manual = GetRandItem('功法', 1, targetLevel);
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了《${manual.name}》！！`];
         AddItemToBackpack(uid, manual, 1);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -136,7 +140,7 @@ export const getRelateManual = new RandomEvent({
         const manual = GetRandItem('功法', 1, targetLevel);
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了《${manual.name}》！！`];
         AddItemToBackpack(uid, manual, 1);
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -148,7 +152,7 @@ export const addMaxAttack = new RandomEvent({
         const amount = rand(10, 100) * monster.level;
         const msg = [`在和${monster.name}战斗后，你灵光一闪，攻击力提升了${amount}！！`];
         AddPowerByEvent(uid, { attack: amount });
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -160,7 +164,7 @@ export const addMaxBlood = new RandomEvent({
         const amount = rand(50, 500) * monster.level;
         const msg = [`在和${monster.name}战斗后，你浑身气血涌动，你生命值提升了${amount}！！`];
         AddPowerByEvent(uid, { blood: amount });
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
@@ -172,12 +176,12 @@ export const addMaxDefense = new RandomEvent({
         const amount = rand(10, 100) * monster.level;
         const msg = [`在和${monster.name}战斗后，你灵光一闪，防御力提升了${amount}！！`];
         AddPowerByEvent(uid, { defense: amount });
-        return XiuxianMsg({ msg: msg });
+        return new XiuxianMsg({ msg: msg });
     }
 });
 
 /** 无事发生 */
 export const blank = new RandomEvent({
     odds: 1,
-    fnc: async (data) => { return XiuxianMsg(); }
+    fnc: async (data) => { return new XiuxianMsg(); }
 });

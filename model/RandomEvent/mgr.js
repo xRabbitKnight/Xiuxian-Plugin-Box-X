@@ -12,7 +12,7 @@ export default class EventMgr {
      * @return 无返回值
      */
     static async Init() {
-        Events.battleVictory = await import('./events_battleVictory.js');
+        Events.battleVictory = Object.values(await import('./events_battleVictory.js'));
         sortEvent('battleVictory');
     }
 
@@ -34,7 +34,7 @@ export default class EventMgr {
         }
 
         if(Events[_type] == undefined) Events[_type] = [];
-        Events[_type].push(..._events);
+        Events[_type].push(...Object.values(_events));
         sortEvent(_type);
     }
 
@@ -43,12 +43,12 @@ export default class EventMgr {
      * @param {string} _type 需执行事件类型 eg. 战斗胜利后事件battleVictory， 详细参考上方Events
      * @param {any} _data 执行事件需要的参数
      * @param {number} _count 事件触发次数上限，默认为1
-     * @return {XiuxianMsg} 执行结果 执行发生错误时result为false
+     * @return {Promise<XiuxianMsg>} 执行结果 执行发生错误时result为false
      */
     static async TriggerEvent(_type, _data, _count = 1) {
         if (_type == undefined || Events[_type] == undefined) {
             logger.error(`事件类型${_type}未定义！`);
-            return XiuxianMsg({ result: false });
+            return new XiuxianMsg({ result: false });
         }
 
         for (let i = 0, done = 0; i < Events[_type].length && done < _count; ++i) {
@@ -62,10 +62,10 @@ export default class EventMgr {
                 done++;
             } catch (error) {
                 logger.error(`${_type}随机事件执行发生错误！\n ${error}`);
-                return XiuxianMsg({ result: false });
+                return new XiuxianMsg({ result: false });
             }
 
-            return XiuxianMsg({ msg: msgs });
+            return new XiuxianMsg({ msg: msgs });
         }
     }
 }
@@ -76,5 +76,5 @@ export default class EventMgr {
  * @return 无返回值
  */
 function sortEvent(_type) {
-    Events[_type]?.sort((a, b) => a.odds - b.odds);
+    Events[_type].sort((a, b) => a.odds - b.odds);
 }

@@ -39,7 +39,7 @@ async function normal(_uid, _monster, _msg) {
     _msg.push(`采集出售从${_monster.name}获取的战利品，你获得了${_monster.level * 100}灵石`);
     AddSpiritStoneToBackpack(_uid, _monster.level * 100);
 
-    const pellets = await GetRandItem("4", Math.floor(_monster.level / 5 + 1), _monster.level);
+    const pellets = await GetRandItem("丹药", Math.floor(_monster.level / 5 + 1), _monster.level);
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
     AddItemsToBackpack(_uid, ...pellets);
 }
@@ -49,13 +49,13 @@ async function boss(_uid, _monster, _msg) {
     _msg.push(`采集出售从${_monster.name}获取的战利品，你获得了${_monster.level * 1000}灵石`);
     AddSpiritStoneToBackpack(_uid, _monster.level * 1000);
 
-    const pellets = await GetRandItem("4", Math.floor(_monster.level * 2));         //TODO 有点丑陋。有时间改改 
+    const pellets = await GetRandItem("丹药", Math.floor(_monster.level * 2));         //TODO 有点丑陋。有时间改改 
     pellets?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
 
-    const props = await GetRandItem("6");
+    const props = await GetRandItem("道具");
     props?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
 
-    const skillBooks = await GetRandItem("7");
+    const skillBooks = await GetRandItem("技能书");
     skillBooks?.forEach(item => _msg.push(`你获得了${item.name} * ${item.acount}.`));
 
     AddItemsToBackpack(_uid, ...pellets, ...props, ...skillBooks);

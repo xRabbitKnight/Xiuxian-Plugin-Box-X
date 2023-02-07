@@ -121,8 +121,8 @@ export default class Shop extends plugin {
         const cfg = config.GetConfig('task/shop.yaml', data.__configPath);
 
         const commodities = [];
-        commodities.push(...(await GetRandItem('4', cfg.pellet.count, cfg.pellet.maxLevel)));
-        commodities.push(...(await GetRandItem('5', cfg.manual.count, cfg.manual.maxLevel)));
+        commodities.push(...(await GetRandItem('丹药', cfg.pellet.count, cfg.pellet.maxLevel)));
+        commodities.push(...(await GetRandItem('功法', cfg.manual.count, cfg.manual.maxLevel)));
         commodities.push(await GetItemObj('传送卷轴', 20));
 
         commodities.sort((a, b) => a.id.localeCompare(b.id));
