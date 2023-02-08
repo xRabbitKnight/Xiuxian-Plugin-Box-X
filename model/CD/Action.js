@@ -19,6 +19,21 @@ export function AddActionCD(_uid, _actionName) {
     CD.AddCD(`${redisKeyPre}:${_uid}:${_actionName}`, time);
 }
 
+/******* 
+ * @description: 删除玩家行为的cd
+ * @param {string} _uid 玩家id
+ * @param {string} _actionName 行为名
+ * @return 无返回值
+ */
+export function DelActionCD(_uid, _actionName) {
+    const time = config.GetConfig('game/cd.yaml')['action'][_actionName];
+    if (time == undefined) {
+        logger.warn(`config中未定义${_actionName}CD时间！`);
+        return;
+    }
+    CD.AddCD(`${redisKeyPre}:${_uid}:${_actionName}`, 0);
+}
+
 
 /******* 
  * @description: 查询玩家某行为是否处在cd中

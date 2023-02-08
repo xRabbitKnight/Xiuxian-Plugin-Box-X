@@ -19,6 +19,20 @@ export function AddSkillCD(_uid, _skillName) {
     CD.AddCD(`${redisKeyPre}:${_uid}:${_skillName}`, time);
 }
 
+/******* 
+ * @description: 删除玩家技能的cd
+ * @param {string} _uid 玩家id
+ * @param {string} _skillName 技能名
+ * @return 无返回值
+ */
+export function DelSkillCD(_uid, _skillName) {
+    const time = config.GetConfig('game/cd.yaml')['skill'][_skillName];
+    if (time == undefined) {
+        logger.warn(`config中未定义${_skillName}CD时间！`);
+        return;
+    }
+    CD.AddCD(`${redisKeyPre}:${_uid}:${_skillName}`, 0);
+}
 
 /******* 
  * @description: 查询玩家某技能是否处在cd中

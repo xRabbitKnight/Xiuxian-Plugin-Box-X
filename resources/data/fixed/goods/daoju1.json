@@ -43,5 +43,35 @@
         "speed": 0,
         "acount": 0,
         "price": 8000
+    },
+    {
+        "id": "6-1-5",
+        "name": "千年灵乳",
+        "attack": 0,
+        "defense": 0,
+        "blood": 0,
+        "burst": 0,
+        "burstmax": 0,
+        "size": 0,
+        "experience": 0,
+        "experiencemax": 0,
+        "speed": 0,
+        "acount": 0,
+        "price": 8000
+    },
+    {
+        "id": "6-1-6",
+        "name": "双生木",
+        "attack": 0,
+        "defense": 0,
+        "blood": 0,
+        "burst": 0,
+        "burstmax": 0,
+        "size": 0,
+        "experience": 0,
+        "experiencemax": 0,
+        "speed": 0,
+        "acount": 0,
+        "price": 6000
     }
 ]
