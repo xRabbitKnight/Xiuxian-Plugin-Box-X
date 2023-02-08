@@ -19,7 +19,7 @@ export default class EventMgr {
     /******* 
      * @description: 插件向随机事件集合中添加事件，请在GameInit中调用
      * @param {string} _type 事件类别，eg. 战斗胜利后事件battleVictory，或自定义类别
-     * @param {RandomEvent[]} _events 所有事件对象数组
+     * @param {RandomEvent[]} _events 所有事件fnc数组
      * @return 无返回值
      */    
     static AddEvents(_type, _events) {
@@ -61,7 +61,7 @@ export default class EventMgr {
                 msgs.push(...msg);
                 done++;
             } catch (error) {
-                logger.error(`${_type}随机事件执行发生错误！\n ${error}`);
+                logger.error(`${_type}类型：随机事件${event.name}执行发生错误！\n ${error.stack}`);
                 return new XiuxianMsg({ result: false });
             }
 

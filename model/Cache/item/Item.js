@@ -38,8 +38,11 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
     if (_dropLevel != undefined) items = items.filter(item => item.dropLevel <= _dropLevel);
 
     const ret = [];
-    for (let i = 0; i < _count; ++i)
-        ret.push(cloneObj(randItem(items)));
+    for (let i = 0; i < _count; ++i){
+        const item = cloneObj(randItem(items));
+        item.acount = 1;
+        ret.push(item);
+    }
 
     return mergeItems(...ret);
 }

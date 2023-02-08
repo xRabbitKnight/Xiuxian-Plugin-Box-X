@@ -57,10 +57,10 @@ export function getAtUid(_e) {
  * @param {[]} _msg 消息数组
  * @return 无返回值
  */
-export async function replyForwardMsg(_e, _msg, limit = 2) {
+export async function replyForwardMsg(_e, _msg, _limit = 2) {
     //转发消息过短直接单条消息换行输出
-    if (_msg.length <= limit) {
-        e.reply(_msg.join('\n'));
+    if (_msg.length <= _limit) {
+        _e.reply(_msg.join('\n'));
         return;
     }
 

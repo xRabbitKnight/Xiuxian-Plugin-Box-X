@@ -9,16 +9,13 @@
 
 import RandomEvent from "./base.js";
 import XiuxianMsg from "../common/msg.js";
-import { rand, clamp } from '../util';
+import { rand } from '../util';
 import {
     AddPowerByEvent,
     AddExp, AddBodyExp,
     AddItemToBackpack, AddSpiritStoneToBackpack,
     GetRandItem
 } from '../Cache';
-
-/** 目前掉落物品的最高最低等级 */
-const MaxLevel = 10, MinLevel = 0;
 
 /** 增加大量修为 */
 export const addLargeExp = new RandomEvent({
@@ -51,7 +48,7 @@ export const addLargeBodyExp = new RandomEvent({
         const { uid, monster } = data;
         const bodyExp = rand(700, 1000) * monster.level;
         const msg = [`击杀${monster.name}后，你提炼出一瓶高品质精血，服下后你的气血提升了${bodyExp}！！！`];
-        AddBodyExp(uid, exp);
+        AddBodyExp(uid, bodyExp);
         return new XiuxianMsg({ msg: msg });
     }
 });
@@ -63,7 +60,7 @@ export const addMediumExpHP = new RandomEvent({
         const { uid, monster } = data;
         const bodyExp = rand(200, 500) * monster.level;
         const msg = [`击杀${monster.name}后，你提炼出一瓶带有瑕疵的精血，服下后你的气血提升了${bodyExp}！`];
-        AddBodyExp(uid, exp);
+        AddBodyExp(uid, bodyExp);
         return new XiuxianMsg({ msg: msg });
     }
 });
@@ -97,8 +94,7 @@ export const getAheadEquipment = new RandomEvent({
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
-        const targetLevel = clamp(monster.level + 5, MinLevel, MaxLevel);
-        const equipment = GetRandItem('装备', 1, targetLevel);
+        const equipment = (await GetRandItem('装备', 1, monster.level + 5))[0];
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了${equipment.name}！！`];
         AddItemToBackpack(uid, equipment, 1);
         return new XiuxianMsg({ msg: msg });
@@ -110,8 +106,7 @@ export const getRelateEquipment = new RandomEvent({
     odds: 0.30,
     fnc: async (data) => {
         const { uid, monster } = data;
-        const targetLevel = clamp(monster.level, MinLevel, MaxLevel);
-        const equipment = GetRandItem('装备', 1, targetLevel);
+        const equipment = (await GetRandItem('装备', 1, monster.level))[0];
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了${equipment.name}！`];
         AddItemToBackpack(uid, equipment, 1);
         return new XiuxianMsg({ msg: msg });
@@ -123,8 +118,7 @@ export const getAheadManual = new RandomEvent({
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
-        const targetLevel = clamp(monster.level + 5, MinLevel, MaxLevel);
-        const manual = GetRandItem('功法', 1, targetLevel);
+        const manual = (await GetRandItem('功法', 1, monster.level + 5))[0];
         const msg = [`跟随濒死的${monster.name}，你发现了一个隐蔽的山洞，在里面你找到了《${manual.name}》！！`];
         AddItemToBackpack(uid, manual, 1);
         return new XiuxianMsg({ msg: msg });
@@ -136,8 +130,7 @@ export const getRelateManual = new RandomEvent({
     odds: 0.30,
     fnc: async (data) => {
         const { uid, monster } = data;
-        const targetLevel = clamp(monster.level, MinLevel, MaxLevel);
-        const manual = GetRandItem('功法', 1, targetLevel);
+        const manual = (await GetRandItem('功法', 1, monster.level))[0];
         const msg = [`在${monster.name}旁边，你发现一件东西掉在地上，你获得了《${manual.name}》！！`];
         AddItemToBackpack(uid, manual, 1);
         return new XiuxianMsg({ msg: msg });
