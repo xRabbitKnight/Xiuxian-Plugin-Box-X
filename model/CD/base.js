@@ -13,6 +13,19 @@ export async function AddCD(_redisKey, _minute) {
         return;
     }
 }
+/******* 
+ * @description: 按key删除cd
+ * @param {string} _redisKey 需要删除cd的key
+ * @return 无返回值
+ */
+export async function DelCD(_redisKey) {
+    try {
+        redis.del(_redisKey);
+    } catch (error) {
+        logger.info(`删除cd:${_redisKey}失败.\n ${error}`);
+        return;
+    }
+}
 
 /******* 
  * @description: 查询cd剩余时间

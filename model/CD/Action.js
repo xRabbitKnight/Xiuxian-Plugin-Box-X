@@ -28,12 +28,11 @@ export function AddActionCD(_uid, _actionName) {
 export function DelActionCD(_uid, _actionName) {
     const time = config.GetConfig('game/cd.yaml')['action'][_actionName];
     if (time == undefined) {
-        logger.warn(`config中未定义${_actionName}CD时间！`);
+        logger.warn(`config中未定义行为${_actionName}！`);
         return;
     }
-    CD.AddCD(`${redisKeyPre}:${_uid}:${_actionName}`, 0);
+    CD.DelCD(`${redisKeyPre}:${_uid}:${_actionName}`);
 }
-
 
 /******* 
  * @description: 查询玩家某行为是否处在cd中

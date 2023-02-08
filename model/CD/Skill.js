@@ -28,10 +28,10 @@ export function AddSkillCD(_uid, _skillName) {
 export function DelSkillCD(_uid, _skillName) {
     const time = config.GetConfig('game/cd.yaml')['skill'][_skillName];
     if (time == undefined) {
-        logger.warn(`config中未定义${_skillName}CD时间！`);
+        logger.warn(`config中未定义技能${_skillName}`);
         return;
     }
-    CD.AddCD(`${redisKeyPre}:${_uid}:${_skillName}`, 0);
+    CD.DelCD(`${redisKeyPre}:${_uid}:${_skillName}`);
 }
 
 /******* 
