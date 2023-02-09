@@ -1,7 +1,7 @@
 import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
-import { lock } from '../base.js';
+import { lock } from '../../util';
 
 const redisKey = data.__gameDataKey.action;
 const PATH = data.__gameDataPath.action;

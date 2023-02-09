@@ -2,8 +2,7 @@ import config from '../../System/config.js';
 import data from '../../System/data.js';
 import path from 'path';
 import { GetInfo, SetInfo } from './InfoCache.js';
-import { rand } from '../../util/math.js';
-import { lock } from '../base.js';
+import { rand, lock } from '../../util';
 
 const redisKey = data.__gameDataKey.talent;
 const PATH = data.__gameDataPath.talent;
@@ -114,7 +113,7 @@ export async function DelManual(_uid, _manualName) {
  * @param {any} _manualName 功法名
  * @return {Promise<boolean>} 返回是否钻研成功 true->忘掉成功
  */
- export async function AddManualBuff(_uid, _manualName) {
+export async function AddManualBuff(_uid, _manualName) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const talentInfo = await getTalentInfo(_uid);
 
@@ -126,7 +125,7 @@ export async function DelManual(_uid, _manualName) {
         talentInfo.buff -= targetManual.buff;
         targetManual.buff = Math.min(targetManual.maxBuff, Math.floor(targetManual.buff * 1.05));
         talentInfo.buff += targetManual.buff;
-        
+
         await setTalentInfo(_uid, talentInfo);
         return true;
     });
@@ -210,10 +209,10 @@ function randSpiritualRoot() {
     const spRoot = [];
     const time = rand(1, 11); //尝试次数
     for (let i = 0; i < time; i++) {
-        const sr = rand(1, 11);
+        const sr = rand(0, 10);
         if (-1 != spRoot.indexOf(sr)) continue;
-        if (sr <= 5 && -1 != spRoot.indexOf(sr + 5)) continue;
-        if (sr > 5 && -1 != spRoot.indexOf(sr - 5)) continue;
+        if (sr < 5 && -1 != spRoot.indexOf(sr + 5)) continue;
+        if (sr >= 5 && -1 != spRoot.indexOf(sr - 5)) continue;
         spRoot.push(sr);
     }
     return spRoot;
@@ -226,6 +225,7 @@ function randSpiritualRoot() {
  */
 function getSpiritualRootName(_spRoot) {
     let name = "";
+    const spRoot = config.GetConfig(['game','player.yaml']);
     _spRoot.forEach(root => name += data.talentList.find(item => item.id == root).name);
     return name;
 }

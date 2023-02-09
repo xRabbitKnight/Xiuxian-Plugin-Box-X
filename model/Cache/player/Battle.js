@@ -1,7 +1,6 @@
 import data from '../../System/data.js';
 import path from 'path';
-import { lock } from '../base.js';
-import { clamp, forceNumber } from '../../util/math.js';
+import { clamp, forceNumber, lock } from '../../util';
 import { GetEquipment } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
@@ -43,7 +42,7 @@ export async function GetNewBattle() {
  * @param {number} _uid 玩家id
  * @return {Promise<number>} 返回当前血量，获取失败时返回undefined
  */
- export async function GetNowBlood(_uid) {
+export async function GetNowBlood(_uid) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const battleInfo = await getBattleInfo(_uid);
         return battleInfo?.nowblood;

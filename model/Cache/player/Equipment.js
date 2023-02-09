@@ -1,6 +1,6 @@
 import data from '../../System/data.js';
 import path from 'path';
-import { lock } from '../base.js';
+import { lock } from '../../util';
 import { GetInfo, SetInfo } from './InfoCache.js';
 
 const redisKey = data.__gameDataKey.equipment;
