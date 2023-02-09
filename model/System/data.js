@@ -9,10 +9,9 @@
     然后调用AddData将想要加入的数据加入即可
  -----------------------------------------------**/
 
-import fs from 'node:fs';
 import path from 'path';
 import config from './config.js';
-
+import { ReadSync, WriteAsync } from '../File/File.js';
 
 /** 插件根目录地址前缀 */
 const __prePath = path.join(path.resolve(), 'plugins', 'Xiuxian-Plugin-Box');
@@ -61,20 +60,15 @@ class Data {
     /** 不同模块游戏数据redis key */
     get __gameDataKey() { return __gameDataKey; }
 
-    /** 几种预设数据组合类型 */
-    fixType = ['items', 'areas', 'spots'];
-
     /******* 
      * @description: 读入所有预设组合数据
      * @return 无返回值
      */
     InitFixData = () => {
-        this.fixType.forEach(type => {
+        for (let type in __def) {
             if (this[type] == undefined) this[type] = [];
             this[type].push(...getFixData(type));
-        });
-        //TODO：记得改！！！
-        tmp();
+        }
     }
 
     /******* 
@@ -82,10 +76,10 @@ class Data {
      * @return 无返回值
      */
     SaveFixData = () => {
-        this.fixType.forEach(type => {
+        for (let type in __def) {
             saveFixData(type, this[type]);
             this[type] = [];
-        });
+        }
     }
 
     /******* 
@@ -158,15 +152,6 @@ const __def = {
     }
 }
 
-//临时处理，有时间改掉
-function tmp() {
-    const data = new Data();
-    data.levelList = JSON.parse(fs.readFileSync(path.join(__fixDataPath.level, 'levelList.json')));
-    data.bodyLevelList = JSON.parse(fs.readFileSync(path.join(__fixDataPath.level, 'bodyLevelList.json')));
-    data.talentList = JSON.parse(fs.readFileSync(path.join(__fixDataPath.talent, 'talentList.json')));
-}
-
-
 /******* 
  * @description: 根据组合目录获取所有数据
  * @param {string} _type : 预定义组合
@@ -182,7 +167,7 @@ function getFixData(_type) {
     try {
         for (var dir of __def[_type].dirs) {
             fs.readdirSync(dir).filter(file => file.endsWith('.json')).forEach(file => {
-                ret.push(...JSON.parse(fs.readFileSync(path.join(dir, file))));
+                ret.push(...JSON.parse(ReadSync(path.join(dir, file))));
             });
         }
     } catch (error) {
@@ -209,21 +194,5 @@ function saveFixData(_type, _data) {
     __gameDataPath[__def[_type].name] = __def[_type].path;
 
     //保存数据
-    saveData(__def[_type].path, JSON.stringify(_data));
+    WriteAsync(__def[_type].path, JSON.stringify(_data));
 }
-
-/******* 
- * @description: 保存数据，发生错误时报错
- * @param {string} _path 存储文件路径
- * @param {string} _data 文件数据
- * @return 无返回值
- */
-function saveData(_path, _data) {
-    fs.writeFile(_path, _data, (err) => {
-        if (err) {
-            logger.error(['保存数据错误！', _path, err]);
-            return;
-        }
-    });
-}
-

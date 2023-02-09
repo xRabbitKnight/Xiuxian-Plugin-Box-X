@@ -225,8 +225,8 @@ function randSpiritualRoot() {
  */
 function getSpiritualRootName(_spRoot) {
     let name = "";
-    const spRoot = config.GetConfig(['game', 'player.yaml']);
-    _spRoot.forEach(root => name += data.talentList.find(item => item.id == root).name);
+    const cfg = config.GetConfig(['game', 'player.yaml']);
+    _spRoot.forEach(root => name += cfg.spritualRoot[root]);
     return name;
 }
 

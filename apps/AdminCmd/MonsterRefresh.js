@@ -12,6 +12,7 @@ import { GetItemObj } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
 import { forceNumber, getAtUid } from "../../model/util";
 import { AddItemToBackpack } from "../../model/Cache";
+import config from "../../model/System/config.js";
 
 
 export default class MonsterRefresh extends plugin {
@@ -84,8 +85,10 @@ export default class MonsterRefresh extends plugin {
             const levelInfo = await GetLevel(player);
             if (battleInfo == undefined || levelInfo == undefined) return;
 
+            const cfg = config.GetConfig(['game', 'player.yaml']);
+
             for (let attr in battleInfo.base) {
-                battleInfo.base[attr] = forceNumber(data.levelList[levelInfo.level - 1][attr]) + forceNumber(data.bodyLevelList[levelInfo.bodyLevel - 1][attr]);
+                battleInfo.base[attr] = forceNumber(cfg.levelList[levelInfo.level][attr]) + forceNumber(cfg.bodyLevelList[levelInfo.bodyLevel][attr]);
             }
             battleInfo.nowblood = battleInfo.base.blood;
             await SetBattle(player, battleInfo);

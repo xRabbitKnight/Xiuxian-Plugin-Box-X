@@ -3,6 +3,7 @@ import path from 'path';
 import { clamp, forceNumber, lock } from '../../util';
 import { GetEquipment } from './Equipment.js';
 import { GetInfo, SetInfo } from './InfoCache.js';
+import config from '../../System/config.js';
 
 const redisKey = data.__gameDataKey.battle;
 const PATH = data.__gameDataPath.battle;
@@ -28,8 +29,9 @@ export async function GetBattle(_uid) {
  */
 export async function GetNewBattle() {
     const battleInfo = { power: 0, base: {} };
+    const cfg = config.GetConfig(['game', 'player.yaml']);
     for (let attr of allAttrs) {
-        battleInfo.base[attr] = data.levelList[0][attr] + data.bodyLevelList[0][attr];
+        battleInfo.base[attr] = cfg.levelList[0][attr] + cfg.bodyLevelList[0][attr];
         battleInfo[attr] = battleInfo.base[attr];
         battleInfo.power += battleInfo[attr];
     }

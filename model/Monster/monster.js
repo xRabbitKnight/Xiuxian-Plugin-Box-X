@@ -1,4 +1,4 @@
-import data from "../System/data.js";
+import config from "../System/config.js";
 import { clamp, forceNumber, rand, randItem } from '../util'
 
 const MonsterName = ['蜥', '狮', '鹏', '雕', '雀', '豹', '虎', '龟', '猫', '龙', '鲲', '鸡', '蛇', '狼', '鼠', '鹿', '貂', '猴', '狗', '熊', '羊', '牛', '象', '兔', '猪'];
@@ -20,9 +20,9 @@ export default class Monster {
         /** 怪物等级 */
         this.level = data.level != undefined ?
             clamp(forceNumber(data.level), 1, MonsterLevelName.length) :
-            rand(1, MonsterLevelName.length + 1);
+            rand(0, MonsterLevelName.length);
         /** 怪物名 */
-        this.name = data.name || randItem(MonsterName) + MonsterLevelName[this.level - 1];
+        this.name = data.name || randItem(MonsterName) + MonsterLevelName[this.level];
         /** 怪物战斗面板信息 */
         this.battleInfo = data.battleInfo || generateMonsterBattleInfo(this.level);
         /** 怪物掉落标签 */
@@ -35,8 +35,9 @@ export default class Monster {
 }
 
 function generateMonsterBattleInfo(_level) {
-    const tmpInfo0 = data.levelList[_level - 1];
-    const tmpInfo1 = data.bodyLevelList[_level - 1];
+    const cfg = config.GetConfig(['game', 'player.yaml']);
+    const tmpInfo0 = cfg.levelList[_level];
+    const tmpInfo1 = cfg.bodyLevelList[_level];
     const percent0 = Math.random() * 0.5 + 0.5;
     const percent1 = Math.random() * 0.7 + 0.7;
 

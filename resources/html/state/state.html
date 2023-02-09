@@ -10,11 +10,11 @@
     <div class="state-top">
       <div class="use_data">
           <div class="user_font">{{name}}</div>
-          {{each list item}}
-          {{if item.id > level && level >= item.id - 2}}
-          <div class="user_font">境界:{{item.name}}</div>
-          {{if name == "练气境界"}}<div class="user_font">突破修为:{{item.exp}}</div>{{/if}}
-          {{if name == "炼体境界"}}<div class="user_font">突破气血:{{item.exp}}</div>{{/if}}
+          {{each list value index}}
+          {{if index > level && level >= index - 2}}
+          <div class="user_font">境界:{{value.name}}</div>
+          {{if name == "练气境界"}}<div class="user_font">突破修为:{{value.exp}}</div>{{/if}}
+          {{if name == "炼体境界"}}<div class="user_font">突破气血:{{value.exp}}</div>{{/if}}
           {{/if}}
           {{/each}}
         </div>

@@ -1,6 +1,6 @@
 import puppeteer from '../../../../lib/puppeteer/puppeteer.js';
 import base from './base.js';
-import data from '../System/data.js'
+import config from '../System/config.js';
 import {
     GetBattle, GetEquipment, GetLevel, GetTalent, GetLife, GetSkill, GetBackpack, GetWarehouse,
     SortBackpackItem, SortWarehouseItem
@@ -131,7 +131,7 @@ export async function GetLevelImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'state/state.css',
         name: '练气境界',
-        list: data.levelList,
+        list: config.GetConfig(['game', 'player.yaml']).levelList,
         level: (await GetLevel(_uid)).level
     });
 }
@@ -149,7 +149,7 @@ export async function GetBodyLevelImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'state/state.css',
         name: '炼体境界',
-        list: data.bodyLevelList,
+        list: config.GetConfig(['game', 'player.yaml']).bodyLevelList,
         level: (await GetLevel(_uid)).bodyLevel
     });
 }

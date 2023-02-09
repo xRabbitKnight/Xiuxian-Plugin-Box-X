@@ -100,20 +100,20 @@ export default class level extends plugin {
 
         const player = await GetLevel(e.user_id);
 
-        if (player.level >= 10) {
+        if (player.level >= 9) {
             e.reply('您已经到达巅峰！');
             return;
         }
 
-        const list = data.levelList;
-        if (player.exp < list[player.level - 1].exp) {
-            e.reply(`修为不足,再积累${list[player.level - 1].exp - player.exp}修为后方可突破`);
+        const list = config.GetConfig(['game', 'player.yaml']).levelList;
+        if (player.exp < list[player.level].exp) {
+            e.reply(`修为不足,再积累${list[player.level].exp - player.exp}修为后方可突破`);
             return;
         }
 
         const failureProb = -0.4 + player.level * 0.1; //突破失败概率
         if (Math.random() < failureProb) {
-            const loss = Math.floor(list[player.level - 1].exp * Math.random());
+            const loss = Math.floor(list[player.level].exp * Math.random());
             AddExp(e.user_id, -loss);
             e.reply(`突破失败，你损失了${loss}修为！`);
             return;
@@ -121,13 +121,13 @@ export default class level extends plugin {
 
         //突破成功
         const MAXRANK = 5;
-        player.exp -= list[player.level - 1].exp;
+        player.exp -= list[player.level].exp;
 
         player.rank += 1;
         player.level += Math.floor(player.rank / MAXRANK);
         player.rank %= MAXRANK;
 
-        player.levelName = list[player.level - 1].name;
+        player.levelName = list[player.level].name;
 
 
         SetLevel(e.user_id, player);
@@ -136,8 +136,8 @@ export default class level extends plugin {
         //大境界突破，更新面板，增加寿命
         if (player.rank == 0) {
             AddPowerByLevelUp(e.user_id, list, player.level);
-            AddLife(e.user_id, list[player.level - 1].exp);
-            e.reply(`寿命增加${list[player.level - 1].exp}`);
+            AddLife(e.user_id, list[player.level].exp);
+            e.reply(`寿命增加${list[player.level].exp}`);
         }
         CD.AddActionCD(e.user_id, 'levelUp');
     }
@@ -190,20 +190,20 @@ export default class level extends plugin {
 
         const player = await GetLevel(e.user_id);
 
-        if (player.bodyLevel >= 10) {
+        if (player.bodyLevel >= 9) {
             e.reply('您已经到达巅峰！');
             return;
         }
 
-        const list = data.bodyLevelList;
-        if (player.bodyExp < list[player.bodyLevel - 1].exp) {
-            e.reply(`气血不足,再积累${list[player.bodyLevel - 1].exp - player.bodyExp}气血后方可突破`);
+        const list = config.GetConfig(['game', 'player.yaml']).bodyLevelList;
+        if (player.bodyExp < list[player.bodyLevel].exp) {
+            e.reply(`气血不足,再积累${list[player.bodyLevel].exp - player.bodyExp}气血后方可突破`);
             return;
         }
 
         const failureProb = -0.4 + player.bodyLevel * 0.1; //突破失败概率
         if (Math.random() < failureProb) {
-            const loss = Math.floor(list[player.bodyLevel - 1].exp * Math.random());
+            const loss = Math.floor(list[player.bodyLevel].exp * Math.random());
             AddBodyExp(e.user_id, -loss);
             e.reply(`突破失败，你损失了${loss}气血！`);
             return;
@@ -211,13 +211,13 @@ export default class level extends plugin {
 
         //突破成功
         const MAXRANK = 5;
-        player.bodyExp -= list[player.bodyLevel - 1].exp;
+        player.bodyExp -= list[player.bodyLevel].exp;
 
         player.bodyRank += 1;
         player.bodyLevel += Math.floor(player.bodyRank / MAXRANK);
         player.bodyRank %= MAXRANK;
 
-        player.bodyLevelName = list[player.bodyLevel - 1].name;
+        player.bodyLevelName = list[player.bodyLevel].name;
 
         SetLevel(e.user_id, player);
         e.reply(`突破成功至${player.bodyLevelName}${RankName[player.bodyRank]}`);
