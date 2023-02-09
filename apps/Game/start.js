@@ -80,7 +80,7 @@ export default class start extends plugin {
 
         const uid = e.user_id;
         //获取基础配置
-        const newPlayer = config.GetConfig('game/start.yaml');
+        const newPlayer = config.GetConfig(['game', 'start.yaml']);
         //行为相关
         await SetAction(uid, newPlayer.action);
         //背包相关

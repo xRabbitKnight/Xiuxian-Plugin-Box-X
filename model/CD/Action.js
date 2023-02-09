@@ -11,7 +11,7 @@ const redisKeyPre = 'xiuxian:player';
  * @return 无返回值
  */
 export function AddActionCD(_uid, _actionName) {
-    const time = config.GetConfig('game/cd.yaml')['action'][_actionName];
+    const time = config.GetConfig(['game', 'cd.yaml']).action[_actionName];
     if (time == undefined) {
         logger.warn(`config中未定义${_actionName}CD时间！`);
         return;
@@ -26,7 +26,7 @@ export function AddActionCD(_uid, _actionName) {
  * @return 无返回值
  */
 export function DelActionCD(_uid, _actionName) {
-    const time = config.GetConfig('game/cd.yaml')['action'][_actionName];
+    const time = config.GetConfig(['game', 'cd.yaml']).action[_actionName];
     if (time == undefined) {
         logger.warn(`config中未定义行为${_actionName}！`);
         return;

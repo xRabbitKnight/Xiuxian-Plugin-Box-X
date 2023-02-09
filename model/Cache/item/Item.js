@@ -1,10 +1,7 @@
 import data from '../../System/data.js';
-import path from 'path';
 import config from "../../System/config.js";
 import { ReadSync } from '../../File/File.js';
-import { forceNumber } from '../../util/math.js';
-import { cloneObj, randItem } from '../../util/commonUtil.js';
-import { mergeItems } from '../../util/gameUtil.js';
+import { forceNumber, cloneObj, randItem, mergeItems } from '../../util';
 
 const redisKey = 'xiuxian:items';
 
@@ -106,7 +103,7 @@ export async function GetItemsObj(..._datas) {
  * @return {RegExp} 成功获取返回正则表达式，未找到返回undefined
  */
 export function GetItemReg(_name, _type = 'idReg') {
-    const regs = config.GetConfig(path.join('game', 'items.yaml'))[_type];
+    const regs = config.GetConfig(['game', 'items.yaml'])[_type];
     if (regs == undefined || regs[_name] == undefined) {
         logger.warn(`${_name} 未定义正则表达式！`);
         return undefined;

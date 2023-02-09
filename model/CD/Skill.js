@@ -11,7 +11,7 @@ const redisKeyPre = 'xiuxian:skill';
  * @return 无返回值
  */
 export function AddSkillCD(_uid, _skillName) {
-    const time = config.GetConfig('game/cd.yaml')['skill'][_skillName];
+    const time = config.GetConfig(['game', 'cd.yaml']).skill[_skillName];
     if (time == undefined) {
         logger.warn(`config中未定义${_skillName}CD时间！`);
         return;
@@ -26,7 +26,7 @@ export function AddSkillCD(_uid, _skillName) {
  * @return 无返回值
  */
 export function DelSkillCD(_uid, _skillName) {
-    const time = config.GetConfig('game/cd.yaml')['skill'][_skillName];
+    const time = config.GetConfig(['game', 'cd.yaml']).skill[_skillName];
     if (time == undefined) {
         logger.warn(`config中未定义技能${_skillName}`);
         return;

@@ -57,7 +57,7 @@ export default class wealth extends plugin {
         }
 
         const backpack = await GetBackpack(uid);
-        const cfg = config.GetConfig('game/backpack.yaml');
+        const cfg = config.GetConfig(['game', 'backpack.yaml']);
 
         if (backpack.grade == cfg.maxLevel) {
             e.reply('已经是最高级的了');

@@ -8,16 +8,16 @@ export default class RefreshTask extends plugin {
             dsc: "定时刷新怪物",
             priority: 300,
         });
-        
+
         this.task = [
             {
                 name: "定时刷新怪物",
-                cron: config.GetConfig('task/monster.yaml').monster.cron,
+                cron: config.GetConfig(['task', 'monster.yaml']).monster.cron,
                 fnc: () => this.refreshMonster(),
             },
             {
                 name: "定时刷新BOSS",
-                cron: config.GetConfig('task/monster.yaml').boss.cron,
+                cron: config.GetConfig(['task', 'monster.yaml']).boss.cron,
                 fnc: () => this.refreshBoss(),
             }
         ];

@@ -74,7 +74,7 @@ export default class level extends plugin {
         }
         redis.del(`xiuxian:player:${e.user_id}:action`);
 
-        const cfg = config.GetConfig('game/player.yaml').seclusion;
+        const cfg = config.GetConfig(['game','player.yaml']).seclusion;
         const time = Math.floor((new Date().getTime() - action.startTime) / 60000);
         if (time < cfg.minTime) {
             e.reply('只是呆了一会儿...');

@@ -109,9 +109,9 @@ class Data {
     /**
      * @description: 将插件插入的帮助指令写入cfg
      * @return 无返回值
-     */    
+     */
     SaveCmdCfg = () => {
-        config.SetConfig(path.join('help', 'plugin.yaml'), this.pluginCfg);
+        config.SetConfig((['help', 'plugin.yaml']), this.pluginCfg);
     }
 
     /**

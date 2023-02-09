@@ -3,4 +3,5 @@ config/help/plugin.yaml
 resources/help/help.jpg
 resources/data/birth/**/*.json
 resources/data/birth/*.json
+resources/data/*.bak.zip
 .vscode

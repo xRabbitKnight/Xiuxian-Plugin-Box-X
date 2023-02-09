@@ -34,7 +34,7 @@ export default class Shop extends plugin {
         });
         this.task = {
             name: "定时刷新商店货物",
-            cron: config.GetConfig('task/shop.yaml', data.__configPath).cron,
+            cron: config.GetConfig(['task', 'shop.yaml'], data.__configPath).cron,
             fnc: () => this.RefreshShop(),
         }
     }
@@ -118,7 +118,7 @@ export default class Shop extends plugin {
     }
 
     RefreshShop = async (e) => {
-        const cfg = config.GetConfig('task/shop.yaml', data.__configPath);
+        const cfg = config.GetConfig(['task', 'shop.yaml'], data.__configPath);
 
         const commodities = [];
         commodities.push(...(await GetRandItem('丹药', cfg.pellet.count, cfg.pellet.maxLevel)));

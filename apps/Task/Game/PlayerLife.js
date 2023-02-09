@@ -11,14 +11,14 @@ export default class AgeTask extends plugin {
 
         this.task = {
             name: '定时增加玩家年龄',
-            cron: config.GetConfig('task/age.yaml').cron,
+            cron: config.GetConfig(['task', 'age.yaml']).cron,
             fnc: () => this.levelTask(),
         }
     }
 
     levelTask = async () => {
         const players = await GetAllUid();
-        const ageInc = config.GetConfig('task/age.yaml').ageInc;
+        const ageInc = config.GetConfig(['task', 'age.yaml']).ageInc;
         players.forEach(player => AddAge(player, ageInc));
     }
 }

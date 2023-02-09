@@ -168,7 +168,7 @@ function getRecoverPlan(recoverItems, V, minus = false) {
 }
 
 async function learnManual(user_id, manualItems) {
-    let maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
+    let maxLearnNum = config.GetConfig(['game', 'player.yaml']).maxManual;
     let talentInfo = await GetTalent(user_id);
 
     let manualList = [];

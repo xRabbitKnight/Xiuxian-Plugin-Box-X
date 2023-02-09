@@ -67,7 +67,7 @@ export async function GetSpiritualRoot(_uid) {
 export async function AddManual(_uid, _manual) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const talentInfo = await getTalentInfo(_uid);
-        const maxLearnNum = config.GetConfig('game/player.yaml').maxManual;
+        const maxLearnNum = config.GetConfig(['game', 'player.yaml']).maxManual;
 
         if (talentInfo.manualList.find(item => item.name == _manual.name) != undefined || talentInfo.manualList.length >= maxLearnNum) {
             return false;
@@ -225,7 +225,7 @@ function randSpiritualRoot() {
  */
 function getSpiritualRootName(_spRoot) {
     let name = "";
-    const spRoot = config.GetConfig(['game','player.yaml']);
+    const spRoot = config.GetConfig(['game', 'player.yaml']);
     _spRoot.forEach(root => name += data.talentList.find(item => item.id == root).name);
     return name;
 }

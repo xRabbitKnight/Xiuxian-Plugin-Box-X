@@ -47,7 +47,7 @@ export default class equipment extends plugin {
             return;
         }
 
-        if (await GetEquipmentCount(e.user_id) >= config.GetConfig('game/player.yaml').maxEquipment) {
+        if (await GetEquipmentCount(e.user_id) >= config.GetConfig(['game', 'player.yaml']).maxEquipment) {
             e.reply(`装备数已达上限！`);
             return;
         }

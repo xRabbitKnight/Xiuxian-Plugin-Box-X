@@ -39,7 +39,7 @@ export default class Inn extends plugin {
 
         this.task = {
             name: "定时获取打听消息",
-            cron: config.GetConfig('task/inn.yaml', data.__configPath).cron,
+            cron: config.GetConfig(['task', 'inn.yaml'], data.__configPath).cron,
             fnc: () => this.GetMsg(),
         }
     }
