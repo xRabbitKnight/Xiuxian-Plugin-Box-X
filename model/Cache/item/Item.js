@@ -38,7 +38,7 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
     if (_dropLevel != undefined) items = items.filter(item => item.dropLevel <= _dropLevel);
 
     const ret = [];
-    for (let i = 0; i < _count; ++i){
+    for (let i = 0; i < _count; ++i) {
         const item = cloneObj(randItem(items));
         item.acount = 1;
         ret.push(item);
@@ -48,20 +48,55 @@ export async function GetRandItem(_type, _count = 1, _dropLevel = undefined) {
 }
 
 /******* 
- * @description: 根据名字获取物品实例
- * @param {string} _name 物品名
- * @param {number} _count 获取数量
- * @return {Promise<any>} 对应物品
+ * @description: 根据id或者物品名获取物品实例
+ * @param {string} id  物品id
+ * @param {string} name 物品名，id或物品名选填其一
+ * @param {number} count 获取数量，选填，默认为1
+ * @return {Promise<any>} 对应物品, 获取失败返回undefined
  */
-export async function GetItemObj(_name, _count) {
+export async function GetItemObj(_data) {
+    if (_data.id == undefined && _data.name == undefined) return undefined;
+
     const items = await getAll();
     if (items == undefined) return undefined;
 
-    const item = items.find(item => item.name == _name);
+    const item = items.find(item => item.id == _data.id || item.name == _data.name);
     if (item == undefined) return undefined;
 
-    item.acount = forceNumber(_count);
+    item.acount = forceNumber(_data.count);
     return item;
+}
+
+/******* 
+ * @description: 批量根据id或者物品名获取物品实例
+ * @param {string} id  物品id
+ * @param {string} name 物品名，id或物品名选填其一
+ * @param {number} count 获取数量，选填，默认为1
+ * @return {Promise<[]>} 物品数组, 参数出错物品不会加入, 发生错误返回空数组
+ */
+export async function GetItemsObj(..._datas) {
+    const ret = [];
+
+    const items = await getAll();
+    if (items == undefined) return ret;
+
+    //预处理，合并一些相同id的物品
+    _datas = mergeItems(..._datas);
+
+    for (let data of _datas) {
+        if (data.id == undefined && data.name == undefined) {
+            logger.warn(`批量获取物品实例参数错误！`);
+            continue;
+        }
+
+        const item = items.find(item => item.id == data.id || item.name == data.name);
+        if (item == undefined) continue;
+
+        item.acount = forceNumber(data.count);
+        ret.push(item);
+    }
+
+    return ret;
 }
 
 /**

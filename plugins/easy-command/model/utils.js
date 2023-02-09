@@ -82,7 +82,7 @@ async function getIdReg(name) {
 		case '全部物品':
 			return /.+/;
 		default:
-			const ITEM = await GetItemObj(name, 1);
+			const ITEM = await GetItemObj({ name: name });
 			return new RegExp(`^${ITEM ? ITEM.id : ''}$`);
 	}
 }

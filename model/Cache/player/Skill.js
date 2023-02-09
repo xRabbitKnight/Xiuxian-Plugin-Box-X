@@ -107,7 +107,7 @@ export async function RefreshSkill(_uid) {
         if (skillInfo == undefined || spRoots == undefined) return;
 
         for (let skill of skillInfo.skillList) {
-            const skillBook = await GetItemObj(`技能书：${skill.name}`, 1);
+            const skillBook = await GetItemObj({ name: `技能书：${skill.name}` });
             if (skillBook == undefined) {
                 logger.error(`更新技能${skill.name}失败!`);
                 continue;

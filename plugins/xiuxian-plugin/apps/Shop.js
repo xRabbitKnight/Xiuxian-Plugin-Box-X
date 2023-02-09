@@ -123,7 +123,7 @@ export default class Shop extends plugin {
         const commodities = [];
         commodities.push(...(await GetRandItem('丹药', cfg.pellet.count, cfg.pellet.maxLevel)));
         commodities.push(...(await GetRandItem('功法', cfg.manual.count, cfg.manual.maxLevel)));
-        commodities.push(await GetItemObj('传送卷轴', 20));
+        commodities.push(await GetItemObj({ name: '传送卷轴', count: 20 }));
 
         commodities.sort((a, b) => a.id.localeCompare(b.id));
         SetCommodities(commodities);

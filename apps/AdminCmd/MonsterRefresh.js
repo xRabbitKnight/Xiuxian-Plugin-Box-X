@@ -1,15 +1,17 @@
 import plugin from "../../../../lib/plugins/plugin.js";
 import data from "../../model/System/data.js";
+import { segment } from "oicq";
+import { CheckStatu, StatuLevel } from "../../model/Statu/Statu.js";
 import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Battle.js";
 import { GetLevel } from "../../model/Cache/player/Level.js";
-import { forceNumber } from "../../model/util/math.js";
 import { RefreshBoss } from "../../model/Monster/refresh.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
 import { GetSpiritualRoot, GetTalent, SetTalent } from "../../model/Cache/player/Talent.js";
 import { GetAllSkill, SetSkill } from "../../model/Cache/player/Skill.js";
 import { GetItemObj } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
-
+import { forceNumber, getAtUid } from "../../model/util";
+import { AddItemToBackpack } from "../../model/Cache";
 
 
 export default class MonsterRefresh extends plugin {
@@ -39,10 +41,36 @@ export default class MonsterRefresh extends plugin {
                     reg: '^#刷新玩家技能列表$',
                     fnc: 'refreshPlayerSkill',
                     permission: 'master'
+                },
+                {
+                    reg: '^#补偿.*$',
+                    fnc: 'give',
+                    permission: 'master'
                 }
 
             ]
         });
+    }
+
+    give = async (e) => {
+        const doneeId = getAtUid(e);
+
+        if (doneeId == undefined || !await CheckStatu({ user_id: doneeId }, StatuLevel.alive, false)) {
+            e.reply("玩家不存在！");
+            return;
+        }
+
+        let [propName, count] = e.msg.replace('#补偿', '').replace('{at:*}', '').split('*');
+        count = Math.max(forceNumber(count), 1);
+
+        const prop = await GetItemObj({ name: propName, count: count });
+        if (prop == undefined) {
+            e.reply(`道具${propName}不存在`);
+            return;
+        }
+
+        AddItemToBackpack(doneeId, prop, count);
+        e.reply([segment.at(doneeId), `你获得补偿${propName} * ${count}`]);
     }
 
     refreshBoss = async () => {
@@ -91,7 +119,7 @@ export default class MonsterRefresh extends plugin {
             const skills = await GetAllSkill(player);
 
             for (let sk of skills) {
-                const skill = await GetItemObj(`技能书：${sk.name}`, 1);
+                const skill = await GetItemObj({ name: `技能书：${sk.name}` });
                 let power = skill.power;
                 //每多一种符合属性的灵根 +20倍率， 多一种不合属性的 -10倍率
                 spiritualRoots.forEach(sr => {
