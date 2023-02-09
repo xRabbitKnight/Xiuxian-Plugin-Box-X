@@ -9,6 +9,7 @@
     然后调用AddData将想要加入的数据加入即可
  -----------------------------------------------**/
 
+import fs from 'node:fs';
 import path from 'path';
 import config from './config.js';
 import { ReadSync, WriteAsync } from '../File/File.js';

@@ -13,10 +13,12 @@
 export default class RandomEvent{
     /******* 
      * @description: 随机事件类
+     * @param {string} name 事件名
      * @param {number} odds 事件触发概率（0~1）
      * @param {Function} fnc 事件触发执行方法
      */
     constructor(data){
+        this.name = data.name,
         this.odds = data.odds,
         this.fnc = data.fnc
     }

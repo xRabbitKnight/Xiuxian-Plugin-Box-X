@@ -61,7 +61,7 @@ export default class EventMgr {
                 msgs.push(...msg);
                 done++;
             } catch (error) {
-                logger.error(`${_type}类型：随机事件${event.name}执行发生错误！\n ${error.stack}`);
+                logger.error(`${_type}类型：随机事件-${event.name} 执行发生错误！\n ${error.stack}`);
                 return new XiuxianMsg({ result: false });
             }
 

@@ -19,6 +19,7 @@ import {
 
 /** 增加大量修为 */
 export const addLargeExp = new RandomEvent({
+    name: '战斗后增加大量修为',
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -31,6 +32,7 @@ export const addLargeExp = new RandomEvent({
 
 /** 增加中量修为 */
 export const addMediumExp = new RandomEvent({
+    name: '战斗后增加中量修为',
     odds: 0.20,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -43,6 +45,7 @@ export const addMediumExp = new RandomEvent({
 
 /** 增加大量气血 */
 export const addLargeBodyExp = new RandomEvent({
+    name: '战斗后增加大量气血',
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -55,6 +58,7 @@ export const addLargeBodyExp = new RandomEvent({
 
 /** 增加中量气血 */
 export const addMediumExpHP = new RandomEvent({
+    name: '战斗后增加中量修为',
     odds: 0.20,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -67,6 +71,7 @@ export const addMediumExpHP = new RandomEvent({
 
 /** 获得大量灵石 */
 export const getLargeMoney = new RandomEvent({
+    name: '战斗后获得大量灵石',
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -79,6 +84,7 @@ export const getLargeMoney = new RandomEvent({
 
 /** 获得中量灵石 */
 export const getMediumMoney = new RandomEvent({
+    name: '战斗后获得中量灵石',
     odds: 0.20,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -91,6 +97,7 @@ export const getMediumMoney = new RandomEvent({
 
 /** 获得远超等级的一件装备 */
 export const getAheadEquipment = new RandomEvent({
+    name: '战斗后获得远超等级的一件装备',
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -103,6 +110,7 @@ export const getAheadEquipment = new RandomEvent({
 
 /** 获得不高于等级的一件装备 */
 export const getRelateEquipment = new RandomEvent({
+    name: '战斗后获得不高于等级的一件装备',
     odds: 0.30,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -115,6 +123,7 @@ export const getRelateEquipment = new RandomEvent({
 
 /** 获得远超等级的一本功法 */
 export const getAheadManual = new RandomEvent({
+    name: '战斗后获得远超等级的一本功法',
     odds: 0.10,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -127,6 +136,7 @@ export const getAheadManual = new RandomEvent({
 
 /** 获得不高于等级的一本功法 */
 export const getRelateManual = new RandomEvent({
+    name: '战斗后获得不高于等级的一件功法',
     odds: 0.30,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -139,6 +149,7 @@ export const getRelateManual = new RandomEvent({
 
 /** 获得攻击力永久提升 */
 export const addMaxAttack = new RandomEvent({
+    name: '战斗后获得攻击力永久提升',
     odds: 0.15,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -151,6 +162,7 @@ export const addMaxAttack = new RandomEvent({
 
 /** 获得生命值永久提升const */
 export const addMaxBlood = new RandomEvent({
+    name: '战斗后获得生命值永久提升',
     odds: 0.15,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -163,6 +175,7 @@ export const addMaxBlood = new RandomEvent({
 
 /** 获得防御力永久提升 */
 export const addMaxDefense = new RandomEvent({
+    name: '战斗后获得防御力永久提升',
     odds: 0.15,
     fnc: async (data) => {
         const { uid, monster } = data;
@@ -175,6 +188,7 @@ export const addMaxDefense = new RandomEvent({
 
 /** 无事发生 */
 export const blank = new RandomEvent({
+    name: '无事发生',
     odds: 1,
-    fnc: async (data) => { return new XiuxianMsg(); }
+    fnc: async (data) => { return new XiuxianMsg({}); }
 });

@@ -4,7 +4,7 @@
 * @param {any} ... 其余信息可自行添加定义
 */
 export default class XiuxianMsg {
-    constructor(data) {
+    constructor(data = {}) {
         this.result = true;
         this.msg = [];
 
