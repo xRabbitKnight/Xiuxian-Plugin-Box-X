@@ -138,13 +138,9 @@ export default class learn extends plugin {
             return;
         }
 
-        if (!await AddSkill(e.user_id, skillBook)) {
-            e.reply('学不会，怎么看都学不会！');
-            return;
-        }
-
-        AddItemToBackpack(e.user_id, skillBook, -1);
-        e.reply(`学习技能${name}`);
+        const { result, msg } = await AddSkill(e.user_id, skillBook);
+        if (result) AddItemToBackpack(e.user_id, skillBook, -1);
+        e.reply(msg);
     }
 
     ForgetSkill = async (e) => {
@@ -153,12 +149,8 @@ export default class learn extends plugin {
         }
 
         const name = e.msg.replace('#忘掉技能', '');
-        if (!await DelSkill(e.user_id, name)) {
-            e.reply(`没学过${name}`);
-            return;
-        }
-
-        e.reply(`忘了${name}`);
+        const { msg } = await DelSkill(e.user_id, name);
+        e.reply(msg);
     }
 
     LearnManual = async (e) => {

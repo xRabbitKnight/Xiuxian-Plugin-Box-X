@@ -6,7 +6,7 @@ import { GetBattle, RefreshBattle, SetBattle } from "../../model/Cache/player/Ba
 import { GetLevel } from "../../model/Cache/player/Level.js";
 import { RefreshBoss } from "../../model/Monster/refresh.js";
 import { GetAllUid } from "../../model/Cache/player/players.js";
-import { GetSpiritualRoot, GetTalent, SetTalent } from "../../model/Cache/player/Talent.js";
+import { GetTalent, SetTalent } from "../../model/Cache/player/Talent.js";
 import { GetAllSkill, SetSkill } from "../../model/Cache/player/Skill.js";
 import { GetItemObj } from "../../model/Cache/item/Item.js";
 import { WriteAsync } from "../../model/File/File.js";
@@ -118,18 +118,10 @@ export default class MonsterRefresh extends plugin {
     refreshPlayerSkill = async () => {
         const players = await GetAllUid();
         players.forEach(async (player) => {
-            const spiritualRoots = await GetSpiritualRoot(player);
             const skills = await GetAllSkill(player);
 
             for (let sk of skills) {
-                const skill = await GetItemObj({ name: `技能书：${sk.name}` });
-                let power = skill.power;
-                //每多一种符合属性的灵根 +20倍率， 多一种不合属性的 -10倍率
-                spiritualRoots.forEach(sr => {
-                    const result = skill.spiritualRoot.find(root => sr == root);
-                    power += (result == undefined ? -10 : 20);
-                });
-                sk.power = power;
+                sk.proficiency = 0;
             }
 
             const obj = { skillList: skills };

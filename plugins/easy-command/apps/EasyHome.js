@@ -211,9 +211,10 @@ async function learnManual(user_id, manualItems) {
 async function learnSkill(user_id, skillItems) {
     let learnStr = '', learnNum = 0;
     for (let item of skillItems) {
-        if (await AddSkill(user_id, item)) {
+        const { result, msg } = await AddSkill(user_id, item);
+        if (result) {
             AddItemToBackpack(user_id, item, -1);
-            learnStr += `\n学习技能『${item.name.substr(4)}』`;
+            learnStr += `\n${msg}`;
             learnNum++;
         }
     }

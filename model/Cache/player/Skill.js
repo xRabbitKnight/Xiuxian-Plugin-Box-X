@@ -1,9 +1,11 @@
 import data from '../../System/data.js';
 import path from 'path';
+import XiuxianMsg from '../../common/msg.js';
 import { lock } from '../../util';
 import { GetInfo, SetInfo } from './InfoCache.js';
 import { GetSpiritualRoot } from './Talent.js';
 import { GetItemObj } from '../item/Item.js';
+
 
 const redisKey = data.__gameDataKey.skill;
 const PATH = data.__gameDataPath.skill;
@@ -37,24 +39,36 @@ export async function GetAllSkill(_uid) {
  * @description: 学习新技能
  * @param {number} _uid 玩家id
  * @param {any} _skillBook 技能书对象
- * @return {Promise<boolean>} 返回是否学习成功 true->学习成功
+ * @return {Promise<XiuxianMsg>} 返回结果
  */
 export async function AddSkill(_uid, _skillBook) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const skillInfo = await getSkillInfo(_uid);
-
-        const name = _skillBook.name.replace("技能书：", "");
-        if (skillInfo == undefined || skillInfo.skillList.find(skill => skill.name == name) != undefined) {
-            return false;
+        //参数错误
+        if (_uid == undefined || _skillBook == undefined || skillInfo == undefined) {
+            return new XiuxianMsg({ result: false, msg: [`玩家${_uid}学习技能发生错误，请联系管理员！`] });
         }
 
-        skillInfo.skillList.push({
-            name: name,
-            power: getSkillPower(_skillBook, await GetSpiritualRoot(_uid))
-        });
+        const name = _skillBook.name.replace("技能书：", "");
+        const targetSkill = skillInfo.skillList.find(skill => skill.name == name);
+        const msg = [];
+        if (targetSkill == undefined) {
+            //新学技能
+            skillInfo.skillList.push({
+                name: name,
+                power: getSkillPower(_skillBook, await GetSpiritualRoot(_uid)),
+                proficiency: 0
+            });
+            msg.push(`新技能『${name} 』学习成功！`);
+        } else {
+            //已学技能，增加熟练度
+            targetSkill.proficiency++;
+            targetSkill.power++;
+            msg.push(`对技能『${name} 』的了解更深入了！`);
+        }
 
         await setSkillInfo(_uid, skillInfo);
-        return true;
+        return new XiuxianMsg({ msg: msg });
     });
 }
 
@@ -62,20 +76,23 @@ export async function AddSkill(_uid, _skillBook) {
  * @description: 忘掉技能
  * @param {number} _uid 玩家id
  * @param {string} _skillName 技能名
- * @return {Promise<boolean>} 返回是否忘掉成功 true->忘掉成功
+ * @return {Promise<XiuxianMsg>} 返回结果
  */
 export async function DelSkill(_uid, _skillName) {
     return lock(`${redisKey}:${_uid}`, async () => {
         const skillInfo = await getSkillInfo(_uid);
+        if (_uid == undefined || _skillBook == undefined || skillInfo == undefined) {
+            return new XiuxianMsg({ result: false, msg: [`玩家${_uid}学习技能发生错误，请联系管理员！`] });
+        }
 
         const targetSkill = skillInfo.skillList.find(skill => skill.name == _skillName);
         if (targetSkill == undefined) {
-            return false;
+            return new XiuxianMsg({ result: false, msg: [`没有学习技能『${_skillName} 』！`] });
         }
 
         skillInfo.skillList.splice(skillInfo.skillList.indexOf(targetSkill), 1);
         await setSkillInfo(_uid, skillInfo);
-        return true;
+        return new XiuxianMsg({ msg: [`成功忘掉技能『${_skillName} 』！`] });;
     });
 }
 
@@ -113,7 +130,7 @@ export async function RefreshSkill(_uid) {
                 continue;
             }
 
-            skill.power = getSkillPower(skillBook, spRoots);
+            skill.power = getSkillPower(skillBook, spRoots) + skill.proficiency;
         }
 
         await setSkillInfo(_uid, skillInfo);
