@@ -56,6 +56,6 @@ body {
   width: 75%;
   display: grid;
   row-gap: 10px;
-  grid-template-columns: auto auto;
-  justify-content: space-around;
+  grid-template-columns: auto auto auto;
+  justify-content: space-between;
 }

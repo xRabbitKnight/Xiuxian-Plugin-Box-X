@@ -31,6 +31,10 @@ export async function GetEquipmentImage(_uid) {
  * @return {Promise<ImageElem>} 生成的图片
  */
 export async function GetManualImage(_uid) {
+    let talentInfo = await GetTalent(_uid);
+    for(let item of talentInfo.manualList) {
+        item.buffPercent = Math.round(item.buff / item.maxBuff * 100);
+    }
     return await puppeteer.screenshot('manual', {
         //puppeteer 所需参数
         tplFile: base.html + 'User/manual/manual.html',
@@ -38,7 +42,7 @@ export async function GetManualImage(_uid) {
         //模板传入参数
         cssPath: base.res + 'User/manual/manual.css',
         uid: _uid,
-        talent: await GetTalent(_uid),
+        talent: talentInfo,
     });
 }
 
