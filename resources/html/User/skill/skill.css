@@ -7,10 +7,10 @@
 
 body {
   margin: 0;
-  width: 600px;
+  width: 700px;
   padding: 60px 50px 15px 50px;
   background-image: url('./skill.jpg');
-  background-size: 700px auto;
+  background-size: 800px auto;
   font-family: xiuxian;
 }
 
@@ -56,6 +56,6 @@ body {
   width: 75%;
   display: grid;
   row-gap: 10px;
-  grid-template-columns: auto auto;
-  justify-content: space-around;
+  grid-template-columns: auto auto auto;
+  justify-content: space-between;
 }

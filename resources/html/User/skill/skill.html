@@ -14,9 +14,19 @@
         <div class="info-list">
             <div style="font-weight:bold; color:wheat">技能名</div>
             <div style="font-weight:bold; color:wheat">伤害</div>
+            <div style="font-weight:bold; color:wheat; justify-self: center;">熟练度</div>
             {{each skill.skillList item}}
             <div>{{item.name}}</div>
             <div>+{{item.power}}%</div>
+            {{if item.proficiency < 5}}
+            <div style="justify-self: center;">初窥门径 ({{item.proficiency}})</div>
+            {{else if item.proficiency < 10}}
+            <div style="justify-self: center;">小有所成 ({{item.proficiency}})</div>
+            {{else if item.proficiency < 15}}
+            <div style="justify-self: center;">得心应手 ({{item.proficiency}})</div>
+            {{else}}
+            <div style="justify-self: center;">功法大成 ({{item.proficiency}})</div>
+            {{/if}}
             {{/each}}
         </div>
     </div>
